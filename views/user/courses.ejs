@@ -1,0 +1,76 @@
+<%- include("../layouts/dashboardHeader") %>
+
+<%- include("../partials/dashboardSidebar") %>
+
+<div class="main-content">
+
+    <div class="topbar">
+        <h1>Available Courses 📚</h1>
+        <p>Choose a course and start learning.</p>
+    </div>
+
+
+    <div class="courses-grid">
+
+        <% if (courses.length === 0) { %>
+
+            <p>No courses available at the moment.</p>
+
+        <% } else { %>
+
+            <% courses.forEach(course => { %>
+
+                <div class="course-card">
+
+                    <img
+                        src="/uploads/<%= course.image %>"
+                        alt="<%= course.title %>"
+                    >
+
+                    <div class="course-body">
+
+                        <h3>
+                            <%= course.title %>
+                        </h3>
+
+                        <p>
+                            <strong>Instructor:</strong>
+                            <%= course.instructor %>
+                        </p>
+
+                        <p>
+                            <strong>Category:</strong>
+                            <%= course.category %>
+                        </p>
+
+                        <p>
+                            <strong>Level:</strong>
+                            <%= course.level %>
+                        </p>
+
+                        <p>
+                            <strong>Price:</strong>
+                            Rs. <%= course.price %>
+                        </p>
+
+                        <a
+                            href="/course/<%= course._id %>"
+                            class="course-btn">
+
+                            View Course
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            <% }) %>
+
+        <% } %>
+
+    </div>
+
+</div>
+
+<%- include("../layouts/dashboardFooter") %>

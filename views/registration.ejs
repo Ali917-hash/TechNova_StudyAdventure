@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create your TechNova learning account.">
+    <title>Create Account | TechNova</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" 
+    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/css/Registration.css">
+</head>
+<body>
+    <main class="auth-shell">
+        <header class="auth-header">
+            <a class="brand" href="/" aria-label="TechNova home">
+                <span class="brand-mark">TN</span>
+                <span class="brand-name">TECHNOVA</span>
+            </a>
+            <a class="back-link" href="/">
+                <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+                Back to website
+            </a>
+        </header>
+
+        <section class="auth-card" aria-labelledby="registration-title">
+            <div class="auth-intro">
+                <span class="eyebrow">Start learning</span>
+                <h1 id="registration-title">Create your account</h1>
+                <p>Build your learning path with TechNova today.</p>
+            </div>
+
+        <form class="registration-form" id="registrationForm" action="/registration" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <input type="hidden" name="courseId" value="<%= courseId || '' %>">
+
+            <div class="form-grid">
+              <div class="input-group">
+                <label for="fname">First Name</label>
+                <input type="text" id="fname" name="firstName" placeholder="First name" autocomplete="given-name" required aria-describedby="fnameError" />
+                <span class="error" id="fnameError" role="alert"></span>
+              </div>
+
+              <div class="input-group">
+                <label for="lname">Last Name</label>
+                <input type="text" id="lname" name="lastName" placeholder="Last name" autocomplete="family-name" required aria-describedby="lnameError" />
+                <span class="error" id="lnameError" role="alert"></span>
+              </div>
+            </div>
+
+            <div class="input-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required aria-describedby="emailError" />
+                <span class="error" id="emailError" role="alert"></span>
+            </div>
+
+            <div class="form-grid">
+              <div class="input-group">
+                <label for="password">Password</label>
+                                <div class="password-field">
+                                        <input type="password" id="password" name="password" placeholder="Create a password" autocomplete="new-password" required aria-describedby="passwordError" />
+                                        <button type="button" class="password-toggle" data-password-toggle="password" aria-label="Show password" aria-pressed="false">
+                                                <i class="fa-solid fa-eye" aria-hidden="true"></i>
+                                        </button>
+                                </div>
+                <span class="error" id="passwordError" role="alert"></span>
+              </div>
+
+              <div class="input-group">
+                <label for="confirm-password">Confirm Password</label>
+                                <div class="password-field">
+                                        <input type="password" id="confirm-password" name="confirmPassword" placeholder="Repeat your password" autocomplete="new-password" required aria-describedby="confirmPasswordError" />
+                                        <button type="button" class="password-toggle" data-password-toggle="confirm-password" aria-label="Show password" aria-pressed="false">
+                                                <i class="fa-solid fa-eye" aria-hidden="true"></i>
+                                        </button>
+                                </div>
+                <span class="error" id="confirmPasswordError" role="alert"></span>
+              </div>
+            </div>
+
+            <div class="input-group">
+                <label for="gender">Gender</label>
+                <select name="gender" id="gender" required>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" name="dob" autocomplete="bday" required aria-describedby="dobError" />
+                <span class="error" id="dobError" role="alert"></span>
+            </div>
+
+            <button type="submit" class="btn">
+                Create account
+                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </button>
+    
+            <p class="footer-text">
+                Already have an account? <a href="/login">Sign in</a>
+            </p>
+        </form>
+        </section>
+    </main>
+
+    <script src="/js/password-toggle.js"></script>
+    <script src="/js/registration.js"></script>
+</body>
+</html>

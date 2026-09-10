@@ -1,0 +1,35 @@
+<%- include("layouts/header") %>
+
+<section class="courses">
+
+<h1>Our Courses</h1>
+
+<div class="course-grid">
+
+<% courses.forEach(course => { %>
+
+<div class="course-card">
+
+<img src="<%= course.image %>">
+
+<h2><%= course.title %></h2>
+
+<p><%= course.instructor %></p>
+
+<p>Rs. <%= course.price %></p>
+
+<a href="/courses/<%= course._id %>">
+
+View Details
+
+</a>
+
+</div>
+
+<% }) %>
+
+</div>
+
+</section>
+
+<%- include("layouts/footer") %>

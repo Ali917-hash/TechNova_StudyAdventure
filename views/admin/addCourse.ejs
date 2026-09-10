@@ -1,0 +1,246 @@
+<%- include("../layouts/adminDashboardHeader") %>
+
+<%- include("../partials/adminSidebar") %>
+
+<div class="main-content">
+
+    <div class="page-header">
+
+        <h1>Add New Course</h1>
+
+        <p>
+            Create a new course for TechNova students.
+        </p>
+
+    </div>
+
+
+    <div class="form-container">
+
+        <form
+            action="/admin/course/add"
+            method="POST"
+            enctype="multipart/form-data">
+
+            <input
+                type="hidden"
+                name="_csrf"
+                value="<%= csrfToken %>">
+
+
+            <div class="form-group">
+
+                <label>Course Title</label>
+
+                <input
+                    type="text"
+                    name="title"
+                    placeholder="Full Stack Web Development"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Instructor</label>
+
+                <input
+                    type="text"
+                    name="instructor"
+                    placeholder="Ali Raza"
+                    required>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Category</label>
+
+                <select name="category" required>
+
+                    <option value="Web Development">
+                        Web Development
+                    </option>
+
+                    <option value="Mobile App Development">
+                        Mobile App Development
+                    </option>
+
+                    <option value="Python">
+                        Python
+                    </option>
+
+                    <option value="Artificial Intelligence">
+                        Artificial Intelligence
+                    </option>
+
+                    <option value="Graphic Design">
+                        Graphic Design
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label>Price</label>
+
+                    <input
+                        type="number"
+                        name="price"
+                        placeholder="5000">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Duration</label>
+
+                    <input
+                        type="text"
+                        name="duration"
+                        placeholder="8 Weeks">
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Level</label>
+
+                <select name="level">
+
+                    <option value="Beginner">
+                        Beginner
+                    </option>
+
+                    <option value="Intermediate">
+                        Intermediate
+                    </option>
+
+                    <option value="Advanced">
+                        Advanced
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Description</label>
+
+                <textarea
+                    name="description"
+                    rows="6"
+                    placeholder="Write complete course description..."
+                    required></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="image">
+                    Course Thumbnail
+                </label>
+
+                <input
+                    type="file"
+                    id="image"
+                    name="image"
+                    accept=".jpg,.jpeg,.png,.webp">
+
+            </div>
+
+            <!-- ========================================== -->
+            <!-- COURSE MATERIAL FOLDER -->
+            <!-- ========================================== -->
+
+            <div class="form-group">
+
+                <label for="contentFolder">
+                    Course Material Folder
+                </label>
+
+                <input
+                    type="file"
+                    id="contentFolder"
+                    name="content"
+                    webkitdirectory
+                    directory
+                    multiple>
+
+                <small class="upload-note">
+                    Select the complete course folder.
+                    All PDFs, videos, DOC, PPT and TXT files inside the folder
+                    will be uploaded together. Maximum size: 3 GB.
+                </small>
+
+                <div id="folderPreview" class="folder-preview"></div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="save-btn">
+
+                <i class="fa-solid fa-plus"></i>
+
+                Save Course
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script nonce="<%= cspNonce %>">
+
+const folderInput = document.getElementById("contentFolder");
+const preview = document.getElementById("folderPreview");
+
+folderInput.addEventListener("change", function () {
+
+    preview.innerHTML = "";
+
+    if (this.files.length === 0) return;
+
+    const title = document.createElement("p");
+    title.innerHTML = "<strong>Selected Files:</strong>";
+
+    preview.appendChild(title);
+
+    const list = document.createElement("ul");
+
+    Array.from(this.files).forEach(file => {
+
+        const item = document.createElement("li");
+
+        item.textContent =
+            file.webkitRelativePath || file.name;
+
+        list.appendChild(item);
+
+    });
+
+    preview.appendChild(list);
+
+});
+
+</script>
+
+<%- include("../layouts/dashboardFooter") %>

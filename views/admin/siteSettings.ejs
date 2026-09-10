@@ -1,0 +1,2065 @@
+<%
+const currentPage = "site-settings";
+
+const heroes =
+    settings.heroes || {};
+
+const homeHero =
+    heroes.home || {};
+
+const aboutHero =
+    heroes.about || {};
+
+const servicesHero =
+    heroes.services || {};
+
+const portfolioHero =
+    heroes.portfolio || {};
+
+const blogHero =
+    heroes.blog || {};
+
+const contactHero =
+    heroes.contact || {};
+
+const values =
+    settings.coreValues || [];
+
+const navigation =
+    settings.navigation || [];
+
+const navMap = {};
+
+navigation.forEach(
+    item => {
+        navMap[item.path] = item;
+    }
+);
+
+%>
+
+
+<%- include("../layouts/adminDashboardHeader") %>
+
+
+<%- include("../partials/adminSidebar") %>
+
+
+<div class="main-content">
+
+
+    <!-- =================================================
+         PAGE HEADER
+    ================================================== -->
+
+    <div class="admin-page-header">
+
+        <div>
+
+            <h1>
+                Website Settings
+            </h1>
+
+            <p>
+                Manage your public TechNova website
+                from one central control panel.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <% if (success) { %>
+
+        <div class="settings-success">
+
+            <i
+                class="fa-solid fa-circle-check"
+            ></i>
+
+            Website settings updated successfully.
+
+        </div>
+
+    <% } %>
+
+
+
+    <!-- =================================================
+         SETTINGS FORM
+    ================================================== -->
+
+    <div class="form-container">
+
+
+        <form
+            action="/admin/site-settings"
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+
+            <!-- =================================================
+                 PAGE HERO
+            ================================================== -->
+
+            <div class="settings-section">
+
+
+                <div class="settings-section-title">
+
+                    <i
+                        class="fa-solid fa-image"
+                    ></i>
+
+
+                    <div>
+
+                        <h2>
+                            Page Hero
+                        </h2>
+
+                        <p>
+                            Choose a public page and
+                            manage its hero section.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- PAGE SELECTOR -->
+
+                <div class="form-group">
+
+                    <label>
+                        Select Page
+                    </label>
+
+
+                    <select
+                        id="heroPage"
+                        name="heroPage"
+                        required
+                    >
+
+                        <option
+                            value="home"
+                            selected
+                        >
+                            Home
+                        </option>
+
+                        <option value="about">
+                            About
+                        </option>
+
+                        <option value="services">
+                            Services
+                        </option>
+
+                        <option value="portfolio">
+                            Portfolio
+                        </option>
+
+                        <option value="blog">
+                            Blog
+                        </option>
+
+                        <option value="contact">
+                            Contact
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     HOME HERO
+                ================================================== -->
+
+                <div
+                    class="hero-settings-panel"
+                    data-hero-panel="home"
+                >
+
+                    <div class="form-group">
+
+                        <label>
+                            Badge
+                        </label>
+
+                        <input
+                            type="text"
+                            name="heroBadge"
+                            value="<%= homeHero.badge || '' %>"
+                            data-field="badge"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Hero Title
+                        </label>
+
+                        <input
+                            type="text"
+                            name="heroTitle"
+                            value="<%= homeHero.title || '' %>"
+                            data-field="title"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Highlight Text
+                        </label>
+
+                        <input
+                            type="text"
+                            name="heroHighlight"
+                            value="<%= homeHero.highlight || '' %>"
+                            data-field="highlight"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Description
+                        </label>
+
+                        <textarea
+                            name="heroDescription"
+                            rows="5"
+                            data-field="description"
+                        ><%= homeHero.description || '' %></textarea>
+
+                    </div>
+
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label>
+                                Button Text
+                            </label>
+
+                            <input
+                                type="text"
+                                name="heroButtonText"
+                                value="<%= homeHero.buttonText || '' %>"
+                                data-field="buttonText"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Button Link
+                            </label>
+
+                            <input
+                                type="text"
+                                name="heroButtonLink"
+                                value="<%= homeHero.buttonLink || '' %>"
+                                data-field="buttonLink"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Hero Image
+                        </label>
+
+
+                        <div
+                            class="settings-image-preview"
+                            data-preview="home"
+                        >
+
+                            <% if (homeHero.image) { %>
+
+                                <img
+                                    src="/uploads/<%= homeHero.image %>"
+                                    alt="Home Hero"
+                                >
+
+                            <% } else { %>
+
+                                <div class="no-image">
+                                    No hero image uploaded.
+                                </div>
+
+                            <% } %>
+
+                        </div>
+
+
+                        <input
+                            type="file"
+                            name="heroImage"
+                            accept=".jpg,.jpeg,.png,.webp"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Hero Status
+                        </label>
+
+
+                        <select
+                            name="heroEnabled"
+                        >
+
+                            <option value="true">
+                                Enabled
+                            </option>
+
+                            <option value="false">
+                                Disabled
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     ABOUT HERO DATA
+                ================================================== -->
+
+                <div
+                    class="hero-page-data"
+                    data-page="about"
+                    data-json='<%- JSON.stringify(aboutHero) %>'
+                ></div>
+
+
+                <div
+                    class="hero-page-data"
+                    data-page="services"
+                    data-json='<%- JSON.stringify(servicesHero) %>'
+                ></div>
+
+
+                <div
+                    class="hero-page-data"
+                    data-page="portfolio"
+                    data-json='<%- JSON.stringify(portfolioHero) %>'
+                ></div>
+
+
+                <div
+                    class="hero-page-data"
+                    data-page="blog"
+                    data-json='<%- JSON.stringify(blogHero) %>'
+                ></div>
+
+
+                <div
+                    class="hero-page-data"
+                    data-page="contact"
+                    data-json='<%- JSON.stringify(contactHero) %>'
+                ></div>
+
+
+            </div>
+
+            <!-- =================================================
+                HOME - WHY CHOOSE TECHNOVA
+            ================================================== -->
+
+            <div class="settings-section">
+
+                <div class="settings-section-title">
+
+                    <i class="fa-solid fa-house"></i>
+
+                    <div>
+
+                        <h2>
+                            Home - Why Choose TechNova
+                        </h2>
+
+                        <p>
+                            Manage the feature cards displayed
+                            on the Home page.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SECTION TITLE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Section Title
+                    </label>
+
+                    <input
+                        type="text"
+                        name="homeWhyChooseTitle"
+                        value="<%= settings.homeWhyChooseTitle || 'Why Choose TechNova?' %>"
+                    >
+
+                </div>
+
+
+                <!-- SECTION DESCRIPTION -->
+
+                <div class="form-group">
+
+                    <label>
+                        Section Description
+                    </label>
+
+                    <textarea
+                        name="homeWhyChooseDescription"
+                        rows="3"
+                    ><%= settings.homeWhyChooseDescription || '' %></textarea>
+
+                </div>
+
+
+                <%
+                    const homeFeatures =
+                        settings.homeWhyChooseItems || [];
+                %>
+
+
+                <% for (
+                    let i = 0;
+                    i < 4;
+                    i++
+                ) { %>
+
+
+                    <div class="settings-subsection">
+
+                        <h3>
+                            Feature <%= i + 1 %>
+                        </h3>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Icon Class
+                            </label>
+
+                            <input
+                                type="text"
+                                name="homeFeature<%= i + 1 %>Icon"
+                                value="<%= homeFeatures[i]?.icon || '' %>"
+                                placeholder="fa-solid fa-star"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Title
+                            </label>
+
+                            <input
+                                type="text"
+                                name="homeFeature<%= i + 1 %>Title"
+                                value="<%= homeFeatures[i]?.title || '' %>"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Description
+                            </label>
+
+                            <textarea
+                                name="homeFeature<%= i + 1 %>Description"
+                                rows="3"
+                            ><%= homeFeatures[i]?.description || '' %></textarea>
+
+                        </div>
+
+                    </div>
+
+
+                <% } %>
+
+            </div>
+
+
+
+            <!-- =================================================
+                HOME CTA
+            ================================================== -->
+
+            <div class="settings-section">
+
+                <div class="settings-section-title">
+
+                    <i class="fa-solid fa-bullhorn"></i>
+
+                    <div>
+
+                        <h2>
+                            Home CTA
+                        </h2>
+
+                        <p>
+                            Manage the final call-to-action
+                            section on the Home page.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        CTA Title
+                    </label>
+
+                    <input
+                        type="text"
+                        name="homeCtaTitle"
+                        value="<%= settings.homeCtaTitle || 'Ready to Start Your Journey?' %>"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        CTA Description
+                    </label>
+
+                    <textarea
+                        name="homeCtaDescription"
+                        rows="4"
+                    ><%= settings.homeCtaDescription || '' %></textarea>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>
+                            Button Text
+                        </label>
+
+                        <input
+                            type="text"
+                            name="homeCtaButtonText"
+                            value="<%= settings.homeCtaButtonText || 'Get Started Today' %>"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Button Link
+                        </label>
+
+                        <input
+                            type="text"
+                            name="homeCtaButtonLink"
+                            value="<%= settings.homeCtaButtonLink || '/registration' %>"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- =================================================
+                OUR STORY
+            ================================================== -->
+
+            <div class="settings-section">
+
+
+                <div class="settings-section-title">
+
+                    <i
+                        class="fa-solid fa-book-open"
+                    ></i>
+
+
+                    <div>
+
+                        <h2>
+                            Our Story
+                        </h2>
+
+                        <p>
+                            Manage the About page story content.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- STORY TITLE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Story Title
+                    </label>
+
+                    <input
+                        type="text"
+                        name="storyTitle"
+                        value="<%= settings.storyTitle || 'Our Story' %>"
+                    >
+
+                </div>
+
+
+
+                <!-- STORY PARAGRAPH 1 -->
+
+                <div class="form-group">
+
+                    <label>
+                        Story Paragraph 1
+                    </label>
+
+                    <textarea
+                        name="storyText1"
+                        rows="4"
+                        placeholder="Enter the first story paragraph..."
+                    ><%= settings.storyText1 || '' %></textarea>
+
+                </div>
+
+
+
+                <!-- STORY PARAGRAPH 2 -->
+
+                <div class="form-group">
+
+                    <label>
+                        Story Paragraph 2
+                    </label>
+
+                    <textarea
+                        name="storyText2"
+                        rows="4"
+                        placeholder="Enter the second story paragraph..."
+                    ><%= settings.storyText2 || '' %></textarea>
+
+                </div>
+
+
+
+                <!-- STORY PARAGRAPH 3 -->
+
+                <div class="form-group">
+
+                    <label>
+                        Story Paragraph 3
+                    </label>
+
+                    <textarea
+                        name="storyText3"
+                        rows="4"
+                        placeholder="Enter the third story paragraph..."
+                    ><%= settings.storyText3 || '' %></textarea>
+
+                </div>
+
+                <!-- STORY IMAGE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Story Image
+                    </label>
+
+
+                    <div class="settings-image-preview">
+
+                        <% if (settings.storyImage) { %>
+
+                            <img
+                                src="/uploads/<%= settings.storyImage %>"
+                                alt="Story Image"
+                            >
+
+                        <% } else { %>
+
+                            <div class="no-image">
+                                No story image uploaded.
+                            </div>
+
+                        <% } %>
+
+                    </div>
+
+
+                    <input
+                        type="file"
+                        name="storyImage"
+                        accept=".jpg,.jpeg,.png,.webp"
+                    >
+
+                </div>
+
+
+            </div>
+
+            <!-- =================================================
+                 MISSION & VISION
+            ================================================== -->
+
+            <div class="settings-section">
+
+
+                <div class="settings-section-title">
+
+                    <i
+                        class="fa-solid fa-bullseye"
+                    ></i>
+
+
+                    <div>
+
+                        <h2>
+                            Mission & Vision
+                        </h2>
+
+                        <p>
+                            Manage the public About page.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Mission Title
+                    </label>
+
+                    <input
+                        type="text"
+                        name="missionTitle"
+                        value="<%= settings.missionTitle || '' %>"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Mission Text
+                    </label>
+
+                    <textarea
+                        name="missionText"
+                        rows="4"
+                    ><%= settings.missionText || '' %></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Vision Title
+                    </label>
+
+                    <input
+                        type="text"
+                        name="visionTitle"
+                        value="<%= settings.visionTitle || '' %>"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Vision Text
+                    </label>
+
+                    <textarea
+                        name="visionText"
+                        rows="4"
+                    ><%= settings.visionText || '' %></textarea>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 CORE VALUES
+            ================================================== -->
+
+            <div class="settings-section">
+
+
+                <div class="settings-section-title">
+
+                    <i
+                        class="fa-solid fa-star"
+                    ></i>
+
+
+                    <div>
+
+                        <h2>
+                            Core Values
+                        </h2>
+
+                        <p>
+                            Manage the About page values.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <% for (
+                    let i = 0;
+                    i < 3;
+                    i++
+                ) { %>
+
+
+                    <div class="settings-subsection">
+
+
+                        <h3>
+                            Core Value <%= i + 1 %>
+                        </h3>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Icon Class
+                            </label>
+
+                            <input
+                                type="text"
+                                name="coreValue<%= i + 1 %>Icon"
+                                value="<%= values[i]?.icon || '' %>"
+                                placeholder="fa-solid fa-award"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Title
+                            </label>
+
+                            <input
+                                type="text"
+                                name="coreValue<%= i + 1 %>Title"
+                                value="<%= values[i]?.title || '' %>"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Description
+                            </label>
+
+                            <textarea
+                                name="coreValue<%= i + 1 %>Description"
+                                rows="3"
+                            ><%= values[i]?.description || '' %></textarea>
+
+                        </div>
+
+                    </div>
+
+
+                <% } %>
+
+
+            </div>
+
+            <!-- =================================================
+                SERVICES CTA
+            ================================================== -->
+
+            <div class="settings-section">
+
+
+                <div class="settings-section-title">
+
+                    <i
+                        class="fa-solid fa-bullhorn"
+                    ></i>
+
+
+                    <div>
+
+                        <h2>
+                            Services CTA
+                        </h2>
+
+                        <p>
+                            Manage the call-to-action section
+                            displayed on the Services page.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- CTA TITLE -->
+
+                <div class="form-group">
+
+                    <label>
+                        CTA Title
+                    </label>
+
+                    <input
+                        type="text"
+                        name="servicesCtaTitle"
+                        value="<%= settings.servicesCtaTitle || 'Ready to Build Your Future in Technology?' %>"
+                    >
+
+                </div>
+
+
+
+                <!-- CTA DESCRIPTION -->
+
+                <div class="form-group">
+
+                    <label>
+                        CTA Description
+                    </label>
+
+                    <textarea
+                        name="servicesCtaDescription"
+                        rows="4"
+                        placeholder="Enter Services CTA description..."
+                    ><%= settings.servicesCtaDescription || '' %></textarea>
+
+                </div>
+
+
+
+                <!-- PRIMARY BUTTON -->
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>
+                            Primary Button Text
+                        </label>
+
+                        <input
+                            type="text"
+                            name="servicesCtaPrimaryText"
+                            value="<%= settings.servicesCtaPrimaryText || 'Create Account' %>"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Primary Button Link
+                        </label>
+
+                        <input
+                            type="text"
+                            name="servicesCtaPrimaryLink"
+                            value="<%= settings.servicesCtaPrimaryLink || '/registration' %>"
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- SECONDARY BUTTON -->
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>
+                            Secondary Button Text
+                        </label>
+
+                        <input
+                            type="text"
+                            name="servicesCtaSecondaryText"
+                            value="<%= settings.servicesCtaSecondaryText || 'Contact Us' %>"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Secondary Button Link
+                        </label>
+
+                        <input
+                            type="text"
+                            name="servicesCtaSecondaryLink"
+                            value="<%= settings.servicesCtaSecondaryLink || '/contact' %>"
+                        >
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+            <!-- =================================================
+                PORTFOLIO CTA
+            ================================================== -->
+
+            <div class="settings-section">
+
+                <div class="settings-section-title">
+
+                    <i class="fa-solid fa-briefcase"></i>
+
+                    <div>
+
+                        <h2>
+                            Portfolio CTA
+                        </h2>
+
+                        <p>
+                            Manage the call-to-action section
+                            displayed on the Portfolio page.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        CTA Title
+                    </label>
+
+                    <input
+                        type="text"
+                        name="portfolioCtaTitle"
+                        value="<%= settings.portfolioCtaTitle || 'Be Our Next Success Story' %>"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        CTA Description
+                    </label>
+
+                    <textarea
+                        name="portfolioCtaDescription"
+                        rows="4"
+                    ><%= settings.portfolioCtaDescription || '' %></textarea>
+
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>
+                            Button Text
+                        </label>
+
+                        <input
+                            type="text"
+                            name="portfolioCtaButtonText"
+                            value="<%= settings.portfolioCtaButtonText || 'Start Learning' %>"
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            Button Link
+                        </label>
+
+                        <input
+                            type="text"
+                            name="portfolioCtaButtonLink"
+                            value="<%= settings.portfolioCtaButtonLink || '/registration' %>"
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <!-- =================================================
+                CONTACT SETTINGS
+            ================================================== -->
+
+            <div class="settings-section">
+
+                <div class="settings-section-title">
+
+                    <i class="fa-solid fa-address-book"></i>
+
+                    <div>
+
+                        <h2>
+                            Contact Information
+                        </h2>
+
+                        <p>
+                            Manage contact details and FAQs
+                            displayed on the public Contact page.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ADDRESS -->
+
+                <div class="form-group">
+
+                    <label>
+                        Address
+                    </label>
+
+                    <textarea
+                        name="contactAddress"
+                        rows="3"
+                    ><%= settings.contactAddress || '' %></textarea>
+
+                </div>
+
+
+                <!-- PHONE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Phone
+                    </label>
+
+                    <input
+                        type="text"
+                        name="contactPhone"
+                        value="<%= settings.contactPhone || '' %>"
+                    >
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label>
+                        Email
+                    </label>
+
+                    <input
+                        type="text"
+                        name="contactEmail"
+                        value="<%= settings.contactEmail || '' %>"
+                    >
+
+                </div>
+
+
+                <!-- HOURS -->
+
+                <div class="form-group">
+
+                    <label>
+                        Business Hours
+                    </label>
+
+                    <textarea
+                        name="contactHours"
+                        rows="4"
+                    ><%= settings.contactHours || '' %></textarea>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                CONTACT FAQ
+            ================================================== -->
+
+            <div class="settings-section">
+
+                <div class="settings-section-title">
+
+                    <i class="fa-solid fa-circle-question"></i>
+
+                    <div>
+
+                        <h2>
+                            Contact FAQs
+                        </h2>
+
+                        <p>
+                            Manage frequently asked questions
+                            shown on the Contact page.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <% for (
+                    let i = 1;
+                    i <= 4;
+                    i++
+                ) { %>
+
+                    <%
+                        const faq =
+                            (settings.contactFaqs || [])[i - 1]
+                            || {};
+                    %>
+
+
+                    <div class="settings-subsection">
+
+                        <h3>
+                            FAQ <%= i %>
+                        </h3>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Question
+                            </label>
+
+                            <input
+                                type="text"
+                                name="faq<%= i %>Question"
+                                value="<%= faq.question || '' %>"
+                                placeholder="Enter question..."
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Answer
+                            </label>
+
+                            <textarea
+                                name="faq<%= i %>Answer"
+                                rows="4"
+                                placeholder="Enter answer..."
+                            ><%= faq.answer || '' %></textarea>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Status
+                            </label>
+
+                            <select
+                                name="faq<%= i %>Visible"
+                            >
+
+                                <option
+                                    value="true"
+                                    <%= faq.visible !== false
+                                        ? "selected"
+                                        : "" %>
+                                >
+                                    Visible
+                                </option>
+
+
+                                <option
+                                    value="false"
+                                    <%= faq.visible === false
+                                        ? "selected"
+                                        : "" %>
+                                >
+                                    Hidden
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                <% } %>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 NAVIGATION
+            ================================================== -->
+
+            <div class="settings-section">
+
+
+                <div class="settings-section-title">
+
+                    <i
+                        class="fa-solid fa-bars"
+                    ></i>
+
+
+                    <div>
+
+                        <h2>
+                            Navigation
+                        </h2>
+
+                        <p>
+                            Change menu labels and visibility.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- HOME -->
+
+                <div class="navigation-setting-row">
+
+                    <div class="navigation-number">
+                        1
+                    </div>
+
+
+                    <div class="navigation-fields">
+
+                        <input
+                            type="text"
+                            name="navHomeLabel"
+                            value="<%= navMap['/']?.label || 'Home' %>"
+                        >
+
+
+                        <select
+                            name="navHomeVisible"
+                        >
+
+                            <option
+                                value="true"
+                                <%= navMap['/']?.visible !== false
+                                    ? "selected"
+                                    : "" %>
+                            >
+                                Visible
+                            </option>
+
+
+                            <option
+                                value="false"
+                                <%= navMap['/']?.visible === false
+                                    ? "selected"
+                                    : "" %>
+                            >
+                                Hidden
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ABOUT -->
+
+                <div class="navigation-setting-row">
+
+                    <div class="navigation-number">
+                        2
+                    </div>
+
+
+                    <div class="navigation-fields">
+
+                        <input
+                            type="text"
+                            name="navAboutLabel"
+                            value="<%= navMap['/about']?.label || 'About Us' %>"
+                        >
+
+
+                        <select
+                            name="navAboutVisible"
+                        >
+
+                            <option
+                                value="true"
+                                <%= navMap['/about']?.visible !== false
+                                    ? "selected"
+                                    : "" %>
+                            >
+                                Visible
+                            </option>
+
+
+                            <option
+                                value="false"
+                                <%= navMap['/about']?.visible === false
+                                    ? "selected"
+                                    : "" %>
+                            >
+                                Hidden
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- SERVICES -->
+
+                <div class="navigation-setting-row">
+
+                    <div class="navigation-number">
+                        3
+                    </div>
+
+
+                    <div class="navigation-fields">
+
+                        <input
+                            type="text"
+                            name="navServicesLabel"
+                            value="<%= navMap['/services']?.label || 'Services' %>"
+                        >
+
+
+                        <select
+                            name="navServicesVisible"
+                        >
+
+                            <option
+                                value="true"
+                                <%= navMap['/services']?.visible !== false
+                                    ? "selected"
+                                    : "" %>
+                            >
+                                Visible
+                            </option>
+
+
+                            <option
+                                value="false"
+                                <%= navMap['/services']?.visible === false
+                                    ? "selected"
+                                    : "" %>
+                            >
+                                Hidden
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- PORTFOLIO -->
+
+                <div class="navigation-setting-row">
+
+                    <div class="navigation-number">
+                        4
+                    </div>
+
+
+                    <div class="navigation-fields">
+
+                        <input
+                            type="text"
+                            name="navPortfolioLabel"
+                            value="<%= navMap['/portfolio']?.label || 'Portfolio' %>"
+                        >
+
+
+                        <select
+                            name="navPortfolioVisible"
+                        >
+
+                            <option
+                                value="true"
+                                <%= navMap['/portfolio']?.visible !== false
+                                    ? "selected"
+                                    : "" %>
+                            >
+                                Visible
+                            </option>
+
+
+                            <option
+                                value="false"
+                                <%= navMap['/portfolio']?.visible === false
+                                    ? "selected"
+                                    : "" %>
+                            >
+                                Hidden
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- BLOG -->
+
+                <div class="navigation-setting-row">
+
+                    <div class="navigation-number">
+                        5
+                    </div>
+
+
+                    <div class="navigation-fields">
+
+                        <input
+                            type="text"
+                            name="navBlogLabel"
+                            value="<%= navMap['/blog']?.label || 'Blog' %>"
+                        >
+
+
+                        <select
+                            name="navBlogVisible"
+                        >
+
+                            <option
+                                value="true"
+                                <%= navMap['/blog']?.visible !== false
+                                    ? "selected"
+                                    : "" %>
+                            >
+                                Visible
+                            </option>
+
+
+                            <option
+                                value="false"
+                                <%= navMap['/blog']?.visible === false
+                                    ? "selected"
+                                    : "" %>
+                            >
+                                Hidden
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- CONTACT -->
+
+                <div class="navigation-setting-row">
+
+                    <div class="navigation-number">
+                        6
+                    </div>
+
+
+                    <div class="navigation-fields">
+
+                        <input
+                            type="text"
+                            name="navContactLabel"
+                            value="<%= navMap['/contact']?.label || 'Contact' %>"
+                        >
+
+
+                        <select
+                            name="navContactVisible"
+                        >
+
+                            <option
+                                value="true"
+                                <%= navMap['/contact']?.visible !== false
+                                    ? "selected"
+                                    : "" %>
+                            >
+                                Visible
+                            </option>
+
+
+                            <option
+                                value="false"
+                                <%= navMap['/contact']?.visible === false
+                                    ? "selected"
+                                    : "" %>
+                            >
+                                Hidden
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 FOOTER
+            ================================================== -->
+
+            <div class="settings-section">
+
+
+                <div class="settings-section-title">
+
+                    <i
+                        class="fa-solid fa-window-maximize"
+                    ></i>
+
+
+                    <div>
+
+                        <h2>
+                            Footer
+                        </h2>
+
+                        <p>
+                            Manage public footer information.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Footer Title
+                    </label>
+
+                    <input
+                        type="text"
+                        name="footerTitle"
+                        value="<%= settings.footerTitle || '' %>"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Footer Description
+                    </label>
+
+                    <textarea
+                        name="footerDescription"
+                        rows="4"
+                    ><%= settings.footerDescription || '' %></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Address
+                    </label>
+
+                    <textarea
+                        name="footerAddress"
+                        rows="3"
+                    ><%= settings.footerAddress || '' %></textarea>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>
+                            Phone
+                        </label>
+
+                        <input
+                            type="text"
+                            name="footerPhone"
+                            value="<%= settings.footerPhone || '' %>"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            name="footerEmail"
+                            value="<%= settings.footerEmail || '' %>"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 SOCIAL LINKS
+            ================================================== -->
+
+            <div class="settings-section">
+
+
+                <div class="settings-section-title">
+
+                    <i
+                        class="fa-solid fa-share-nodes"
+                    ></i>
+
+
+                    <div>
+
+                        <h2>
+                            Social Links
+                        </h2>
+
+                        <p>
+                            Manage footer social media links.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Facebook
+                    </label>
+
+                    <input
+                        type="url"
+                        name="facebookUrl"
+                        value="<%= settings.facebookUrl || '' %>"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Twitter / X
+                    </label>
+
+                    <input
+                        type="url"
+                        name="twitterUrl"
+                        value="<%= settings.twitterUrl || '' %>"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        LinkedIn
+                    </label>
+
+                    <input
+                        type="url"
+                        name="linkedinUrl"
+                        value="<%= settings.linkedinUrl || '' %>"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Instagram
+                    </label>
+
+                    <input
+                        type="url"
+                        name="instagramUrl"
+                        value="<%= settings.instagramUrl || '' %>"
+                    >
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 SAVE
+            ================================================== -->
+
+            <div class="settings-actions">
+
+                <button
+                    type="submit"
+                    class="save-btn"
+                >
+
+                    <i
+                        class="fa-solid fa-floppy-disk"
+                    ></i>
+
+                    Save Website Settings
+
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     HERO PAGE SWITCHING
+===================================================== -->
+
+<script nonce="<%= cspNonce %>">
+
+const heroData = JSON.stringify({
+    home: homeHero,
+    about: aboutHero,
+    services: servicesHero,
+    portfolio: portfolioHero,
+    blog: blogHero,
+    contact: contactHero
+});
+
+
+const heroPageSelect = document.getElementById("heroPage");
+const heroBadge = document.querySelector('[name="heroBadge"]');
+const heroTitle = document.querySelector('[name="heroTitle"]');
+const heroHighlight = document.querySelector('[name="heroHighlight"]');
+const heroDescription = document.querySelector('[name="heroDescription"]');
+const heroButtonText = document.querySelector('[name="heroButtonText"]');
+
+
+const heroButtonLink =
+    document.querySelector(
+        '[name="heroButtonLink"]'
+    );
+
+
+const heroEnabled =
+    document.querySelector(
+        '[name="heroEnabled"]'
+    );
+
+
+const heroPreview =
+    document.querySelector(
+        ".settings-image-preview"
+    );
+
+
+function loadHero(
+    page
+) {
+
+    const hero =
+        heroData[page] || {};
+
+
+    heroBadge.value =
+        hero.badge || "";
+
+
+    heroTitle.value =
+        hero.title || "";
+
+
+    heroHighlight.value =
+        hero.highlight || "";
+
+
+    heroDescription.value =
+        hero.description || "";
+
+
+    heroButtonText.value =
+        hero.buttonText ||
+        "Get Started";
+
+
+    heroButtonLink.value =
+        hero.buttonLink ||
+        "/registration";
+
+
+    heroEnabled.value =
+        hero.enabled === false
+            ? "false"
+            : "true";
+
+
+    if (hero.image) {
+
+        heroPreview.innerHTML = `
+
+            <img
+                src="/uploads/${hero.image}"
+                alt="${page} Hero"
+            >
+
+        `;
+
+    } else {
+
+        heroPreview.innerHTML = `
+
+            <div class="no-image">
+                No hero image uploaded.
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+heroPageSelect.addEventListener(
+    "change",
+    function () {
+
+        loadHero(
+            this.value
+        );
+
+    }
+);
+
+
+loadHero("home");
+
+</script>
+
+
+<%- include("../layouts/dashboardFooter") %>

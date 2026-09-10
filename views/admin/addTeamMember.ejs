@@ -1,0 +1,227 @@
+<%
+const currentPage = "team";
+%>
+
+<%- include("../layouts/adminDashboardHeader") %>
+
+<%- include("../partials/adminSidebar") %>
+
+
+<div class="main-content">
+
+
+    <div class="admin-page-header">
+
+        <div>
+
+            <h1>
+                Add Team Member
+            </h1>
+
+            <p>
+                Add a leadership team member to the About page.
+            </p>
+
+        </div>
+
+
+        <a
+            href="/admin/team"
+            class="back-btn"
+        >
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            Back to Team
+
+        </a>
+
+    </div>
+
+
+    <div class="form-container">
+
+
+        <form
+            action="/admin/team/add"
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+
+            <div class="form-group">
+
+                <label>
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    name="name"
+                    placeholder="Ali Raza"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Position / Title
+                </label>
+
+                <input
+                    type="text"
+                    name="title"
+                    placeholder="CEO & Founder"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Experience
+                </label>
+
+                <input
+                    type="text"
+                    name="experience"
+                    placeholder="6+ years in EdTech"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Profile Image
+                </label>
+
+                <input
+                    type="file"
+                    name="image"
+                    accept=".jpg,.jpeg,.png,.webp"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Bio
+                </label>
+
+                <textarea
+                    name="bio"
+                    rows="4"
+                    maxlength="500"
+                    placeholder="Short professional biography..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label>
+                        LinkedIn URL
+                    </label>
+
+                    <input
+                        type="url"
+                        name="linkedin"
+                        placeholder="https://linkedin.com/in/..."
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Instagram URL
+                    </label>
+
+                    <input
+                        type="url"
+                        name="instagram"
+                        placeholder="https://instagram.com/..."
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Visibility
+                    </label>
+
+                    <select name="isPublished">
+
+                        <option value="true">
+                            Published
+                        </option>
+
+                        <option value="false">
+                            Hidden
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Display Order
+                    </label>
+
+                    <input
+                        type="number"
+                        name="order"
+                        value="0"
+                        min="0"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="save-btn"
+            >
+
+                <i class="fa-solid fa-plus"></i>
+
+                Add Team Member
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<%- include("../layouts/dashboardFooter") %>

@@ -1,0 +1,399 @@
+<%
+const currentPage = "portfolio";
+%>
+
+<%- include("../layouts/adminDashboardHeader") %>
+
+<%- include("../partials/adminSidebar") %>
+
+
+<div class="main-content">
+
+
+    <div class="admin-page-header">
+
+        <div>
+
+            <h1>
+                Edit Portfolio Item
+            </h1>
+
+            <p>
+                Update project information.
+            </p>
+
+        </div>
+
+
+        <a
+            href="/admin/portfolio"
+            class="back-btn"
+        >
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            Back
+
+        </a>
+
+    </div>
+
+
+    <div class="form-container">
+
+
+        <form
+            action="/admin/portfolio/update/<%= project._id %>"
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+
+            <div class="form-group">
+
+                <label>
+                    Project Title
+                </label>
+
+                <input
+                    type="text"
+                    name="title"
+                    value="<%= project.title %>"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Category
+                    </label>
+
+                    <input
+                        type="text"
+                        name="category"
+                        value="<%= project.category %>"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Type
+                    </label>
+
+                    <select name="type">
+
+                        <option
+                            value="project"
+                            <%= project.type === "project"
+                                ? "selected"
+                                : "" %>
+                        >
+                            Student Project
+                        </option>
+
+                        <option
+                            value="success-story"
+                            <%= project.type === "success-story"
+                                ? "selected"
+                                : "" %>
+                        >
+                            Success Story
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Current Image
+                </label>
+
+                <div
+                    style="
+                        margin-bottom:15px;
+                        padding:15px;
+                        background:#f8fafc;
+                        border-radius:10px;
+                    "
+                >
+
+                    <img
+                        src="/uploads/<%= project.image %>"
+                        alt="<%= project.title %>"
+                        style="
+                            width:240px;
+                            max-width:100%;
+                            height:140px;
+                            object-fit:cover;
+                            border-radius:8px;
+                        "
+                    >
+
+                </div>
+
+
+                <label>
+                    Replace Image
+                </label>
+
+                <input
+                    type="file"
+                    name="image"
+                    accept=".jpg,.jpeg,.png,.webp"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Short Description
+                </label>
+
+                <textarea
+                    name="description"
+                    rows="4"
+                    maxlength="500"
+                    required
+                ><%= project.description %></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Full Project Details
+                </label>
+
+                <textarea
+                    name="content"
+                    rows="10"
+                ><%= project.content %></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Technologies
+                </label>
+
+                <input
+                    type="text"
+                    name="technologies"
+                    value="<%= project.technologies.join(', ') %>"
+                >
+
+            </div>
+
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Student / Client Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="studentName"
+                        value="<%= project.studentName %>"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Role
+                    </label>
+
+                    <input
+                        type="text"
+                        name="studentRole"
+                        value="<%= project.studentRole %>"
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Success Story / Quote
+                </label>
+
+                <textarea
+                    name="quote"
+                    rows="4"
+                ><%= project.quote %></textarea>
+
+            </div>
+
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Live Project URL
+                    </label>
+
+                    <input
+                        type="url"
+                        name="projectUrl"
+                        value="<%= project.projectUrl %>"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        GitHub URL
+                    </label>
+
+                    <input
+                        type="url"
+                        name="githubUrl"
+                        value="<%= project.githubUrl %>"
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Publishing
+                    </label>
+
+                    <select name="isPublished">
+
+                        <option
+                            value="true"
+                            <%= project.isPublished
+                                ? "selected"
+                                : "" %>
+                        >
+                            Published
+                        </option>
+
+                        <option
+                            value="false"
+                            <%= !project.isPublished
+                                ? "selected"
+                                : "" %>
+                        >
+                            Draft
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Featured
+                    </label>
+
+                    <select name="isFeatured">
+
+                        <option
+                            value="true"
+                            <%= project.isFeatured
+                                ? "selected"
+                                : "" %>
+                        >
+                            Yes
+                        </option>
+
+                        <option
+                            value="false"
+                            <%= !project.isFeatured
+                                ? "selected"
+                                : "" %>
+                        >
+                            No
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Display Order
+                    </label>
+
+                    <input
+                        type="number"
+                        name="order"
+                        value="<%= project.order %>"
+                        min="0"
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="save-btn"
+            >
+
+                <i class="fa-solid fa-floppy-disk"></i>
+
+                Update Portfolio Item
+
+            </button>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<%- include("../layouts/dashboardFooter") %>

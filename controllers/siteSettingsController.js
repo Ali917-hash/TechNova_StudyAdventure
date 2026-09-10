@@ -1,0 +1,940 @@
+const SiteSettings =
+    require("../models/SiteSettings");
+
+
+// =====================================================
+// AVAILABLE HERO PAGES
+// =====================================================
+
+const HERO_PAGES = [
+    "home",
+    "about",
+    "services",
+    "portfolio",
+    "blog",
+    "contact"
+];
+
+
+// =====================================================
+// BOOLEAN HELPER
+// =====================================================
+
+function parseBoolean(
+    value,
+    defaultValue = true
+) {
+
+    if (
+        value === true ||
+        value === "true" ||
+        value === "1" ||
+        value === "on"
+    ) {
+        return true;
+    }
+
+
+    if (
+        value === false ||
+        value === "false" ||
+        value === "0" ||
+        value === "off"
+    ) {
+        return false;
+    }
+
+
+    return defaultValue;
+}
+
+
+// =====================================================
+// GET / CREATE SETTINGS
+// =====================================================
+
+async function getSettings() {
+
+    let settings =
+        await SiteSettings.findOne();
+
+
+    if (!settings) {
+
+        settings =
+            await SiteSettings.create({});
+
+    }
+
+
+    return settings;
+}
+
+
+// =====================================================
+// ADMIN - SETTINGS PAGE
+// =====================================================
+
+exports.settingsPage = async (
+    req,
+    res
+) => {
+
+    try {
+
+        const settings =
+            await getSettings();
+
+
+        const success =
+            req.query.success === "1";
+
+
+        res.render(
+            "admin/siteSettings",
+            {
+
+                user:
+                    req.session.user,
+
+                settings,
+
+                success,
+
+                currentPage:
+                    "site-settings"
+
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "SITE SETTINGS PAGE ERROR:",
+            error
+        );
+
+
+        res.status(500).send(
+            "Unable to load website settings."
+        );
+
+    }
+
+};
+
+
+// =====================================================
+// ADMIN - UPDATE SETTINGS
+// =====================================================
+
+exports.updateSettings = async (
+    req,
+    res
+) => {
+
+    try {
+
+        const {
+            heroPage,
+            heroBadge,
+            heroTitle,
+            heroHighlight,
+            heroDescription,
+            heroButtonText,
+            heroButtonLink,
+            heroEnabled,
+
+            navHomeLabel,
+            navHomeVisible,
+            navAboutLabel,
+            navAboutVisible,
+            navServicesLabel,
+            navServicesVisible,
+            navPortfolioLabel,
+            navPortfolioVisible,
+            navBlogLabel,
+            navBlogVisible,
+            navContactLabel,
+            navContactVisible,
+
+            homeWhyChooseTitle,
+            homeWhyChooseDescription,
+
+            homeFeature1Icon,
+            homeFeature1Title,
+            homeFeature1Description,
+
+            homeFeature2Icon,
+            homeFeature2Title,
+            homeFeature2Description,
+
+            homeFeature3Icon,
+            homeFeature3Title,
+            homeFeature3Description,
+
+            homeFeature4Icon,
+            homeFeature4Title,
+            homeFeature4Description,
+
+            homeCtaTitle,
+            homeCtaDescription,
+            homeCtaButtonText,
+            homeCtaButtonLink,
+
+            storyTitle,
+            storyText1,
+            storyText2,
+            storyText3,
+
+            missionTitle,
+            missionText,
+
+            visionTitle,
+            visionText,
+
+            coreValue1Icon,
+            coreValue1Title,
+            coreValue1Description,
+            coreValue2Icon,
+            coreValue2Title,
+            coreValue2Description,
+            coreValue3Icon,
+            coreValue3Title,
+            coreValue3Description,
+
+            servicesCtaTitle,
+            servicesCtaDescription,
+            servicesCtaPrimaryText,
+            servicesCtaPrimaryLink,
+            servicesCtaSecondaryText,
+            servicesCtaSecondaryLink,
+
+            portfolioCtaTitle,
+            portfolioCtaDescription,
+            portfolioCtaButtonText,
+            portfolioCtaButtonLink,
+
+            contactAddress,
+            contactPhone,
+            contactEmail,
+            contactHours,
+
+            faq1Question,
+            faq1Answer,
+            faq1Visible,
+
+            faq2Question,
+            faq2Answer,
+            faq2Visible,
+
+            faq3Question,
+            faq3Answer,
+            faq3Visible,
+
+            faq4Question,
+            faq4Answer,
+            faq4Visible,
+
+            footerTitle,
+            footerDescription,
+            footerAddress,
+            footerPhone,
+            footerEmail,
+
+            facebookUrl,
+            twitterUrl,
+            linkedinUrl,
+            instagramUrl
+
+        } = req.body;
+
+
+        const settings =
+            await getSettings();
+
+
+        // =================================================
+        // HERO UPDATE
+        // =================================================
+
+        if (
+            HERO_PAGES.includes(
+                heroPage
+            )
+        ) {
+
+            const currentHero =
+                settings.heroes?.[heroPage]
+                || {};
+
+
+            const updatedHero = {
+
+                badge:
+                    heroBadge || "",
+
+                title:
+                    heroTitle || "",
+
+                highlight:
+                    heroHighlight || "",
+
+                description:
+                    heroDescription || "",
+
+                buttonText:
+                    heroButtonText ||
+                    "Get Started",
+
+                buttonLink:
+                    heroButtonLink ||
+                    "/registration",
+
+                image:
+                    currentHero.image || "",
+
+                enabled:
+                    parseBoolean(
+                        heroEnabled,
+                        true
+                    )
+
+            };
+
+            // =================================================
+            // HERO IMAGE
+            // =================================================
+
+            if (
+                req.files &&
+                req.files.heroImage &&
+                req.files.heroImage.length > 0
+            ) {
+
+                updatedHero.image =
+                    req.files.heroImage[0].filename;
+
+            }
+
+            settings.set(
+                `heroes.${heroPage}`,
+                updatedHero
+            );
+
+        }
+
+        // =================================================
+        // HOME - WHY CHOOSE TECHNOVA
+        // =================================================
+
+        settings.homeWhyChooseTitle =
+            homeWhyChooseTitle ||
+            "Why Choose TechNova?";
+
+        settings.homeWhyChooseDescription =
+            homeWhyChooseDescription ||
+            "We provide everything you need to succeed in the tech industry.";
+
+        settings.homeWhyChooseItems = [
+
+            {
+                icon:
+                    homeFeature1Icon ||
+                    "fas fa-book-open",
+
+                title:
+                    homeFeature1Title ||
+                    "Expert-Led Courses",
+
+                description:
+                    homeFeature1Description ||
+                    "Learn from industry professionals with real-world experience.",
+
+                order: 1
+            },
+
+            {
+                icon:
+                    homeFeature2Icon ||
+                    "fas fa-people-group",
+
+                title:
+                    homeFeature2Title ||
+                    "Community Support",
+
+                description:
+                    homeFeature2Description ||
+                    "Join a growing community of learners and technology enthusiasts.",
+
+                order: 2
+            },
+
+            {
+                icon:
+                    homeFeature3Icon ||
+                    "fa-solid fa-certificate",
+
+                title:
+                    homeFeature3Title ||
+                    "Certified Programs",
+
+                description:
+                    homeFeature3Description ||
+                    "Earn certificates that demonstrate your learning achievements.",
+
+                order: 3
+            },
+
+            {
+                icon:
+                    homeFeature4Icon ||
+                    "fa-solid fa-chart-line",
+
+                title:
+                    homeFeature4Title ||
+                    "Career Growth",
+
+                description:
+                    homeFeature4Description ||
+                    "Build practical skills and prepare yourself for the technology industry.",
+
+                order: 4
+            }
+
+        ];
+
+
+        // =================================================
+        // HOME - CTA
+        // =================================================
+
+        settings.homeCtaTitle =
+            homeCtaTitle ||
+            "Ready to Start Your Journey?";
+
+        settings.homeCtaDescription =
+            homeCtaDescription ||
+            "Join TechNova and start building practical technology skills for your future.";
+
+        settings.homeCtaButtonText =
+            homeCtaButtonText ||
+            "Get Started Today";
+
+        settings.homeCtaButtonLink =
+            homeCtaButtonLink ||
+            "/registration";
+
+        // =================================================
+        // ABOUT - OUR STORY
+        // =================================================
+
+        settings.storyTitle =
+            storyTitle ||
+            "Our Story";
+
+
+        settings.storyText1 =
+            storyText1 ||
+            "";
+
+
+        settings.storyText2 =
+            storyText2 ||
+            "";
+
+
+        settings.storyText3 =
+            storyText3 ||
+            "";
+
+        // =================================================
+        // STORY IMAGE
+        // =================================================
+
+        if (
+            req.files &&
+            req.files.storyImage &&
+            req.files.storyImage.length > 0
+        ) {
+
+            settings.storyImage =
+                req.files.storyImage[0].filename;
+
+        }
+
+        // =================================================
+        // MISSION
+        // =================================================
+
+        settings.missionTitle =
+            missionTitle ||
+            "Our Mission";
+
+
+        settings.missionText =
+            missionText ||
+            "";
+
+
+        // =================================================
+        // VISION
+        // =================================================
+
+        settings.visionTitle =
+            visionTitle ||
+            "Our Vision";
+
+
+        settings.visionText =
+            visionText ||
+            "";
+
+        // =================================================
+        // CORE VALUES
+        // =================================================
+
+        settings.coreValues = [
+
+            {
+
+                icon:
+                    coreValue1Icon ||
+                    "fa-solid fa-award",
+
+                title:
+                    coreValue1Title ||
+                    "Excellence",
+
+                description:
+                    coreValue1Description ||
+                    ""
+
+            },
+
+
+            {
+
+                icon:
+                    coreValue2Icon ||
+                    "fa-solid fa-users",
+
+                title:
+                    coreValue2Title ||
+                    "Community",
+
+                description:
+                    coreValue2Description ||
+                    ""
+
+            },
+
+
+            {
+
+                icon:
+                    coreValue3Icon ||
+                    "fa-solid fa-bullseye",
+
+                title:
+                    coreValue3Title ||
+                    "Innovation",
+
+                description:
+                    coreValue3Description ||
+                    ""
+
+            }
+
+        ];
+        
+        // =================================================
+        // SERVICES - CTA
+        // =================================================
+
+        settings.servicesCtaTitle =
+            servicesCtaTitle ||
+            "Ready to Build Your Future in Technology?";
+
+
+        settings.servicesCtaDescription =
+            servicesCtaDescription ||
+            "Choose a course, develop practical skills, complete your learning journey and earn certificates through TechNova.";
+
+        settings.servicesCtaPrimaryText =
+            servicesCtaPrimaryText ||
+            "Create Account";
+
+        settings.servicesCtaPrimaryLink =
+            servicesCtaPrimaryLink ||
+            "/registration";
+
+        settings.servicesCtaSecondaryText =
+            servicesCtaSecondaryText ||
+            "Contact Us";
+
+        settings.servicesCtaSecondaryLink =
+            servicesCtaSecondaryLink ||
+            "/contact";
+        
+        // =================================================
+        // PORTFOLIO - CTA
+        // =================================================
+
+        settings.portfolioCtaTitle =
+            portfolioCtaTitle ||
+            "Be Our Next Success Story";
+
+        settings.portfolioCtaDescription =
+            portfolioCtaDescription ||
+            "Join TechNova and start building your portfolio today.";
+
+        settings.portfolioCtaButtonText =
+            portfolioCtaButtonText ||
+            "Start Learning";
+
+        settings.portfolioCtaButtonLink =
+            portfolioCtaButtonLink ||
+            "/registration";
+        
+        // =================================================
+        // CONTACT INFORMATION
+        // =================================================
+
+        settings.contactAddress =
+            contactAddress ||
+            "Govt. Graduate College, Sahiwal, Pakistan";
+
+        settings.contactPhone =
+            contactPhone ||
+            "(040) 9200428 | +92 301 4823746";
+
+        settings.contactEmail =
+            contactEmail ||
+            "ali@ggcs.edu.pk | info@technova.com";
+
+        settings.contactHours =
+            contactHours ||
+            "Monday - Friday: 9:00 AM - 6:00 PM\nSaturday: 10:00 AM - 4:00 PM\nSunday: Closed";
+
+        // =================================================
+        // CONTACT FAQS
+        // =================================================
+
+        settings.contactFaqs = [
+
+            {
+                question:
+                    faq1Question || "",
+
+                answer:
+                    faq1Answer || "",
+
+                visible:
+                    parseBoolean(
+                        faq1Visible,
+                        true
+                    ),
+
+                order: 1
+            },
+
+            {
+                question:
+                    faq2Question || "",
+
+                answer:
+                    faq2Answer || "",
+
+                visible:
+                    parseBoolean(
+                        faq2Visible,
+                        true
+                    ),
+
+                order: 2
+            },
+
+            {
+                question:
+                    faq3Question || "",
+
+                answer:
+                    faq3Answer || "",
+
+                visible:
+                    parseBoolean(
+                        faq3Visible,
+                        true
+                    ),
+
+                order: 3
+            },
+
+            {
+                question:
+                    faq4Question || "",
+
+                answer:
+                    faq4Answer || "",
+
+                visible:
+                    parseBoolean(
+                        faq4Visible,
+                        true
+                    ),
+
+                order: 4
+            }
+
+        ];
+
+        // =================================================
+        // NAVIGATION
+        // =================================================
+
+        settings.navigation = [
+
+            {
+
+                label:
+                    navHomeLabel ||
+                    "Home",
+
+                path:
+                    "/",
+
+                visible:
+                    parseBoolean(
+                        navHomeVisible,
+                        true
+                    ),
+
+                order:
+                    1
+
+            },
+
+
+            {
+
+                label:
+                    navAboutLabel ||
+                    "About Us",
+
+                path:
+                    "/about",
+
+                visible:
+                    parseBoolean(
+                        navAboutVisible,
+                        true
+                    ),
+
+                order:
+                    2
+
+            },
+
+
+            {
+
+                label:
+                    navServicesLabel ||
+                    "Services",
+
+                path:
+                    "/services",
+
+                visible:
+                    parseBoolean(
+                        navServicesVisible,
+                        true
+                    ),
+
+                order:
+                    3
+
+            },
+
+
+            {
+
+                label:
+                    navPortfolioLabel ||
+                    "Portfolio",
+
+                path:
+                    "/portfolio",
+
+                visible:
+                    parseBoolean(
+                        navPortfolioVisible,
+                        true
+                    ),
+
+                order:
+                    4
+
+            },
+
+
+            {
+
+                label:
+                    navBlogLabel ||
+                    "Blog",
+
+                path:
+                    "/blog",
+
+                visible:
+                    parseBoolean(
+                        navBlogVisible,
+                        true
+                    ),
+
+                order:
+                    5
+
+            },
+
+
+            {
+
+                label:
+                    navContactLabel ||
+                    "Contact",
+
+                path:
+                    "/contact",
+
+                visible:
+                    parseBoolean(
+                        navContactVisible,
+                        true
+                    ),
+
+                order:
+                    6
+
+            }
+
+        ];
+
+
+        // =================================================
+        // FOOTER
+        // =================================================
+
+        settings.footerTitle =
+            footerTitle ||
+            "TechNova";
+
+
+        settings.footerDescription =
+            footerDescription ||
+            "";
+
+
+        settings.footerAddress =
+            footerAddress ||
+            "";
+
+
+        settings.footerPhone =
+            footerPhone ||
+            "";
+
+
+        settings.footerEmail =
+            footerEmail ||
+            "";
+
+
+        // =================================================
+        // SOCIAL
+        // =================================================
+
+        settings.facebookUrl =
+            facebookUrl ||
+            "";
+
+
+        settings.twitterUrl =
+            twitterUrl ||
+            "";
+
+
+        settings.linkedinUrl =
+            linkedinUrl ||
+            "";
+
+
+        settings.instagramUrl =
+            instagramUrl ||
+            "";
+
+
+        // =================================================
+        // DEBUG
+        // =================================================
+
+        console.log(
+            "================================"
+        );
+
+        console.log(
+            "WEBSITE SETTINGS UPDATED"
+        );
+
+        console.log(
+            "HERO PAGE:",
+            heroPage
+        );
+
+        console.log(
+            "NAVIGATION:",
+            settings.navigation
+        );
+
+        console.log(
+            "HERO:",
+            heroPage
+                ? settings.heroes?.[heroPage]
+                : "Not changed"
+        );
+
+        console.log(
+            "================================"
+        );
+
+
+        // =================================================
+        // SAVE
+        // =================================================
+
+        await settings.save();
+
+
+        return res.redirect(
+            "/admin/site-settings?success=1"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "UPDATE SITE SETTINGS ERROR:",
+            error
+        );
+
+
+        return res.status(500).send(
+            "Unable to update website settings."
+        );
+
+    }
+
+};

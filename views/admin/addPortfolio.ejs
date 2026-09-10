@@ -1,0 +1,354 @@
+<%
+const currentPage = "portfolio";
+%>
+
+<%- include("../layouts/adminDashboardHeader") %>
+
+<%- include("../partials/adminSidebar") %>
+
+
+<div class="main-content">
+
+
+    <div class="admin-page-header">
+
+        <div>
+
+            <h1>
+                Add Portfolio Item
+            </h1>
+
+            <p>
+                Add a project or student success story.
+            </p>
+
+        </div>
+
+
+        <a
+            href="/admin/portfolio"
+            class="back-btn"
+        >
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            Back
+
+        </a>
+
+    </div>
+
+
+    <div class="form-container">
+
+
+        <form
+            action="/admin/portfolio/add"
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+
+            <div class="form-group">
+
+                <label>
+                    Project Title
+                </label>
+
+                <input
+                    type="text"
+                    name="title"
+                    placeholder="E-Commerce Platform"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Category
+                    </label>
+
+                    <input
+                        type="text"
+                        name="category"
+                        placeholder="Web Development"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Type
+                    </label>
+
+                    <select name="type">
+
+                        <option value="project">
+                            Student Project
+                        </option>
+
+                        <option value="success-story">
+                            Success Story
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Project Image
+                </label>
+
+                <input
+                    type="file"
+                    name="image"
+                    accept=".jpg,.jpeg,.png,.webp"
+                >
+
+                <small>
+                    Recommended size:
+                    1200 × 750 px.
+                </small>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Short Description
+                </label>
+
+                <textarea
+                    name="description"
+                    rows="4"
+                    maxlength="500"
+                    placeholder="Describe the project..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Full Project Details
+                </label>
+
+                <textarea
+                    name="content"
+                    rows="10"
+                    placeholder="Write detailed project information..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Technologies
+                </label>
+
+                <input
+                    type="text"
+                    name="technologies"
+                    placeholder="React, Node.js, MongoDB"
+                >
+
+                <small>
+                    Separate technologies with commas.
+                </small>
+
+            </div>
+
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Student / Client Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="studentName"
+                        placeholder="Ali Raza"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Role
+                    </label>
+
+                    <input
+                        type="text"
+                        name="studentRole"
+                        placeholder="Full Stack Developer"
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Success Story / Quote
+                </label>
+
+                <textarea
+                    name="quote"
+                    rows="4"
+                    placeholder="What did the student/client say?"
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Live Project URL
+                    </label>
+
+                    <input
+                        type="url"
+                        name="projectUrl"
+                        placeholder="https://example.com"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        GitHub URL
+                    </label>
+
+                    <input
+                        type="url"
+                        name="githubUrl"
+                        placeholder="https://github.com/..."
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Publishing
+                    </label>
+
+                    <select name="isPublished">
+
+                        <option value="true">
+                            Published
+                        </option>
+
+                        <option value="false">
+                            Draft
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Featured
+                    </label>
+
+                    <select name="isFeatured">
+
+                        <option value="false">
+                            No
+                        </option>
+
+                        <option value="true">
+                            Yes
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Display Order
+                    </label>
+
+                    <input
+                        type="number"
+                        name="order"
+                        value="0"
+                        min="0"
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="save-btn"
+            >
+
+                <i class="fa-solid fa-plus"></i>
+
+                Save Portfolio Item
+
+            </button>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<%- include("../layouts/dashboardFooter") %>

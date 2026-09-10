@@ -1,0 +1,682 @@
+<!-- =====================================================
+     TECHNOVA FOOTER
+====================================================== -->
+
+<footer class="main-footer">
+
+    <div class="container footer-grid">
+
+
+        <!-- COMPANY -->
+
+        <div class="footer-col">
+
+            <h3 class="footer-logo">
+
+                <%= siteSettings?.footerTitle || "TechNova" %>
+
+            </h3>
+
+
+            <p>
+
+                <%= siteSettings?.footerDescription || "" %>
+
+            </p>
+
+
+            <div class="social-links">
+
+
+                <% if (siteSettings?.facebookUrl) { %>
+
+                    <a
+                        href="<%= siteSettings.facebookUrl %>"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Facebook"
+                    >
+
+                        <i
+                            class="fa-brands fa-facebook-f"
+                        ></i>
+
+                    </a>
+
+                <% } %>
+
+
+                <% if (siteSettings?.twitterUrl) { %>
+
+                    <a
+                        href="<%= siteSettings.twitterUrl %>"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Twitter / X"
+                    >
+
+                        <i
+                            class="fa-brands fa-x-twitter"
+                        ></i>
+
+                    </a>
+
+                <% } %>
+
+
+                <% if (siteSettings?.linkedinUrl) { %>
+
+                    <a
+                        href="<%= siteSettings.linkedinUrl %>"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="LinkedIn"
+                    >
+
+                        <i
+                            class="fa-brands fa-linkedin-in"
+                        ></i>
+
+                    </a>
+
+                <% } %>
+
+
+                <% if (siteSettings?.instagramUrl) { %>
+
+                    <a
+                        href="<%= siteSettings.instagramUrl %>"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Instagram"
+                    >
+
+                        <i
+                            class="fa-brands fa-instagram"
+                        ></i>
+
+                    </a>
+
+                <% } %>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- QUICK LINKS -->
+
+        <div class="footer-col">
+
+            <h4>
+                Quick Links
+            </h4>
+
+
+            <ul>
+
+                <% navItems.forEach(
+                    item => {
+                %>
+
+                    <li>
+
+                        <a
+                            href="<%= item.path %>"
+                        >
+
+                            <%= item.label %>
+
+                        </a>
+
+                    </li>
+
+                <% }) %>
+
+            </ul>
+
+        </div>
+
+
+
+        <!-- CONTACT -->
+
+        <div class="footer-col">
+
+            <h4>
+                Contact Info
+            </h4>
+
+
+            <div class="contact-item">
+
+                <i
+                    class="fa-solid fa-location-dot"
+                ></i>
+
+                <span>
+
+                    <%= siteSettings?.footerAddress || "" %>
+
+                </span>
+
+            </div>
+
+
+            <div class="contact-item">
+
+                <i
+                    class="fa-solid fa-phone"
+                ></i>
+
+                <span>
+
+                    <%= siteSettings?.footerPhone || "" %>
+
+                </span>
+
+            </div>
+
+
+            <div class="contact-item">
+
+                <i
+                    class="fa-solid fa-envelope"
+                ></i>
+
+                <span>
+
+                    <%= siteSettings?.footerEmail || "" %>
+
+                </span>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        <p>
+
+            &copy; <%= new Date().getFullYear() %>
+
+            <%= siteSettings?.footerTitle || "TechNova" %>.
+
+            All rights reserved.
+
+        </p>
+
+    </div>
+
+</footer>
+
+
+<!-- =====================================================
+     FOOTER STYLES
+====================================================== -->
+
+<style>
+
+    /* ================================================
+       FOOTER
+    ================================================= */
+
+    .technova-footer {
+
+        background:
+            linear-gradient(
+                135deg,
+                #0f172a,
+                #172554
+            );
+
+        color: #cbd5e1;
+
+        margin-top: 70px;
+
+    }
+
+
+    .technova-footer-container {
+
+        width: 92%;
+
+        max-width: 1250px;
+
+        margin: 0 auto;
+
+        padding: 60px 0 45px;
+
+        display: grid;
+
+        grid-template-columns:
+            1.6fr
+            1fr
+            1fr
+            1.2fr;
+
+        gap: 45px;
+
+    }
+
+
+    /* ================================================
+       BRAND
+    ================================================= */
+
+    .technova-footer-brand {
+
+        max-width: 360px;
+
+    }
+
+
+    .footer-logo {
+
+        display: inline-block;
+
+        margin-bottom: 18px;
+
+    }
+
+
+    .footer-logo img {
+
+        width: 170px;
+
+        height: 60px;
+
+        object-fit: contain;
+
+        object-position: left center;
+
+        display: block;
+
+        border-radius: 8px;
+
+    }
+
+
+    .technova-footer-brand > p {
+
+        margin: 0;
+
+        color: #94a3b8;
+
+        font-size: 13px;
+
+        line-height: 1.8;
+
+    }
+
+
+    /* ================================================
+       SOCIAL
+    ================================================= */
+
+    .footer-social {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 9px;
+
+        margin-top: 22px;
+
+    }
+
+
+    .footer-social a {
+
+        width: 37px;
+
+        height: 37px;
+
+        border-radius: 9px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        color: #cbd5e1;
+
+        background:
+            rgba(255,255,255,0.08);
+
+        border:
+            1px solid rgba(255,255,255,0.08);
+
+        text-decoration: none;
+
+        transition:
+            transform 0.2s ease,
+            background 0.2s ease,
+            color 0.2s ease;
+
+    }
+
+
+    .footer-social a:hover {
+
+        transform: translateY(-3px);
+
+        background: #2563eb;
+
+        color: white;
+
+    }
+
+
+    /* ================================================
+       FOOTER COLUMNS
+    ================================================= */
+
+    .technova-footer-column h3 {
+
+        margin: 0 0 18px;
+
+        color: white;
+
+        font-size: 15px;
+
+        font-weight: 700;
+
+    }
+
+
+    .technova-footer-column ul {
+
+        list-style: none;
+
+        margin: 0;
+
+        padding: 0;
+
+    }
+
+
+    .technova-footer-column li {
+
+        margin-bottom: 11px;
+
+    }
+
+
+    .technova-footer-column li a {
+
+        color: #94a3b8;
+
+        text-decoration: none;
+
+        font-size: 12px;
+
+        transition:
+            color 0.2s ease,
+            padding-left 0.2s ease;
+
+    }
+
+
+    .technova-footer-column li a:hover {
+
+        color: #60a5fa;
+
+        padding-left: 4px;
+
+    }
+
+
+    /* ================================================
+       CONTACT
+    ================================================= */
+
+    .footer-contact-item {
+
+        display: flex;
+
+        align-items: flex-start;
+
+        gap: 10px;
+
+        margin-bottom: 13px;
+
+        color: #94a3b8;
+
+        font-size: 12px;
+
+        line-height: 1.5;
+
+    }
+
+
+    .footer-contact-item i {
+
+        width: 17px;
+
+        color: #60a5fa;
+
+        flex-shrink: 0;
+
+        margin-top: 2px;
+
+    }
+
+
+    .footer-contact-item a {
+
+        color: #94a3b8;
+
+        text-decoration: none;
+
+        transition: color 0.2s ease;
+
+    }
+
+
+    .footer-contact-item a:hover {
+
+        color: #60a5fa;
+
+    }
+
+
+    /* ================================================
+       FOOTER BOTTOM
+    ================================================= */
+
+    .technova-footer-bottom {
+
+        border-top:
+            1px solid rgba(255,255,255,0.08);
+
+    }
+
+
+    .technova-footer-bottom-container {
+
+        width: 92%;
+
+        max-width: 1250px;
+
+        min-height: 65px;
+
+        margin: 0 auto;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 20px;
+
+    }
+
+
+    .technova-footer-bottom p {
+
+        margin: 0;
+
+        color: #64748b;
+
+        font-size: 11px;
+
+    }
+
+
+    .footer-bottom-links {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 18px;
+
+    }
+
+
+    .footer-bottom-links a {
+
+        color: #64748b;
+
+        text-decoration: none;
+
+        font-size: 11px;
+
+        transition: color 0.2s ease;
+
+    }
+
+
+    .footer-bottom-links a:hover {
+
+        color: #60a5fa;
+
+    }
+
+
+    /* ================================================
+       RESPONSIVE
+    ================================================= */
+
+    @media (max-width: 950px) {
+
+        .technova-footer-container {
+
+            grid-template-columns:
+                1.5fr 1fr 1fr;
+
+        }
+
+        .technova-footer-brand {
+
+            grid-column: 1 / -1;
+
+            max-width: 600px;
+
+        }
+
+    }
+
+
+    @media (max-width: 650px) {
+
+        .technova-footer-container {
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 30px;
+
+            padding:
+                45px 0 35px;
+
+        }
+
+        .technova-footer-brand {
+
+            grid-column: 1 / -1;
+
+        }
+
+        .technova-footer-bottom-container {
+
+            min-height: auto;
+
+            padding: 18px 0;
+
+            flex-direction: column;
+
+            align-items: flex-start;
+
+        }
+
+        .footer-bottom-links {
+
+            flex-wrap: wrap;
+
+        }
+
+    }
+
+
+    @media (max-width: 450px) {
+
+        .technova-footer-container {
+
+            grid-template-columns: 1fr;
+
+        }
+
+        .technova-footer-brand {
+
+            grid-column: auto;
+
+        }
+
+        .technova-footer-bottom-links {
+
+            flex-direction: column;
+
+            align-items: flex-start;
+
+            gap: 8px;
+
+        }
+
+    }
+
+</style>
+
+
+<!-- =====================================================
+     CURRENT YEAR
+====================================================== -->
+
+<script nonce="<%= cspNonce %>">
+
+    (function () {
+
+        const yearElement =
+            document.getElementById(
+                "technovaYear"
+            );
+
+        if (yearElement) {
+
+            yearElement.textContent =
+                new Date().getFullYear();
+
+        }
+
+    })();
+
+</script>

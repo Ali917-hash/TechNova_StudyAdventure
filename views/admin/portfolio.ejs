@@ -1,0 +1,470 @@
+<%
+const currentPage = "portfolio";
+%>
+
+<%- include("../layouts/adminDashboardHeader") %>
+
+<%- include("../partials/adminSidebar") %>
+
+
+<div class="main-content">
+
+
+    <div class="admin-page-header">
+
+        <div>
+
+            <h1>
+                Portfolio Management
+            </h1>
+
+            <p>
+                Manage TechNova projects and success stories.
+            </p>
+
+        </div>
+
+
+        <a
+            href="/admin/portfolio/add"
+            class="save-btn"
+        >
+
+            <i class="fa-solid fa-plus"></i>
+
+            Add Project
+
+        </a>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         STATISTICS
+    =========================================== -->
+
+    <div class="cards">
+
+
+        <div class="card">
+
+            <i class="fa-solid fa-folder-open"></i>
+
+            <h2>
+                <%= totalProjects %>
+            </h2>
+
+            <p>
+                Total Projects
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <i class="fa-solid fa-circle-check"></i>
+
+            <h2>
+                <%= publishedProjects %>
+            </h2>
+
+            <p>
+                Published
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <i class="fa-solid fa-star"></i>
+
+            <h2>
+                <%= featuredProjects %>
+            </h2>
+
+            <p>
+                Featured
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <i class="fa-solid fa-users"></i>
+
+            <h2>
+                <%= successStories %>
+            </h2>
+
+            <p>
+                Success Stories
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         PROJECT TABLE
+    =========================================== -->
+
+    <div class="messages-card">
+
+
+        <div class="messages-card-header">
+
+            <div>
+
+                <h2>
+                    Portfolio Items
+                </h2>
+
+                <p>
+                    Manage projects and success stories.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <% if (
+            !projects ||
+            projects.length === 0
+        ) { %>
+
+
+            <div class="empty-messages">
+
+                <i class="fa-solid fa-folder-open"></i>
+
+                <h3>
+                    No Portfolio Items
+                </h3>
+
+                <p>
+                    Create your first project.
+                </p>
+
+            </div>
+
+
+        <% } else { %>
+
+
+            <div class="table-wrapper">
+
+                <table class="messages-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                #
+                            </th>
+
+                            <th>
+                                Project
+                            </th>
+
+                            <th>
+                                Category
+                            </th>
+
+                            <th>
+                                Type
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Featured
+                            </th>
+
+                            <th>
+                                Order
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        <% projects.forEach(
+                            (project, index) => {
+                        %>
+
+
+                            <tr>
+
+
+                                <td>
+                                    <%= index + 1 %>
+                                </td>
+
+
+                                <td>
+
+                                    <div
+                                        class="sender-info"
+                                    >
+
+                                        <div
+                                            class="sender-avatar"
+                                        >
+
+                                            <i
+                                                class="fa-solid fa-folder"
+                                            ></i>
+
+                                        </div>
+
+
+                                        <strong>
+
+                                            <%= project.title %>
+
+                                        </strong>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+
+                                    <%= project.category %>
+
+                                </td>
+
+
+                                <td>
+
+                                    <%= project.type ===
+                                        "success-story"
+                                            ? "Success Story"
+                                            : "Project"
+                                    %>
+
+                                </td>
+
+
+                                <td>
+
+                                    <% if (
+                                        project.isPublished
+                                    ) { %>
+
+                                        <span
+                                            class="message-status replied"
+                                        >
+
+                                            <i
+                                                class="fa-solid fa-circle-check"
+                                            ></i>
+
+                                            Published
+
+                                        </span>
+
+                                    <% } else { %>
+
+                                        <span
+                                            class="message-status waiting"
+                                        >
+
+                                            Draft
+
+                                        </span>
+
+                                    <% } %>
+
+                                </td>
+
+
+                                <td>
+
+                                    <% if (
+                                        project.isFeatured
+                                    ) { %>
+
+                                        <span
+                                            class="message-status replied"
+                                        >
+
+                                            <i
+                                                class="fa-solid fa-star"
+                                            ></i>
+
+                                            Yes
+
+                                        </span>
+
+                                    <% } else { %>
+
+                                        No
+
+                                    <% } %>
+
+                                </td>
+
+
+                                <td>
+
+                                    <%= project.order %>
+
+                                </td>
+
+
+                                <td>
+
+                                    <div
+                                        class="message-actions"
+                                    >
+
+
+                                        <a
+                                            href="/portfolio/project/<%= project.slug %>"
+                                            class="view-btn"
+                                            target="_blank"
+                                            title="View"
+                                        >
+
+                                            <i
+                                                class="fa-solid fa-eye"
+                                            ></i>
+
+                                        </a>
+
+
+                                        <a
+                                            href="/admin/portfolio/edit/<%= project._id %>"
+                                            class="view-btn"
+                                            title="Edit"
+                                        >
+
+                                            <i
+                                                class="fa-solid fa-pen"
+                                            ></i>
+
+                                        </a>
+
+
+                                        <form
+                                            action="/admin/portfolio/toggle-published/<%= project._id %>"
+                                            method="POST"
+                                            style="display:inline;"
+                                        >
+
+                                            <input
+                                                type="hidden"
+                                                name="_csrf"
+                                                value="<%= csrfToken %>"
+                                            >
+
+                                            <button
+                                                type="submit"
+                                                class="view-btn"
+                                                title="Publish / Draft"
+                                            >
+
+                                                <i class="fa-solid fa-power-off"></i>
+
+                                            </button>
+
+                                        </form>
+
+                                        <form
+                                            action="/admin/portfolio/toggle-featured/<%= project._id %>"
+                                            method="POST"
+                                            style="display:inline;"
+                                        >
+
+                                            <input
+                                                type="hidden"
+                                                name="_csrf"
+                                                value="<%= csrfToken %>"
+                                            >
+
+                                            <button
+                                                type="submit"
+                                                class="view-btn"
+                                                title="Featured"
+                                            >
+
+                                                <i class="fa-solid fa-star"></i>
+
+                                            </button>
+
+                                        </form>
+
+
+                                        <form
+                                            action="/admin/portfolio/delete/<%= project._id %>"
+                                            method="POST"
+                                            style="display:inline;"
+                                            data-confirm="Are you sure you want to delete this portfolio item?"
+                                        >
+
+                                            <input
+                                                type="hidden"
+                                                name="_csrf"
+                                                value="<%= csrfToken %>"
+                                            >
+
+                                            <button
+                                                type="submit"
+                                                class="delete-btn"
+                                                title="Delete"
+                                            >
+
+                                                <i class="fa-solid fa-trash"></i>
+
+                                            </button>
+
+                                        </form>
+
+
+                                    </div>
+
+                                </td>
+
+
+                            </tr>
+
+
+                        <% }) %>
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        <% } %>
+
+
+    </div>
+
+</div>
+
+
+<%- include("../layouts/dashboardFooter") %>

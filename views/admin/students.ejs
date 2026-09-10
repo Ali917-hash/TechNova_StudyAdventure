@@ -1,0 +1,495 @@
+<%
+const currentPage = "students";
+%>
+
+<%- include("../layouts/adminDashboardHeader") %>
+
+<%- include("../partials/adminSidebar") %>
+
+
+<div class="main-content">
+
+    <!-- =========================================
+         PAGE HEADER
+    ========================================== -->
+
+    <div class="students-page-header">
+
+        <div>
+
+            <h1>
+                Students
+            </h1>
+
+            <p>
+                Manage and monitor all registered students.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         STATISTICS
+    ========================================== -->
+
+    <div class="student-statistics">
+
+
+        <!-- Total -->
+
+        <div class="student-stat-card">
+
+            <div class="student-stat-icon total">
+
+                <i class="fa-solid fa-users"></i>
+
+            </div>
+
+            <div>
+
+                <span>
+                    Total Students
+                </span>
+
+                <h2>
+                    <%= totalStudents %>
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <!-- Active -->
+
+        <div class="student-stat-card">
+
+            <div class="student-stat-icon active">
+
+                <i class="fa-solid fa-user-check"></i>
+
+            </div>
+
+            <div>
+
+                <span>
+                    Active Students
+                </span>
+
+                <h2>
+                    <%= activeStudents %>
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <!-- Inactive -->
+
+        <div class="student-stat-card">
+
+            <div class="student-stat-icon inactive">
+
+                <i class="fa-solid fa-user-slash"></i>
+
+            </div>
+
+            <div>
+
+                <span>
+                    Inactive Students
+                </span>
+
+                <h2>
+                    <%= inactiveStudents %>
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <!-- Recent -->
+
+        <div class="student-stat-card">
+
+            <div class="student-stat-icon recent">
+
+                <i class="fa-solid fa-user-plus"></i>
+
+            </div>
+
+            <div>
+
+                <span>
+                    Registered Last 30 Days
+                </span>
+
+                <h2>
+                    <%= recentStudents %>
+                </h2>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =========================================
+         SEARCH + FILTER
+    ========================================== -->
+
+    <div class="students-toolbar">
+
+        <form
+            action="/admin/students"
+            method="GET"
+            class="student-search-form">
+
+
+            <div class="student-search-box">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input
+                    type="text"
+                    name="search"
+                    value="<%= search %>"
+                    placeholder="Search by name or email...">
+
+            </div>
+
+
+            <select
+                name="status"
+                class="student-status-filter">
+
+                <option
+                    value="all"
+                    <%= status === "all" ? "selected" : "" %>>
+                    All Students
+                </option>
+
+                <option
+                    value="active"
+                    <%= status === "active" ? "selected" : "" %>>
+                    Active
+                </option>
+
+                <option
+                    value="inactive"
+                    <%= status === "inactive" ? "selected" : "" %>>
+                    Inactive
+                </option>
+
+            </select>
+
+
+            <button
+                type="submit"
+                class="student-filter-btn">
+
+                <i class="fa-solid fa-filter"></i>
+
+                Filter
+
+            </button>
+
+
+            <% if(search || status !== "all") { %>
+
+                <a
+                    href="/admin/students"
+                    class="clear-filter-btn">
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                    Clear
+
+                </a>
+
+            <% } %>
+
+
+        </form>
+
+    </div>
+
+
+    <!-- =========================================
+         STUDENTS TABLE
+    ========================================== -->
+
+    <div class="students-table-container">
+
+        <div class="students-table-header">
+
+            <div>
+
+                <h2>
+                    Student List
+                </h2>
+
+                <p>
+                    <%= students.length %> student(s) found
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <% if(students.length === 0) { %>
+
+            <div class="no-students">
+
+                <div class="no-students-icon">
+
+                    <i class="fa-solid fa-user-group"></i>
+
+                </div>
+
+                <h3>
+                    No Students Found
+                </h3>
+
+                <p>
+                    Try changing your search or filter.
+                </p>
+
+            </div>
+
+
+        <% } else { %>
+
+
+            <div class="students-table-wrapper">
+
+                <table class="students-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>#</th>
+
+                            <th>Student</th>
+
+                            <th>Email</th>
+
+                            <th>Gender</th>
+
+                            <th>Date of Birth</th>
+
+                            <th>Registered</th>
+
+                            <th>Status</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <% students.forEach((student, index) => { %>
+
+
+                            <tr>
+
+
+                                <!-- Number -->
+
+                                <td class="student-number">
+
+                                    <%= index + 1 %>
+
+                                </td>
+
+
+                                <!-- Student -->
+
+                                <td>
+
+                                    <div class="student-info">
+
+                                        <div class="student-avatar">
+
+                                            <i class="fa-solid fa-user"></i>
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <strong>
+
+                                                <%= student.firstName %>
+                                                <%= student.lastName %>
+
+                                            </strong>
+
+                                            <small>
+                                                Student
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- Email -->
+
+                                <td>
+
+                                    <span class="student-email">
+
+                                        <%= student.email %>
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- Gender -->
+
+                                <td>
+
+                                    <span class="gender-badge">
+
+                                        <%= student.gender %>
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- DOB -->
+
+                                <td>
+
+                                    <%= student.dob
+                                        ? new Date(student.dob).toLocaleDateString()
+                                        : "N/A"
+                                    %>
+
+                                </td>
+
+
+                                <!-- Registration -->
+
+                                <td>
+
+                                    <%= student.createdAt
+                                        ? new Date(student.createdAt).toLocaleDateString()
+                                        : "N/A"
+                                    %>
+
+                                </td>
+
+
+                                <!-- Status -->
+
+                                <td>
+
+                                    <% if(student.isActive) { %>
+
+                                        <span class="student-status active">
+
+                                            <span class="status-dot"></span>
+
+                                            Active
+
+                                        </span>
+
+                                    <% } else { %>
+
+                                        <span class="student-status inactive">
+
+                                            <span class="status-dot"></span>
+
+                                            Inactive
+
+                                        </span>
+
+                                    <% } %>
+
+                                </td>
+
+
+                                <!-- Action -->
+
+                                <td>
+
+                                    <form
+                                        action="/admin/students/toggle/<%= student._id %>"
+                                        method="POST"
+                                        class="student-action-form"
+                                        data-confirm="Are you sure you want to change this student status?">
+
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+
+                                        <% if(student.isActive) { %>
+
+                                            <button
+                                                type="submit"
+                                                class="student-action deactivate"
+                                                title="Deactivate Student">
+
+                                                <i class="fa-solid fa-user-slash"></i>
+
+                                                Deactivate
+
+                                            </button>
+
+                                        <% } else { %>
+
+                                            <button
+                                                type="submit"
+                                                class="student-action activate"
+                                                title="Activate Student">
+
+                                                <i class="fa-solid fa-user-check"></i>
+
+                                                Activate
+
+                                            </button>
+
+                                        <% } %>
+
+
+                                    </form>
+
+                                </td>
+
+
+                            </tr>
+
+
+                        <% }) %>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        <% } %>
+
+    </div>
+
+</div>
+
+
+<%- include("../layouts/dashboardFooter") %>

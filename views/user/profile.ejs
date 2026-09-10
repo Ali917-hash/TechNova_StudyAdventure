@@ -1,0 +1,962 @@
+<%- include("../layouts/userDashboardHeader") %>
+
+<%- include("../partials/dashboardSidebar", {
+    currentPage: "profile"
+}) %>
+
+<div class="main-content profile-page">
+
+    <!-- ==========================================
+         TOPBAR
+    =========================================== -->
+
+    <div class="topbar">
+
+        <h1>
+            My Profile
+        </h1>
+
+    </div>
+
+
+    <div class="profile-container">
+
+
+        <!-- ==========================================
+             PROFILE HEADER
+        =========================================== -->
+
+        <div class="profile-header">
+
+            <div class="profile-image-section">
+
+                <img
+                    src="/uploads/<%= user.profileImage || 'default-profile.png' %>"
+                    alt="Profile Picture"
+                    class="profile-image"
+                    id="profilePreview"
+                >
+
+
+                <label
+                    for="profileImage"
+                    class="change-photo-btn"
+                >
+
+                    <i class="fa-solid fa-camera"></i>
+
+                    Change Photo
+
+                </label>
+
+            </div>
+
+
+            <div class="profile-header-info">
+
+                <h2>
+
+                    <%= user.firstName %>
+                    <%= user.lastName %>
+
+                </h2>
+
+
+                <p>
+
+                    <i class="fa-solid fa-envelope"></i>
+
+                    <%= user.email %>
+
+                </p>
+
+
+                <span class="role-badge">
+
+                    <%= user.role %>
+
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ==========================================
+             PERSONAL INFORMATION
+        =========================================== -->
+
+        <div class="profile-card">
+
+            <div class="profile-card-header">
+
+                <div>
+
+                    <h2>
+                        Personal Information
+                    </h2>
+
+                    <p>
+                        Update your personal information
+                    </p>
+
+                </div>
+
+                <i class="fa-solid fa-user-pen"></i>
+
+            </div>
+
+
+            <form
+                action="/profile/update"
+                method="POST"
+                enctype="multipart/form-data"
+                class="profile-form"
+            >
+
+            <input
+                type="hidden"
+                name="_csrf"
+                value="<%= csrfToken %>"
+            >
+
+                <!-- Hidden Image Input -->
+
+                <input
+                    type="file"
+                    name="profileImage"
+                    id="profileImage"
+                    accept="image/*"
+                    hidden
+                >
+
+
+                <!-- First Name -->
+
+                <div class="form-group">
+
+                    <label for="firstName">
+                        First Name
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="fa-solid fa-user"></i>
+
+                        <input
+                            type="text"
+                            id="firstName"
+                            name="firstName"
+                            value="<%= user.firstName %>"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- Last Name -->
+
+                <div class="form-group">
+
+                    <label for="lastName">
+                        Last Name
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="fa-solid fa-user"></i>
+
+                        <input
+                            type="text"
+                            id="lastName"
+                            name="lastName"
+                            value="<%= user.lastName %>"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- Gender -->
+
+                <div class="form-group">
+
+                    <label for="gender">
+                        Gender
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="fa-solid fa-venus-mars"></i>
+
+                        <select
+                            id="gender"
+                            name="gender"
+                            required
+                        >
+
+                            <option
+                                value="male"
+                                <%= user.gender === "male"
+                                    ? "selected"
+                                    : "" %>
+                            >
+                                Male
+                            </option>
+
+
+                            <option
+                                value="female"
+                                <%= user.gender === "female"
+                                    ? "selected"
+                                    : "" %>
+                            >
+                                Female
+                            </option>
+
+
+                            <option
+                                value="other"
+                                <%= user.gender === "other"
+                                    ? "selected"
+                                    : "" %>
+                            >
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Date of Birth -->
+
+                <div class="form-group">
+
+                    <label for="dob">
+                        Date of Birth
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="fa-solid fa-calendar"></i>
+
+                        <input
+                            type="date"
+                            id="dob"
+                            name="dob"
+                            value="<%= user.dob
+                                ? new Date(user.dob)
+                                    .toISOString()
+                                    .split('T')[0]
+                                : '' %>"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- Account Role -->
+
+                <div class="form-group">
+
+                    <label>
+                        Account Role
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="fa-solid fa-shield"></i>
+
+                        <input
+                            type="text"
+                            value="<%= user.role %>"
+                            readonly
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- Account Status -->
+
+                <div class="form-group">
+
+                    <label>
+                        Account Status
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="fa-solid fa-circle-check"></i>
+
+                        <input
+                            type="text"
+                            value="<%= user.isActive
+                                ? 'Active'
+                                : 'Inactive' %>"
+                            readonly
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- Save Button -->
+
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="save-profile-btn"
+                    >
+
+                        <i class="fa-solid fa-floppy-disk"></i>
+
+                        Save Changes
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+
+        <!-- ==========================================
+             ACCOUNT SECURITY
+        =========================================== -->
+
+        <div class="profile-card security-card">
+
+            <div class="profile-card-header">
+
+                <div>
+
+                    <h2>
+                        Account Security
+                    </h2>
+
+                    <p>
+                        Change your email address and password
+                    </p>
+
+                </div>
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+            </div>
+
+
+            <!-- ==========================================
+                 CHANGE EMAIL
+            =========================================== -->
+
+            <div class="security-section">
+
+                <div class="security-section-header">
+
+                    <div>
+
+                        <h3>
+                            Change Email Address
+                        </h3>
+
+                        <p>
+                            Update the email address used
+                            to sign in to your account.
+                        </p>
+
+                    </div>
+
+                    <i class="fa-solid fa-envelope"></i>
+
+                </div>
+
+
+                <form
+                    action="/profile/change-email"
+                    method="POST"
+                    class="profile-form security-form"
+                >
+
+                <input
+                    type="hidden"
+                    name="_csrf"
+                    value="<%= csrfToken %>"
+                >
+
+                    <!-- Current Email -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Current Email
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-solid fa-envelope"></i>
+
+                            <input
+                                type="email"
+                                value="<%= user.email %>"
+                                readonly
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- New Email -->
+
+                    <div class="form-group">
+
+                        <label for="newEmail">
+
+                            New Email Address
+
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-solid fa-at"></i>
+
+                            <input
+                                type="email"
+                                id="newEmail"
+                                name="newEmail"
+                                placeholder="Enter new email address"
+                                required
+                                autocomplete="email"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Current Password -->
+
+                    <div class="form-group">
+
+                        <label for="emailCurrentPassword">
+
+                            Current Password
+
+                        </label>
+
+                        <div class="input-wrapper password-wrapper">
+
+                            <i class="fa-solid fa-lock"></i>
+
+                            <input
+                                type="password"
+                                id="emailCurrentPassword"
+                                name="currentPassword"
+                                placeholder="Enter your current password"
+                                required
+                                autocomplete="current-password"
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                data-target="emailCurrentPassword"
+                            >
+
+                                <i class="fa-solid fa-eye"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-actions">
+
+                        <button
+                            type="submit"
+                            class="save-profile-btn security-save-btn"
+                        >
+
+                            <i class="fa-solid fa-envelope-circle-check"></i>
+
+                            Change Email
+
+                        </button>
+
+                    </div>
+
+
+                </form>
+
+            </div>
+
+
+
+            <!-- ==========================================
+                 CHANGE PASSWORD
+            =========================================== -->
+
+            <div class="security-section password-section">
+
+                <div class="security-section-header">
+
+                    <div>
+
+                        <h3>
+                            Change Password
+                        </h3>
+
+                        <p>
+                            Use a strong password that you
+                            do not use on other websites.
+                        </p>
+
+                    </div>
+
+                    <i class="fa-solid fa-key"></i>
+
+                </div>
+
+
+                <form
+                    action="/profile/change-password"
+                    method="POST"
+                    class="profile-form security-form"
+                >
+
+                <input
+                    type="hidden"
+                    name="_csrf"
+                    value="<%= csrfToken %>"
+                >
+                
+                    <!-- Current Password -->
+
+                    <div class="form-group">
+
+                        <label for="currentPassword">
+
+                            Current Password
+
+                        </label>
+
+                        <div class="input-wrapper password-wrapper">
+
+                            <i class="fa-solid fa-lock"></i>
+
+                            <input
+                                type="password"
+                                id="currentPassword"
+                                name="currentPassword"
+                                placeholder="Enter current password"
+                                required
+                                autocomplete="current-password"
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                data-target="currentPassword"
+                            >
+
+                                <i class="fa-solid fa-eye"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- New Password -->
+
+                    <div class="form-group">
+
+                        <label for="newPassword">
+
+                            New Password
+
+                        </label>
+
+                        <div class="input-wrapper password-wrapper">
+
+                            <i class="fa-solid fa-lock"></i>
+
+                            <input
+                                type="password"
+                                id="newPassword"
+                                name="newPassword"
+                                placeholder="Enter new password"
+                                minlength="6"
+                                required
+                                autocomplete="new-password"
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                data-target="newPassword"
+                            >
+
+                                <i class="fa-solid fa-eye"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Confirm Password -->
+
+                    <div class="form-group">
+
+                        <label for="confirmPassword">
+
+                            Confirm New Password
+
+                        </label>
+
+                        <div class="input-wrapper password-wrapper">
+
+                            <i class="fa-solid fa-lock"></i>
+
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                placeholder="Confirm new password"
+                                minlength="6"
+                                required
+                                autocomplete="new-password"
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                data-target="confirmPassword"
+                            >
+
+                                <i class="fa-solid fa-eye"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Password Rules -->
+
+                    <div class="password-rules">
+
+                        <p>
+                            <i class="fa-solid fa-circle-info"></i>
+                            Password must be at least 6 characters.
+                        </p>
+
+                    </div>
+
+
+                    <div class="form-actions">
+
+                        <button
+                            type="submit"
+                            class="save-profile-btn security-save-btn"
+                        >
+
+                            <i class="fa-solid fa-key"></i>
+
+                            Change Password
+
+                        </button>
+
+                    </div>
+
+
+                </form>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ==========================================
+             ACCOUNT INFORMATION
+        =========================================== -->
+
+        <div class="profile-card account-card">
+
+            <div class="profile-card-header">
+
+                <div>
+
+                    <h2>
+                        Account Information
+                    </h2>
+
+                    <p>
+                        Information about your TechNova account
+                    </p>
+
+                </div>
+
+                <i class="fa-solid fa-circle-info"></i>
+
+            </div>
+
+
+            <div class="account-info-grid">
+
+
+                <div class="account-info-item">
+
+                    <span>
+                        Account ID
+                    </span>
+
+                    <strong>
+                        <%= user._id %>
+                    </strong>
+
+                </div>
+
+
+                <div class="account-info-item">
+
+                    <span>
+                        Account Created
+                    </span>
+
+                    <strong>
+                        <%= new Date(
+                            user.createdAt
+                        ).toLocaleDateString() %>
+                    </strong>
+
+                </div>
+
+
+                <div class="account-info-item">
+
+                    <span>
+                        Last Updated
+                    </span>
+
+                    <strong>
+                        <%= new Date(
+                            user.updatedAt
+                        ).toLocaleDateString() %>
+                    </strong>
+
+                </div>
+
+
+                <div class="account-info-item">
+
+                    <span>
+                        Status
+                    </span>
+
+                    <strong class="active-text">
+
+                        <i class="fa-solid fa-circle"></i>
+
+                        <%= user.isActive
+                            ? "Active"
+                            : "Inactive" %>
+
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script nonce="<%= cspNonce %>">
+
+    // ==========================================
+    // PROFILE IMAGE PREVIEW
+    // ==========================================
+
+    const imageInput =
+        document.getElementById(
+            "profileImage"
+        );
+
+    const preview =
+        document.getElementById(
+            "profilePreview"
+        );
+
+
+    if (imageInput) {
+
+        imageInput.addEventListener(
+            "change",
+            function () {
+
+                const file =
+                    this.files[0];
+
+
+                if (file && preview) {
+
+                    preview.src =
+                        URL.createObjectURL(
+                            file
+                        );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // ==========================================
+    // PASSWORD VISIBILITY
+    // ==========================================
+
+    document
+        .querySelectorAll(
+            ".password-toggle"
+        )
+        .forEach(function (button) {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    const targetId =
+                        this.dataset.target;
+
+                    const input =
+                        document.getElementById(
+                            targetId
+                        );
+
+                    const icon =
+                        this.querySelector(
+                            "i"
+                        );
+
+
+                    if (!input) {
+                        return;
+                    }
+
+
+                    if (
+                        input.type ===
+                        "password"
+                    ) {
+
+                        input.type =
+                            "text";
+
+                        icon.classList.remove(
+                            "fa-eye"
+                        );
+
+                        icon.classList.add(
+                            "fa-eye-slash"
+                        );
+
+                    } else {
+
+                        input.type =
+                            "password";
+
+                        icon.classList.remove(
+                            "fa-eye-slash"
+                        );
+
+                        icon.classList.add(
+                            "fa-eye"
+                        );
+
+                    }
+
+                }
+            );
+
+        });
+
+
+    // ==========================================
+    // PASSWORD CONFIRMATION
+    // ==========================================
+
+    const passwordForm =
+        document.querySelector(
+            'form[action="/profile/change-password"]'
+        );
+
+    if (passwordForm) {
+
+        passwordForm.addEventListener(
+            "submit",
+            function (event) {
+
+                const newPassword =
+                    document.getElementById(
+                        "newPassword"
+                    ).value;
+
+                const confirmPassword =
+                    document.getElementById(
+                        "confirmPassword"
+                    ).value;
+
+
+                if (
+                    newPassword !==
+                    confirmPassword
+                ) {
+
+                    event.preventDefault();
+
+                    alert(
+                        "New password and confirm password do not match."
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+</script>
+
+
+<%- include("../layouts/dashboardFooter") %>

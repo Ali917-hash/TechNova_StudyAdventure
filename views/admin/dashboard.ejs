@@ -1,0 +1,1656 @@
+<%
+const currentPage = "dashboard";
+%>
+
+<%- include("../layouts/adminDashboardHeader") %>
+
+<%- include("../partials/adminSidebar") %>
+
+
+<div class="main-content">
+
+    <!-- ==========================================
+         PAGE HEADER
+    =========================================== -->
+
+    <div class="admin-page-header">
+
+        <div>
+
+            <h1>
+                Admin Dashboard
+            </h1>
+
+            <p>
+
+                Welcome back,
+
+                <strong>
+                    <%= user.firstName %>
+                </strong>
+
+            </p>
+
+        </div>
+
+
+        <div class="admin-header-date">
+
+            <i class="fa-solid fa-calendar"></i>
+
+            <span>
+                Admin Panel
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         EXISTING STATISTICS CARDS
+         DO NOT CHANGE
+    =========================================== -->
+
+    <div class="cards">
+
+
+        <!-- Total Courses -->
+
+        <div class="card">
+
+            <i class="fa-solid fa-book"></i>
+
+            <h2>
+                <%= totalCourses %>
+            </h2>
+
+            <p>
+                Total Courses
+            </p>
+
+        </div>
+
+
+        <!-- Total Students -->
+
+        <div class="card">
+
+            <i class="fa-solid fa-users"></i>
+
+            <h2>
+                <%= totalStudents %>
+            </h2>
+
+            <p>
+                Total Students
+            </p>
+
+        </div>
+
+
+        <!-- Total Messages -->
+
+        <div class="card">
+
+            <i class="fa-solid fa-envelope"></i>
+
+            <h2>
+                <%= totalMessages %>
+            </h2>
+
+            <p>
+                Messages
+            </p>
+
+        </div>
+
+
+        <!-- Total Enrollments -->
+
+        <div class="card">
+
+            <i class="fa-solid fa-graduation-cap"></i>
+
+            <h2>
+                <%= totalEnrollments %>
+            </h2>
+
+            <p>
+                Enrollments
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         ANALYTICS SUMMARY
+    =========================================== -->
+
+    <section class="admin-analytics-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <h2>
+                    Platform Analytics
+                </h2>
+
+                <p>
+                    Overview of current learning activity.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="analytics-grid">
+
+
+            <!-- Pending -->
+
+            <div class="analytics-card pending">
+
+                <div class="analytics-icon">
+
+                    <i class="fa-solid fa-clock"></i>
+
+                </div>
+
+                <div class="analytics-content">
+
+                    <span>
+                        Pending Enrollments
+                    </span>
+
+                    <strong>
+                        <%= pendingEnrollments || 0 %>
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- Approved -->
+
+            <div class="analytics-card approved">
+
+                <div class="analytics-icon">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                </div>
+
+                <div class="analytics-content">
+
+                    <span>
+                        Approved Enrollments
+                    </span>
+
+                    <strong>
+                        <%= approvedEnrollments || 0 %>
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- Rejected -->
+
+            <div class="analytics-card rejected">
+
+                <div class="analytics-icon">
+
+                    <i class="fa-solid fa-circle-xmark"></i>
+
+                </div>
+
+                <div class="analytics-content">
+
+                    <span>
+                        Rejected Enrollments
+                    </span>
+
+                    <strong>
+                        <%= rejectedEnrollments || 0 %>
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- Completed -->
+
+            <div class="analytics-card completed">
+
+                <div class="analytics-icon">
+
+                    <i class="fa-solid fa-trophy"></i>
+
+                </div>
+
+                <div class="analytics-content">
+
+                    <span>
+                        Completed Courses
+                    </span>
+
+                    <strong>
+                        <%= completedCourses || 0 %>
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- Certificates -->
+
+            <div class="analytics-card certificates">
+
+                <div class="analytics-icon">
+
+                    <i class="fa-solid fa-certificate"></i>
+
+                </div>
+
+                <div class="analytics-content">
+
+                    <span>
+                        Certificates Issued
+                    </span>
+
+                    <strong>
+                        <%= certificatesIssued || 0 %>
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+     <!-- ==========================================
+        ENROLLMENT ANALYTICS
+    ========================================== -->
+
+    <section class="enrollment-analytics-panel">
+
+        <div class="panel-header">
+
+            <div>
+
+                <h2>
+                    Enrollment Overview
+                </h2>
+
+                <p>
+                    Current enrollment status distribution.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="enrollment-chart-container">
+
+
+            <!-- CHART -->
+
+            <div class="enrollment-chart">
+
+                <div class="chart-circle">
+
+                    <div class="chart-center">
+
+                        <strong>
+                            <%= totalEnrollments || 0 %>
+                        </strong>
+
+                        <span>
+                            Total
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- LEGEND -->
+
+            <div class="enrollment-legend">
+
+
+                <!-- Pending -->
+
+                <div class="legend-item">
+
+                    <div class="legend-label">
+
+                        <span class="legend-dot pending-dot"></span>
+
+                        <span>
+                            Pending
+                        </span>
+
+                    </div>
+
+                    <strong>
+                        <%= pendingEnrollments || 0 %>
+                    </strong>
+
+                </div>
+
+
+                <!-- Approved -->
+
+                <div class="legend-item">
+
+                    <div class="legend-label">
+
+                        <span class="legend-dot approved-dot"></span>
+
+                        <span>
+                            Approved
+                        </span>
+
+                    </div>
+
+                    <strong>
+                        <%= approvedEnrollments || 0 %>
+                    </strong>
+
+                </div>
+
+
+                <!-- Rejected -->
+
+                <div class="legend-item">
+
+                    <div class="legend-label">
+
+                        <span class="legend-dot rejected-dot"></span>
+
+                        <span>
+                            Rejected
+                        </span>
+
+                    </div>
+
+                    <strong>
+                        <%= rejectedEnrollments || 0 %>
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ==========================================
+        COURSE PERFORMANCE
+    ========================================== -->
+
+    <section class="course-performance-panel">
+
+        <div class="panel-header">
+
+            <div>
+
+                <h2>
+                    Course Performance
+                </h2>
+
+                <p>
+                    Enrollment and completion performance of popular courses.
+                </p>
+
+            </div>
+
+            <a
+                href="/admin/courses"
+                class="panel-link"
+            >
+                Manage Courses
+            </a>
+
+        </div>
+
+
+        <% if (
+            coursePerformance &&
+            coursePerformance.length > 0
+        ) { %>
+
+
+            <div class="course-performance-table-wrapper">
+
+                <table class="course-performance-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Course
+                            </th>
+
+                            <th>
+                                Category
+                            </th>
+
+                            <th>
+                                Enrolled
+                            </th>
+
+                            <th>
+                                Completed
+                            </th>
+
+                            <th>
+                                Completion
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        <% coursePerformance.forEach(course => { %>
+
+
+                            <tr>
+
+
+                                <!-- COURSE -->
+
+                                <td>
+
+                                    <div class="performance-course">
+
+                                        <div class="performance-course-icon">
+
+                                            <i class="fa-solid fa-book-open"></i>
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <strong>
+
+                                                <%= course.title || "Course Deleted" %>
+
+                                            </strong>
+
+                                            <span>
+                                                Course
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- CATEGORY -->
+
+                                <td>
+
+                                    <span class="performance-category">
+
+                                        <%= course.category || "N/A" %>
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- ENROLLED -->
+
+                                <td>
+
+                                    <strong class="performance-number">
+
+                                        <%= course.enrolledStudents || 0 %>
+
+                                    </strong>
+
+                                </td>
+
+
+                                <!-- COMPLETED -->
+
+                                <td>
+
+                                    <strong class="performance-number completed-number">
+
+                                        <%= course.completedStudents || 0 %>
+
+                                    </strong>
+
+                                </td>
+
+
+                                <!-- COMPLETION -->
+
+                                <td>
+
+                                    <div class="performance-progress">
+
+
+                                        <div class="performance-progress-top">
+
+                                            <strong>
+
+                                                <%= course.completionPercentage || 0 %>%
+
+                                            </strong>
+
+                                        </div>
+
+
+                                        <div class="performance-progress-track">
+
+                                            <div
+                                                class="performance-progress-fill"
+                                                data-progress="<%= course.completionPercentage || 0 %>"
+                                            >
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </td>
+
+
+                            </tr>
+
+
+                        <% }) %>
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        <% } else { %>
+
+
+            <div class="empty-dashboard-state">
+
+                <i class="fa-solid fa-chart-column"></i>
+
+                <p>
+                    No course performance data available yet.
+                </p>
+
+            </div>
+
+
+        <% } %>
+
+    </section>
+
+    <!-- ==========================================
+        STUDENT LEARNING ENGAGEMENT
+    ========================================== -->
+
+    <section class="learning-engagement-panel">
+
+        <div class="learning-engagement-header">
+
+            <div>
+
+                <h2>
+                    Student Learning Engagement
+                </h2>
+
+                <p>
+                    Overview of how students are progressing
+                    through approved courses.
+                </p>
+
+            </div>
+
+
+            <div class="engagement-average">
+
+                <span>
+                    Average Progress
+                </span>
+
+                <strong>
+                    <%= averageLearningProgress || 0 %>%
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================================
+            ENGAGEMENT STATISTICS
+        =========================================== -->
+
+        <div class="engagement-stats">
+
+
+            <!-- NOT STARTED -->
+
+            <div class="engagement-stat-card">
+
+                <div class="engagement-stat-icon not-started">
+
+                    <i class="fa-solid fa-hourglass-start"></i>
+
+                </div>
+
+
+                <div class="engagement-stat-content">
+
+                    <span>
+                        Not Started
+                    </span>
+
+                    <strong>
+                        <%= notStartedLearning || 0 %>
+                    </strong>
+
+                    <small>
+                        approved enrollments
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- IN PROGRESS -->
+
+            <div class="engagement-stat-card">
+
+                <div class="engagement-stat-icon in-progress">
+
+                    <i class="fa-solid fa-spinner"></i>
+
+                </div>
+
+
+                <div class="engagement-stat-content">
+
+                    <span>
+                        In Progress
+                    </span>
+
+                    <strong>
+                        <%= inProgressLearning || 0 %>
+                    </strong>
+
+                    <small>
+                        active learners
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- COMPLETED -->
+
+            <div class="engagement-stat-card">
+
+                <div class="engagement-stat-icon completed">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                </div>
+
+
+                <div class="engagement-stat-content">
+
+                    <span>
+                        Completed
+                    </span>
+
+                    <strong>
+                        <%= completedLearning || 0 %>
+                    </strong>
+
+                    <small>
+                        completed courses
+                    </small>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ==========================================
+            AVERAGE PROGRESS
+        =========================================== -->
+
+        <div class="engagement-progress-section">
+
+            <div class="engagement-progress-header">
+
+                <div>
+
+                    <strong>
+                        Overall Learning Progress
+                    </strong>
+
+                    <span>
+                        Based on recorded student progress
+                    </span>
+
+                </div>
+
+
+                <strong class="engagement-progress-value">
+
+                    <%= averageLearningProgress || 0 %>%
+
+                </strong>
+
+            </div>
+
+
+            <div class="engagement-progress-track">
+
+                <div
+                    class="engagement-progress-fill"
+                    data-progress="<%= averageLearningProgress || 0 %>"
+                ></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================================
+            TOTAL APPROVED ENROLLMENTS
+        =========================================== -->
+
+        <div class="engagement-footer">
+
+            <div>
+
+                <i class="fa-solid fa-user-graduate"></i>
+
+                <span>
+                    Approved Enrollments
+                </span>
+
+            </div>
+
+
+            <strong>
+                <%= approvedEnrollmentCount || 0 %>
+            </strong>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         DASHBOARD DATA GRID
+    =========================================== -->
+
+    <div class="dashboard-data-grid">
+
+
+        <!-- ======================================
+             TOP COURSES
+        ======================================= -->
+
+        <section class="dashboard-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        Top Courses
+                    </h2>
+
+                    <p>
+                        Courses with the highest enrollments.
+                    </p>
+
+                </div>
+
+                <a
+                    href="/admin/courses"
+                    class="panel-link"
+                >
+                    View All
+                </a>
+
+            </div>
+
+
+            <% if (topCourses && topCourses.length > 0) { %>
+
+
+                <div class="top-course-list">
+
+
+                    <% topCourses.forEach((course, index) => { %>
+
+
+                        <div class="top-course-item">
+
+
+                            <div class="course-rank">
+
+                                <%= index + 1 %>
+
+                            </div>
+
+
+                            <div class="top-course-info">
+
+                                <h3>
+
+                                    <%= course.title || "Course Deleted" %>
+
+                                </h3>
+
+                                <span>
+
+                                    <%= course.category || "N/A" %>
+
+                                </span>
+
+                            </div>
+
+
+                            <div class="course-student-count">
+
+                                <strong>
+
+                                    <%= course.students || 0 %>
+
+                                </strong>
+
+                                <span>
+                                    students
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+
+                    <% }) %>
+
+
+                </div>
+
+
+            <% } else { %>
+
+
+                <div class="empty-dashboard-state">
+
+                    <i class="fa-solid fa-book-open"></i>
+
+                    <p>
+                        No enrollment data available yet.
+                    </p>
+
+                </div>
+
+
+            <% } %>
+
+        </section>
+
+
+        <!-- ======================================
+             RECENT ENROLLMENTS
+        ======================================= -->
+
+        <section class="dashboard-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        Recent Enrollments
+                    </h2>
+
+                    <p>
+                        Latest student course enrollments.
+                    </p>
+
+                </div>
+
+                <a
+                    href="/admin/enrollments"
+                    class="panel-link"
+                >
+                    View All
+                </a>
+
+            </div>
+
+
+            <% if (
+                recentEnrollments &&
+                recentEnrollments.length > 0
+            ) { %>
+
+
+                <div class="activity-list">
+
+
+                    <% recentEnrollments.forEach(enrollment => { %>
+
+
+                        <div class="activity-item">
+
+
+                            <div class="activity-avatar">
+
+                                <i class="fa-solid fa-user"></i>
+
+                            </div>
+
+
+                            <div class="activity-info">
+
+                                <strong>
+
+                                    <%= enrollment.student
+                                        ? enrollment.student.firstName
+                                        + " "
+                                        + enrollment.student.lastName
+                                        : "Unknown Student" %>
+
+                                </strong>
+
+                                <span>
+
+                                    <%= enrollment.course
+                                        ? enrollment.course.title
+                                        : "Course Deleted" %>
+
+                                </span>
+
+                            </div>
+
+
+                            <div class="activity-status">
+
+                                <span
+                                    class="dashboard-status <%= enrollment.status %>"
+                                >
+
+                                    <%= enrollment.status %>
+
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+
+                    <% }) %>
+
+
+                </div>
+
+
+            <% } else { %>
+
+
+                <div class="empty-dashboard-state">
+
+                    <i class="fa-solid fa-graduation-cap"></i>
+
+                    <p>
+                        No enrollments available yet.
+                    </p>
+
+                </div>
+
+
+            <% } %>
+
+        </section>
+
+
+    </div>
+
+    <!-- ==========================================
+         SECOND DATA GRID
+    =========================================== -->
+
+    <div class="dashboard-data-grid">
+
+
+        <!-- ======================================
+             RECENT STUDENTS
+        ======================================= -->
+
+        <section class="dashboard-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        Recent Students
+                    </h2>
+
+                    <p>
+                        Newly registered students.
+                    </p>
+
+                </div>
+
+                <a
+                    href="/admin/students"
+                    class="panel-link"
+                >
+                    View All
+                </a>
+
+            </div>
+
+
+            <% if (
+                recentStudents &&
+                recentStudents.length > 0
+            ) { %>
+
+
+                <div class="activity-list">
+
+
+                    <% recentStudents.forEach(student => { %>
+
+
+                        <div class="activity-item">
+
+
+                            <div class="activity-avatar student-avatar">
+
+                                <i class="fa-solid fa-user"></i>
+
+                            </div>
+
+
+                            <div class="activity-info">
+
+                                <strong>
+
+                                    <%= student.firstName %>
+                                    <%= student.lastName %>
+
+                                </strong>
+
+                                <span>
+
+                                    <%= student.email %>
+
+                                </span>
+
+                            </div>
+
+
+                            <div class="activity-date">
+
+                                <%= new Date(
+                                    student.createdAt
+                                ).toLocaleDateString() %>
+
+                            </div>
+
+
+                        </div>
+
+
+                    <% }) %>
+
+
+                </div>
+
+
+            <% } else { %>
+
+
+                <div class="empty-dashboard-state">
+
+                    <i class="fa-solid fa-users"></i>
+
+                    <p>
+                        No students registered yet.
+                    </p>
+
+                </div>
+
+
+            <% } %>
+
+        </section>
+
+
+        <!-- ======================================
+             RECENT CERTIFICATES
+        ======================================= -->
+
+        <section class="dashboard-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        Recent Certificates
+                    </h2>
+
+                    <p>
+                        Latest certificates issued.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <% if (
+                recentCertificates &&
+                recentCertificates.length > 0
+            ) { %>
+
+
+                <div class="activity-list">
+
+
+                    <% recentCertificates.forEach(certificate => { %>
+
+
+                        <div class="activity-item">
+
+
+                            <div class="activity-avatar certificate-avatar">
+
+                                <i class="fa-solid fa-certificate"></i>
+
+                            </div>
+
+
+                            <div class="activity-info">
+
+                                <strong>
+
+                                    <%= certificate.user
+                                        ? certificate.user.firstName
+                                        + " "
+                                        + certificate.user.lastName
+                                        : "Unknown Student" %>
+
+                                </strong>
+
+                                <span>
+
+                                    <%= certificate.course
+                                        ? certificate.course.title
+                                        : "Course Deleted" %>
+
+                                </span>
+
+                            </div>
+
+
+                            <div class="activity-date">
+
+                                <%= new Date(
+                                    certificate.issuedAt
+                                ).toLocaleDateString() %>
+
+                            </div>
+
+
+                        </div>
+
+
+                    <% }) %>
+
+
+                </div>
+
+
+            <% } else { %>
+
+
+                <div class="empty-dashboard-state">
+
+                    <i class="fa-solid fa-certificate"></i>
+
+                    <p>
+                        No certificates issued yet.
+                    </p>
+
+                </div>
+
+
+            <% } %>
+
+        </section>
+
+<!--   ==========================================
+            RECENT MESSAGES
+        ========================================== -->
+
+        <section class="dashboard-panel dashboard-messages-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h2>
+                        Recent Messages
+                    </h2>
+
+                    <p>
+                        Latest messages received from users.
+                    </p>
+
+                </div>
+
+                <a
+                    href="/admin/messages"
+                    class="panel-link"
+                >
+                    View All
+                </a>
+
+            </div>
+
+
+            <% if (
+                recentMessages &&
+                recentMessages.length > 0
+            ) { %>
+
+
+                <div class="message-dashboard-list">
+
+
+                    <% recentMessages.forEach(message => { %>
+
+
+                        <div class="message-dashboard-item">
+
+                            <div class="message-dashboard-icon">
+
+                                <i class="fa-solid fa-envelope"></i>
+
+                            </div>
+
+
+                            <div class="message-dashboard-content">
+
+                                <div class="message-dashboard-top">
+
+                                    <strong>
+
+                                        <%= message.name %>
+
+                                    </strong>
+
+                                    <span>
+
+                                        <%= new Date(
+                                            message.createdAt
+                                        ).toLocaleDateString() %>
+
+                                    </span>
+
+                                </div>
+
+
+                                <p>
+
+                                    <%= message.subject %>
+
+                                </p>
+
+
+                                <small>
+
+                                    <%= message.email %>
+
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                    <% }) %>
+
+
+                </div>
+
+
+            <% } else { %>
+
+
+                <div class="empty-dashboard-state">
+
+                    <i class="fa-solid fa-envelope-open"></i>
+
+                    <p>
+                        No messages received yet.
+                    </p>
+
+                </div>
+
+
+            <% } %>
+
+        </section>
+
+
+    </div>
+
+
+    <!-- ==========================================
+         QUICK ACTIONS
+    =========================================== -->
+
+    <section class="quick-actions-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <h2>
+                    Quick Actions
+                </h2>
+
+                <p>
+                    Quickly access common administration tasks.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="quick-actions-grid">
+
+
+            <a
+                href="/admin/add-course"
+                class="quick-action"
+            >
+
+                <div class="quick-action-icon">
+
+                    <i class="fa-solid fa-plus"></i>
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        Add Course
+                    </strong>
+
+                    <span>
+                        Create a new course
+                    </span>
+
+                </div>
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </a>
+
+
+            <a
+                href="/admin/students"
+                class="quick-action"
+            >
+
+                <div class="quick-action-icon students">
+
+                    <i class="fa-solid fa-users"></i>
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        Students
+                    </strong>
+
+                    <span>
+                        Manage students
+                    </span>
+
+                </div>
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </a>
+
+
+            <a
+                href="/admin/enrollments"
+                class="quick-action"
+            >
+
+                <div class="quick-action-icon enrollments">
+
+                    <i class="fa-solid fa-graduation-cap"></i>
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        Enrollments
+                    </strong>
+
+                    <span>
+                        Review enrollments
+                    </span>
+
+                </div>
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </a>
+
+
+            <a
+                href="/admin/messages"
+                class="quick-action"
+            >
+
+                <div class="quick-action-icon messages">
+
+                    <i class="fa-solid fa-envelope"></i>
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        Messages
+                    </strong>
+
+                    <span>
+                        View user messages
+                    </span>
+
+                </div>
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </a>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         WELCOME CARD
+    =========================================== -->
+
+    <div class="admin-welcome-card">
+
+        <div class="welcome-icon">
+
+            <i class="fa-solid fa-shield-halved"></i>
+
+        </div>
+
+
+        <div>
+
+            <h2>
+
+                Welcome to TechNova Admin Panel
+
+            </h2>
+
+
+            <p>
+
+                Manage courses, students, enrollments
+                and your learning platform from here.
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+<script nonce="<%= cspNonce %>">
+    document
+        .querySelectorAll(".performance-progress-fill")
+        .forEach(function (bar) {
+
+            const progress =
+                Number(
+                    bar.dataset.progress || 0
+                );
+
+            bar.style.width =
+                Math.max(
+                    0,
+                    Math.min(100, progress)
+                ) + "%";
+
+        });
+
+
+    const totalEnrollments =
+        Number("<%= totalEnrollments || 0 %>");
+
+    const approvedEnrollments =
+        Number("<%= approvedEnrollments || 0 %>");
+
+    const pendingEnrollments =
+        Number("<%= pendingEnrollments || 0 %>");
+
+
+    const approvedAngle =
+        totalEnrollments > 0
+            ? (approvedEnrollments / totalEnrollments) * 360
+            : 0;
+
+
+    const pendingAngle =
+        totalEnrollments > 0
+            ? (pendingEnrollments / totalEnrollments) * 360
+            : 0;
+
+
+    const chart =
+        document.querySelector(".chart-circle");
+
+
+    if (chart) {
+
+        chart.style.setProperty(
+            "--approved-angle",
+            approvedAngle + "deg"
+        );
+
+        chart.style.setProperty(
+            "--pending-angle",
+            pendingAngle + "deg"
+        );
+
+    }
+
+    document
+        .querySelectorAll(".engagement-progress-fill")
+        .forEach(function (bar) {
+
+            const progress =
+                Number(
+                    bar.dataset.progress || 0
+                );
+
+            bar.style.width =
+                Math.max(
+                    0,
+                    Math.min(
+                        100,
+                        progress
+                    )
+                ) + "%";
+
+        });
+</script>
+
+<%- include("../layouts/dashboardFooter") %>

@@ -1,0 +1,524 @@
+<%- include("layouts/header") %>
+
+
+<!-- =====================================================
+     HERO
+====================================================== -->
+
+<%
+const hero =
+    siteSettings?.heroes?.about || {};
+%>
+
+
+<section
+    class="hero about-hero"
+    id="about"
+>
+
+
+    <div class="container hero-inner">
+
+
+        <div class="hero-text">
+
+
+            <% if (hero.badge) { %>
+
+                <span class="hero-badge">
+
+                    <%= hero.badge %>
+
+                </span>
+
+            <% } %>
+
+
+            <h1>
+
+                <%= hero.title ||
+                    "We Don't Just Write"
+                %>
+
+                <br>
+
+                <span>
+
+                    <%= hero.highlight ||
+                        "Code, We Architect the Future."
+                    %>
+
+                </span>
+
+            </h1>
+
+
+            <p>
+
+                <%= hero.description ||
+                    "At TechNova, we believe that every line of code should serve a purpose."
+                %>
+
+            </p>
+
+
+            <div class="hero-cta">
+
+                <a
+                    class="cta-btn"
+                    href="<%= hero.buttonLink || '/registration' %>"
+                >
+
+                    <%= hero.buttonText || 'Get Started' %>
+
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+        <% if (hero.image) { %>
+
+            <div
+                class="hero-right has-image"
+                style="
+                    background-image:
+                    url('/uploads/<%= hero.image %>');
+                "
+            ></div>
+
+        <% } else { %>
+
+            <div class="hero-right"></div>
+
+        <% } %>
+
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     MAIN CONTENT
+====================================================== -->
+
+<main class="content">
+
+    <!-- ==========================================
+        OUR STORY
+    =========================================== -->
+
+    <section class="story-section">
+
+        <div class="story-text">
+
+            <h1>
+                <%= siteSettings.storyTitle || "Our Story" %>
+            </h1>
+
+
+            <% if (siteSettings.storyText1) { %>
+
+                <p>
+                    <%= siteSettings.storyText1 %>
+                </p>
+
+            <% } %>
+
+
+            <% if (siteSettings.storyText2) { %>
+
+                <p>
+                    <%= siteSettings.storyText2 %>
+                </p>
+
+            <% } %>
+
+
+            <% if (siteSettings.storyText3) { %>
+
+                <p>
+                    <%= siteSettings.storyText3 %>
+                </p>
+
+            <% } %>
+
+        </div>
+
+
+        <div class="story-image">
+
+            <img
+                src="/uploads/<%= siteSettings.storyImage || 'about.webp' %>"
+                alt="<%= siteSettings.storyTitle || 'TechNova Story' %>"
+                loading="lazy"
+                decoding="async"
+            >
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ==========================================
+         MISSION / VISION
+    =========================================== -->
+
+    <div class="grid-container">
+
+
+        <div class="card">
+
+            <div class="card-icon">
+
+                <i class="fa-solid fa-rocket"></i>
+
+            </div>
+
+
+            <h2>
+                <%= siteSettings.missionTitle %>
+            </h2>
+
+
+            <p>
+                <%= siteSettings.missionText %>
+            </p>
+
+        </div>
+
+
+
+        <div class="card">
+
+            <div class="card-icon">
+
+                <i class="fa-solid fa-eye"></i>
+
+            </div>
+
+
+            <h2>
+                <%= siteSettings.visionTitle %>
+            </h2>
+
+
+            <p>
+                <%= siteSettings.visionText %>
+            </p>
+
+        </div>
+
+    </div>
+
+    
+    <!-- ==========================================
+         CORE VALUES
+    =========================================== -->
+
+    <section class="values-section">
+
+        <h2 class="section-title">
+            Our Core Values
+        </h2>
+
+
+        <div class="values-grid">
+
+
+            <% (siteSettings.coreValues || [])
+                .forEach(value => {
+            %>
+
+                <div class="value-item">
+
+                    <div class="icon">
+
+                        <i class="<%= value.icon %>"></i>
+
+                    </div>
+
+
+                    <h3>
+                        <%= value.title %>
+                    </h3>
+
+
+                    <p>
+                        <%= value.description %>
+                    </p>
+
+                </div>
+
+            <% }) %>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- ==========================================
+         DYNAMIC STATISTICS
+    =========================================== -->
+
+    <section class="about-stats-section">
+
+
+        <div class="about-stats-grid">
+
+
+            <div class="about-stat-item">
+
+                <div class="about-stat-icon">
+
+                    <i class="fa-solid fa-users"></i>
+
+                </div>
+
+
+                <strong>
+                    <%= totalStudents || 0 %>
+                </strong>
+
+
+                <span>
+                    Registered Students
+                </span>
+
+            </div>
+
+
+            <div class="about-stat-item">
+
+                <div class="about-stat-icon">
+
+                    <i class="fa-solid fa-book"></i>
+
+                </div>
+
+
+                <strong>
+                    <%= totalCourses || 0 %>
+                </strong>
+
+
+                <span>
+                    Courses Available
+                </span>
+
+            </div>
+
+
+            <div class="about-stat-item">
+
+                <div class="about-stat-icon">
+
+                    <i class="fa-solid fa-certificate"></i>
+
+                </div>
+
+
+                <strong>
+                    <%= totalCertificates || 0 %>
+                </strong>
+
+
+                <span>
+                    Certificates Issued
+                </span>
+
+            </div>
+
+
+            <div class="about-stat-item">
+
+                <div class="about-stat-icon">
+
+                    <i class="fa-solid fa-folder-open"></i>
+
+                </div>
+
+
+                <strong>
+                    <%= totalProjects || 0 %>
+                </strong>
+
+
+                <span>
+                    Published Projects
+                </span>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ==========================================
+         LEADERSHIP
+    =========================================== -->
+
+    <section class="leadership-section">
+
+
+        <h2 class="section-title">
+            Meet Our Leadership Team
+        </h2>
+
+
+        <p class="section-subtitle">
+            Experienced professionals dedicated to your success
+        </p>
+
+
+        <% if (
+            !teamMembers ||
+            teamMembers.length === 0
+        ) { %>
+
+
+            <div class="team-empty">
+
+                <i class="fa-solid fa-users"></i>
+
+                <h3>
+                    Our Team Is Growing
+                </h3>
+
+                <p>
+                    Leadership team information will appear
+                    here when it is added.
+                </p>
+
+            </div>
+
+
+        <% } else { %>
+
+
+            <div class="team-grid">
+
+
+                <% teamMembers.forEach(
+                    member => {
+                %>
+
+
+                    <div class="team-card">
+
+
+                        <div class="profile-circle">
+
+                            <img
+                                src="/uploads/<%= member.image %>"
+                                alt="<%= member.name %>"
+                                loading="lazy"
+                            >
+
+                        </div>
+
+
+                        <h3>
+
+                            <%= member.name %>
+
+                        </h3>
+
+
+                        <p class="title">
+
+                            <%= member.title %>
+
+                        </p>
+
+
+                        <% if (member.experience) { %>
+
+                            <p class="experience">
+
+                                <%= member.experience %>
+
+                            </p>
+
+                        <% } %>
+
+
+                        <% if (member.bio) { %>
+
+                            <p class="team-bio">
+
+                                <%= member.bio %>
+
+                            </p>
+
+                        <% } %>
+
+
+                        <div class="social-links">
+
+
+                            <% if (member.linkedin) { %>
+
+                                <a
+                                    href="<%= member.linkedin %>"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    title="LinkedIn"
+                                >
+
+                                    <i
+                                        class="fa-brands fa-linkedin"
+                                    ></i>
+
+                                </a>
+
+                            <% } %>
+
+
+                            <% if (member.instagram) { %>
+
+                                <a
+                                    href="<%= member.instagram %>"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    title="Instagram"
+                                >
+
+                                    <i
+                                        class="fa-brands fa-instagram"
+                                    ></i>
+
+                                </a>
+
+                            <% } %>
+
+
+                        </div>
+
+                    </div>
+
+
+                <% }) %>
+
+
+            </div>
+
+
+        <% } %>
+
+
+    </section>
+
+
+</main>
+
+
+<%- include("layouts/footer") %>

@@ -1,0 +1,161 @@
+<%
+const currentPage = "help";
+%>
+<%- include("../layouts/adminDashboardHeader") %>
+<%- include("../partials/adminSidebar") %>
+<div class="main-content">
+    <!-- ==========================================
+         PAGE HEADER
+    =========================================== -->
+    <div class="admin-page-header">
+        <div>
+            <h1>
+                Admin Help & Support
+            </h1>
+            <p>
+                Helpful information for managing the TechNova platform.
+            </p>
+        </div>
+        <div class="admin-header-date">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>
+                TechNova Admin
+            </span>
+        </div>
+    </div>
+    <!-- ==========================================
+         HELP CARDS
+    =========================================== -->
+    <div class="admin-help-grid">
+        <!-- COURSE MANAGEMENT -->
+        <div class="admin-help-card">
+            <div class="admin-help-icon blue">
+                <i class="fa-solid fa-book"></i>
+            </div>
+            <h3>
+                Course Management
+            </h3>
+            <p>
+                Add, edit and manage course information
+                and learning materials.
+            </p>
+        </div>
+        <!-- STUDENTS -->
+        <div class="admin-help-card">
+            <div class="admin-help-icon green">
+                <i class="fa-solid fa-users"></i>
+            </div>
+            <h3>
+                Student Management
+            </h3>
+            <p>
+                View registered students and manage
+                their account status.
+            </p>
+        </div>
+        <!-- ENROLLMENTS -->
+        <div class="admin-help-card">
+            <div class="admin-help-icon orange">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <h3>
+                Enrollment Management
+            </h3>
+            <p>
+                Review, approve, reject and manage
+                student course enrollments.
+            </p>
+        </div>
+        <!-- MESSAGES -->
+        <div class="admin-help-card">
+            <div class="admin-help-icon purple">
+                <i class="fa-solid fa-envelope"></i>
+            </div>
+            <h3>
+                Messages & Replies
+            </h3>
+            <p>
+                Read visitor messages and send email
+                replies directly from the admin panel.
+            </p>
+        </div>
+        <!-- CERTIFICATES -->
+        <div class="admin-help-card">
+            <div class="admin-help-icon cyan">
+                <i class="fa-solid fa-certificate"></i>
+            </div>
+            <h3>
+                Certificates
+            </h3>
+            <p>
+                Certificates are generated automatically
+                when students complete their courses.
+            </p>
+        </div>
+        <!-- ANALYTICS -->
+        <div class="admin-help-card">
+            <div class="admin-help-icon red">
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <h3>
+                Dashboard Analytics
+            </h3>
+            <p>
+                Monitor courses, students, enrollments,
+                messages and learning progress.
+            </p>
+        </div>
+    </div>
+    <!-- ==========================================
+         SYSTEM INFORMATION
+    =========================================== -->
+    <section class="system-info-card">
+        <div class="system-info-header">
+            <div>
+                <h2>
+                    System Information
+                </h2>
+                <p>
+                    Current TechNova platform information.
+                </p>
+            </div>
+            <i class="fa-solid fa-server"></i>
+        </div>
+        <div class="system-info-grid">
+            <div class="system-info-item">
+                <span>
+                    Platform
+                </span>
+                <strong>
+                    TechNova
+                </strong>
+            </div>
+            <div class="system-info-item">
+                <span>
+                    Environment
+                </span>
+                <strong>
+                    Development
+                </strong>
+            </div>
+            <div class="system-info-item">
+                <span>
+                    Server
+                </span>
+                <strong class="system-status">
+                    <i class="fa-solid fa-circle"></i>
+                    Running
+                </strong>
+            </div>
+            <div class="system-info-item">
+                <span>
+                    Application
+                </span>
+                <strong>
+                    Node.js / Express
+                </strong>
+            </div>
+        </div>
+    </section>
+</div>
+<%- include("../layouts/dashboardFooter") %>

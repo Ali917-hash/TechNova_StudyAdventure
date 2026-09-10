@@ -1,0 +1,573 @@
+<%
+const currentPage = "messages";
+%>
+
+<%- include("../layouts/adminDashboardHeader") %>
+
+<%- include("../partials/adminSidebar") %>
+
+
+<div class="main-content">
+
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                View Message
+            </h1>
+
+            <p>
+                Message details submitted by the visitor.
+            </p>
+
+        </div>
+
+
+        <a
+            href="/admin/messages"
+            class="back-btn"
+        >
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            Back to Messages
+
+        </a>
+
+    </div>
+
+
+    <div class="message-details-container">
+
+
+        <!-- ==========================================
+             SENDER INFORMATION
+        =========================================== -->
+
+        <div class="message-info-card">
+
+            <div class="message-card-title">
+
+                <i class="fa-solid fa-user"></i>
+
+                <h2>
+                    Sender Information
+                </h2>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span>
+                    Name
+                </span>
+
+                <strong>
+                    <%= message.name %>
+                </strong>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span>
+                    Email
+                </span>
+
+                <a
+                    href="mailto:<%= message.email %>"
+                >
+                    <%= message.email %>
+                </a>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span>
+                    Phone
+                </span>
+
+                <a
+                    href="tel:<%= message.phone %>"
+                >
+                    <%= message.phone %>
+                </a>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span>
+                    Date
+                </span>
+
+                <strong>
+
+                    <%= new Date(
+                        message.createdAt
+                    ).toLocaleString() %>
+
+                </strong>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ==========================================
+             ORIGINAL MESSAGE
+        =========================================== -->
+
+        <div class="message-content-card">
+
+            <div class="message-card-title">
+
+                <i class="fa-solid fa-envelope"></i>
+
+                <h2>
+                    Message
+                </h2>
+
+            </div>
+
+
+            <div class="message-subject">
+
+                <span>
+                    Subject
+                </span>
+
+                <h3>
+                    <%= message.subject %>
+                </h3>
+
+            </div>
+
+
+            <div class="message-body">
+
+                <p>
+                    <%= message.message %>
+                </p>
+
+            </div>
+
+
+            <div class="message-footer">
+
+                <button
+                    type="button"
+                    class="reply-btn"
+                    data-toggle-target="replyFormContainer"
+                >
+
+                    <i class="fa-solid fa-reply"></i>
+
+                    Reply
+
+                </button>
+
+
+                <form
+                    action="/admin/messages/delete/<%= message._id %>"
+                    method="POST"
+                    style="display:inline;"
+                    data-confirm="Are you sure you want to delete this message?"
+                >
+                    <input
+                        type="hidden"
+                        name="_csrf"
+                        value="<%= csrfToken %>"
+                    >
+
+                    <button
+                        type="submit"
+                        class="delete-btn-large"
+                    >
+                        <i class="fa-solid fa-trash"></i>
+                        Delete
+                    </button>
+                </form>
+            </div>
+
+
+
+            <!-- ==========================================
+                 REPLY FORM
+            =========================================== -->
+
+            <div
+                id="replyFormContainer"
+                class="reply-form-container"
+                style="display:none;"
+            >
+
+                <div class="reply-form-header">
+
+                    <div>
+
+                        <h3>
+
+                            <i class="fa-solid fa-paper-plane"></i>
+
+                            Reply to
+                            <%= message.name %>
+
+                        </h3>
+
+
+                        <p>
+
+                            Your reply will be sent to:
+
+                            <strong>
+                                <%= message.email %>
+                            </strong>
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <form
+                    action="/admin/messages/reply/<%= message._id %>"
+                    method="POST"
+                    class="reply-form"
+                >
+                    <input
+                        type="hidden"
+                        name="_csrf"
+                        value="<%= csrfToken %>"
+                    >
+                    
+                    <div class="form-group">
+
+                        <label>
+                            To
+                        </label>
+
+                        <input
+                            type="email"
+                            value="<%= message.email %>"
+                            readonly
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Subject
+                        </label>
+
+                        <input
+                            type="text"
+                            value="Re: <%= message.subject %>"
+                            readonly
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label
+                            for="replyMessage"
+                        >
+                            Your Reply
+                        </label>
+
+                        <textarea
+                            id="replyMessage"
+                            name="replyMessage"
+                            rows="8"
+                            placeholder="Write your reply to the visitor..."
+                            required
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="reply-form-actions">
+
+                        <button
+                            type="button"
+                            class="cancel-reply-btn"
+                            data-toggle-target="replyFormContainer"
+                        >
+
+                            Cancel
+
+                        </button>
+
+
+                        <button
+                            type="submit"
+                            class="send-reply-btn"
+                        >
+
+                            <i class="fa-solid fa-paper-plane"></i>
+
+                            Send Reply
+
+                        </button>
+
+                    </div>
+
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ==========================================
+             CONVERSATION HISTORY
+        =========================================== -->
+
+        <div class="conversation-card">
+
+            <div class="message-card-title">
+
+                <i class="fa-solid fa-comments"></i>
+
+                <div>
+
+                    <h2>
+                        Conversation History
+                    </h2>
+
+                    <p class="conversation-subtitle">
+                        All replies exchanged with this visitor.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- ORIGINAL MESSAGE -->
+
+            <div
+                class="conversation-message user-message"
+            >
+
+                <div class="conversation-message-header">
+
+                    <div class="conversation-person">
+
+                        <div
+                            class="conversation-avatar user-avatar"
+                        >
+
+                            <i class="fa-solid fa-user"></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+                                <%= message.name %>
+                            </strong>
+
+                            <span>
+                                Visitor
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="conversation-date">
+
+                        <%= new Date(
+                            message.createdAt
+                        ).toLocaleString() %>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="conversation-subject-line"
+                >
+
+                    <i class="fa-solid fa-tag"></i>
+
+                    <strong>
+                        <%= message.subject %>
+                    </strong>
+
+                </div>
+
+
+                <div class="conversation-body">
+
+                    <%= message.message %>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- REPLIES -->
+
+            <%
+                const conversationReplies =
+                    Array.isArray(message.replies)
+                        ? message.replies
+                        : [];
+            %>
+
+
+            <% if (
+                conversationReplies.length > 0
+            ) { %>
+
+
+                <div class="conversation-replies">
+
+
+                    <% conversationReplies.forEach(
+                        reply => {
+                    %>
+
+
+                        <div
+                            class="conversation-message admin-message"
+                        >
+
+                            <div
+                                class="conversation-message-header"
+                            >
+
+                                <div
+                                    class="conversation-person"
+                                >
+
+                                    <div
+                                        class="conversation-avatar admin-avatar"
+                                    >
+
+                                        <i
+                                            class="fa-solid fa-headset"
+                                        ></i>
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <strong>
+                                            <%= reply.sentByName ||
+                                                "TechNova Support" %>
+                                        </strong>
+
+                                        <span>
+                                            TechNova Support
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div
+                                    class="conversation-date"
+                                >
+
+                                    <%= new Date(
+                                        reply.sentAt
+                                    ).toLocaleString() %>
+
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="conversation-body"
+                            >
+
+                                <%= reply.message %>
+
+                            </div>
+
+
+                            <div
+                                class="reply-email-status"
+                            >
+
+                                <i
+                                    class="fa-solid fa-circle-check"
+                                ></i>
+
+                                Reply sent to
+
+                                <strong>
+                                    <%= message.email %>
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                    <% }) %>
+
+
+                </div>
+
+
+            <% } else { %>
+
+
+                <div class="no-replies-message">
+
+                    <i
+                        class="fa-solid fa-reply"
+                    ></i>
+
+                    <div>
+
+                        <strong>
+                            No replies yet
+                        </strong>
+
+                        <p>
+                            No response has been sent
+                            to this visitor yet.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+            <% } %>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+<%- include("../layouts/dashboardFooter") %>

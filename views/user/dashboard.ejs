@@ -1,0 +1,387 @@
+<%- include("../layouts/userDashboardHeader") %>
+<%- include("../partials/dashboardSidebar", {
+    currentPage: "dashboard"
+}) %>
+
+<main class="main-content">
+
+    <!-- =========================================
+         TOP BAR
+    =========================================== -->
+
+    <div class="topbar">
+        <h1>
+            Welcome Back,
+            <%= user.firstName %> 👋
+        </h1>
+    </div>
+
+    <!-- ==========================================
+         STATISTICS CARDS
+    =========================================== -->
+
+    <div class="cards">
+
+        <!-- Enrolled Courses -->
+        <div class="card">
+            <i class="fa-solid fa-book"></i>
+            <h2>
+                <%= enrolledCourses || 0 %>
+            </h2>
+
+            <p>
+                Enrolled Courses
+            </p>
+        </div>
+
+        <!-- Completed Courses -->
+        <div class="card">
+            <i class="fa-solid fa-circle-check"></i>
+            <h2>
+                <%= completedCourses || 0 %>
+            </h2>
+
+            <p>
+                Completed
+            </p>
+        </div>
+
+        <!-- Certificates -->
+
+        <div class="card">
+
+            <i class="fa-solid fa-certificate"></i>
+
+            <h2>
+
+                <%= certificates || 0 %>
+
+            </h2>
+
+            <p>
+
+                Certificates
+
+            </p>
+
+        </div>
+
+
+        <!-- Learning Hours -->
+
+        <div class="card">
+
+            <i class="fa-solid fa-clock"></i>
+
+            <h2>
+
+                <%= learningHours || 0 %>
+
+            </h2>
+
+            <p>
+
+                Learning Hours
+
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ==========================================
+         MY COURSES
+    =========================================== -->
+
+    <section class="my-courses">
+
+        <h2>
+            My Courses
+        </h2>
+
+
+        <% if (!myCourses || myCourses.length === 0) { %>
+
+
+            <!-- No Courses -->
+
+            <div class="profile-box">
+
+                <i
+                    class="fa-solid fa-book-open"
+                    style="font-size:35px;color:#2563eb;"
+                >
+                </i>
+
+
+                <h3 style="margin-top:15px;">
+
+                    No Courses Yet
+
+                </h3>
+
+
+                <p>
+
+                    You have not enrolled in any course yet.
+
+                </p>
+
+
+                <a
+                    href="/services"
+                    class="course-btn"
+                    style="max-width:200px;"
+                >
+
+                    Browse Courses
+
+                </a>
+
+            </div>
+
+
+        <% } else { %>
+
+
+            <!-- Courses Grid -->
+
+            <div class="courses-grid">
+
+
+                <% myCourses.forEach(item => { %>
+
+
+                    <% if (item.course) { %>
+
+
+                        <div class="course-card">
+
+
+                            <!-- COURSE IMAGE -->
+
+                            <img
+                                src="/uploads/<%= item.course.image %>"
+                                alt="<%= item.course.title %>"
+                            >
+
+
+                            <div class="course-body">
+
+
+                                <!-- COURSE TITLE -->
+
+                                <h3>
+
+                                    <%= item.course.title %>
+
+                                </h3>
+
+
+                                <!-- INSTRUCTOR -->
+
+                                <p>
+
+                                    <strong>
+                                        Instructor:
+                                    </strong>
+
+                                    <%= item.course.instructor %>
+
+                                </p>
+
+
+                                <!-- CATEGORY -->
+
+                                <p>
+
+                                    <strong>
+                                        Category:
+                                    </strong>
+
+                                    <%= item.course.category %>
+
+                                </p>
+
+
+                                <!-- STATUS -->
+
+                                <p>
+
+                                    <strong>
+                                        Status:
+                                    </strong>
+
+
+                                    <span class="status-active">
+
+                                        <%= item.status || "Pending" %>
+
+                                    </span>
+
+                                </p>
+
+
+                                <!-- =================================
+                                     COURSE PROGRESS
+                                ================================== -->
+
+                                <div class="course-progress">
+
+
+                                    <div class="progress-header">
+
+                                        <span>
+
+                                            Course Progress
+
+                                        </span>
+
+
+                                        <strong>
+
+                                            <%= item.progress || 0 %>%
+
+                                        </strong>
+
+                                    </div>
+
+
+                                    <div class="progress-track">
+
+                                        <div
+                                            class="progress-fill"
+                                            data-progress="<%= item.progress || 0 %>">
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+
+
+                                <!-- CONTINUE LEARNING -->
+
+                                <a
+                                    href="/learn/course/<%= item.course._id %>"
+                                    class="course-btn"
+                                >
+
+                                    <i class="fa-solid fa-play"></i>
+
+                                    Continue Learning
+
+                                </a>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    <% } %>
+
+
+                <% }) %>
+
+
+            </div>
+
+
+        <% } %>
+
+
+    </section>
+
+
+    <!-- ==========================================
+         USER INFORMATION
+    =========================================== -->
+
+    <div class="profile-box">
+
+
+        <h2>
+
+            <i class="fa-solid fa-user"></i>
+
+            User Information
+
+        </h2>
+
+
+        <p>
+
+            <strong>
+                Name:
+            </strong>
+
+            <%= user.firstName %>
+            <%= user.lastName %>
+
+        </p>
+
+
+        <p>
+
+            <strong>
+                Email:
+            </strong>
+
+            <%= user.email %>
+
+        </p>
+
+
+        <p>
+
+            <strong>
+                Role:
+            </strong>
+
+            <%= user.role %>
+
+        </p>
+
+
+        <a
+            href="/profile"
+            class="course-btn"
+            style="max-width:180px;"
+        >
+
+            Edit Profile
+
+        </a>
+
+
+    </div>
+
+
+</main>
+
+<script nonce="<%= cspNonce %>">
+
+    document
+        .querySelectorAll(".progress-fill")
+        .forEach(function (bar) {
+
+            const progress =
+                Number(
+                    bar.dataset.progress || 0
+                );
+
+            bar.style.width =
+                Math.max(
+                    0,
+                    Math.min(100, progress)
+                ) + "%";
+
+        });
+
+</script>
+
+<%- include("../layouts/dashboardFooter") %>

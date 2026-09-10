@@ -1,0 +1,696 @@
+/* =========================================================
+   TECHNOVA ADMIN - WEBSITE SETTINGS
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   MAIN SETTINGS CONTAINER
+========================================================= */
+
+.settings-success {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 22px;
+    padding: 13px 16px;
+
+    background: #ecfdf5;
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+
+    color: #166534;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.settings-success i {
+    color: #16a34a;
+    font-size: 16px;
+}
+
+
+/* =========================================================
+   FORM CONTAINER
+========================================================= */
+
+.form-container {
+    width: 100%;
+    max-width: 1100px;
+
+    margin: 0 auto;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+
+    box-shadow:
+        0 10px 30px rgba(15, 23, 42, 0.06);
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   SETTINGS SECTION
+========================================================= */
+
+.settings-section {
+    padding: 30px 32px;
+
+    border-bottom: 1px solid #eef2f7;
+}
+
+.settings-section:last-of-type {
+    border-bottom: none;
+}
+
+
+/* =========================================================
+   SECTION HEADER
+========================================================= */
+
+.settings-section-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    margin-bottom: 25px;
+
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid #edf0f5;
+}
+
+.settings-section-title > i {
+    width: 46px;
+    height: 46px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eff6ff,
+            #dbeafe
+        );
+
+    color: #2563eb;
+
+    font-size: 19px;
+}
+
+.settings-section-title h2 {
+    margin: 0 0 4px;
+
+    color: #0f172a;
+
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.settings-section-title p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   FORM GROUP
+========================================================= */
+
+.settings-section .form-group {
+    margin-bottom: 19px;
+}
+
+.settings-section .form-group:last-child {
+    margin-bottom: 0;
+}
+
+.settings-section label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #334155;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+.settings-section input,
+.settings-section textarea,
+.settings-section select {
+    width: 100%;
+
+    padding: 12px 14px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    color: #0f172a;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.settings-section input,
+.settings-section select {
+    min-height: 45px;
+}
+
+.settings-section textarea {
+    min-height: 105px;
+
+    resize: vertical;
+
+    line-height: 1.65;
+}
+
+.settings-section input::placeholder,
+.settings-section textarea::placeholder {
+    color: #94a3b8;
+}
+
+.settings-section input:focus,
+.settings-section textarea:focus,
+.settings-section select:focus {
+    border-color: #2563eb;
+
+    background: #fcfdff;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(37, 99, 235, 0.08);
+}
+
+
+/* =========================================================
+   FORM ROW
+========================================================= */
+
+.settings-section .form-row {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 18px;
+
+    align-items: start;
+}
+
+
+/* =========================================================
+   SMALL HELP TEXT
+========================================================= */
+
+.settings-section small {
+    display: block;
+
+    margin-top: 7px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   HERO IMAGE PREVIEW
+========================================================= */
+
+.settings-image-preview {
+    width: 100%;
+
+    max-width: 480px;
+
+    height: 220px;
+
+    margin-bottom: 14px;
+
+    padding: 8px;
+
+    overflow: hidden;
+
+    border:
+        1px solid #dbe3ec;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f8fafc,
+            #eef2f7
+        );
+}
+
+.settings-image-preview img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    border-radius: 9px;
+}
+
+
+/* =========================================================
+   CORE VALUE SUBSECTION
+========================================================= */
+
+.settings-subsection {
+    margin-bottom: 20px;
+
+    padding: 20px;
+
+    border:
+        1px solid #e2e8f0;
+
+    border-radius: 13px;
+
+    background: #f8fafc;
+}
+
+.settings-subsection:last-child {
+    margin-bottom: 0;
+}
+
+.settings-subsection h3 {
+    margin: 0 0 16px;
+
+    color: #0f172a;
+
+    font-size: 14px;
+
+    font-weight: 800;
+}
+
+.settings-subsection .form-group {
+    margin-bottom: 15px;
+}
+
+
+/* =========================================================
+   NAVIGATION SETTINGS
+========================================================= */
+
+.navigation-setting-row {
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 12px;
+
+    padding: 13px;
+
+    background: #f8fafc;
+
+    border:
+        1px solid #e2e8f0;
+
+    border-radius: 11px;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.navigation-setting-row:hover {
+    background: #f8fbff;
+
+    border-color: #cbd5e1;
+}
+
+.navigation-setting-row:last-child {
+    margin-bottom: 0;
+}
+
+.navigation-number {
+    width: 34px;
+    height: 34px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #dbeafe;
+
+    color: #2563eb;
+
+    font-size: 12px;
+
+    font-weight: 800;
+}
+
+.navigation-fields {
+    flex: 1;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        130px;
+
+    gap: 10px;
+}
+
+.navigation-fields input,
+.navigation-fields select {
+    width: 100%;
+
+    min-height: 42px;
+}
+
+
+/* =========================================================
+   SETTINGS ACTIONS
+========================================================= */
+
+.settings-actions {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    padding:
+        22px 32px;
+
+    background: #f8fafc;
+
+    border-top:
+        1px solid #eef2f7;
+}
+
+.save-btn {
+    min-height: 45px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    padding:
+        0 20px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #2563eb,
+            #06b6d4
+        );
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 18px
+        rgba(37, 99, 235, 0.20);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.save-btn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 12px 24px
+        rgba(37, 99, 235, 0.28);
+}
+
+.save-btn i {
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   PAGE HEADER BUTTON
+========================================================= */
+
+.admin-page-header .save-btn {
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   FILE INPUT
+========================================================= */
+
+.settings-section input[type="file"] {
+    padding: 8px;
+
+    background: #f8fafc;
+
+    cursor: pointer;
+}
+
+.settings-section input[type="file"]::file-selector-button {
+    margin-right: 10px;
+
+    padding: 8px 12px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background: #dbeafe;
+
+    color: #2563eb;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease;
+}
+
+.settings-section input[type="file"]::file-selector-button:hover {
+    background: #bfdbfe;
+}
+
+
+/* =========================================================
+   SELECT
+========================================================= */
+
+.settings-section select {
+    cursor: pointer;
+
+    appearance: auto;
+}
+
+
+/* =========================================================
+   RESPONSIVE - 900px
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .settings-section {
+        padding:
+            25px 24px;
+    }
+
+    .settings-actions {
+        padding:
+            20px 24px;
+    }
+
+    .settings-section .form-row {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - 650px
+========================================================= */
+
+@media (max-width: 650px) {
+
+    .form-container {
+        border-radius: 15px;
+    }
+
+    .settings-section {
+        padding:
+            22px 18px;
+    }
+
+    .settings-section-title {
+        gap: 11px;
+    }
+
+    .settings-section-title > i {
+        width: 40px;
+        height: 40px;
+
+        font-size: 16px;
+    }
+
+    .settings-section-title h2 {
+        font-size: 17px;
+    }
+
+    .settings-section-title p {
+        font-size: 11px;
+    }
+
+    .navigation-setting-row {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .navigation-number {
+        width: 30px;
+        height: 30px;
+    }
+
+    .navigation-fields {
+        width: 100%;
+
+        grid-template-columns: 1fr;
+    }
+
+    .settings-image-preview {
+        height: 190px;
+    }
+
+    .settings-actions {
+        padding:
+            18px;
+    }
+
+    .settings-actions .save-btn {
+        width: 100%;
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE - 450px
+========================================================= */
+
+@media (max-width: 450px) {
+
+    .settings-section {
+        padding:
+            18px 14px;
+    }
+
+    .settings-section input,
+    .settings-section textarea,
+    .settings-section select {
+        font-size: 12px;
+    }
+
+    .settings-subsection {
+        padding: 15px;
+    }
+
+    .settings-image-preview {
+        height: 160px;
+    }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+.settings-section input:disabled,
+.settings-section textarea:disabled,
+.settings-section select:disabled {
+    background: #f1f5f9;
+
+    color: #94a3b8;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .navigation-setting-row,
+    .save-btn,
+    .settings-section input,
+    .settings-section textarea,
+    .settings-section select {
+        transition: none;
+    }
+
+}

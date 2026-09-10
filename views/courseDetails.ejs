@@ -1,0 +1,153 @@
+<%- include("layouts/header") %>
+
+
+<section class="course-details-section">
+
+    <div class="course-details-container">
+
+
+        <!-- IMAGE -->
+
+        <div class="course-details-image">
+
+            <img
+                src="/uploads/<%= course.image %>"
+                alt="<%= course.title %>"
+            >
+
+        </div>
+
+
+        <!-- INFORMATION -->
+
+        <div class="course-details-content">
+
+            <span class="course-category">
+                <%= course.category %>
+            </span>
+
+
+            <h1>
+                <%= course.title %>
+            </h1>
+
+
+            <p class="course-instructor">
+
+                <i class="fa-solid fa-user"></i>
+
+                Instructor:
+
+                <strong>
+                    <%= course.instructor %>
+                </strong>
+
+            </p>
+
+
+            <div class="course-meta">
+
+                <div>
+
+                    <i class="fa-solid fa-signal"></i>
+
+                    <strong>Level</strong>
+
+                    <span>
+                        <%= course.level %>
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <i class="fa-solid fa-clock"></i>
+
+                    <strong>Duration</strong>
+
+                    <span>
+                        <%= course.duration %>
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <i class="fa-solid fa-tag"></i>
+
+                    <strong>Price</strong>
+
+                    <span>
+                        Rs. <%= course.price %>
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="course-description">
+
+                <h2>
+                    Course Description
+                </h2>
+
+                <p>
+                    <%= course.description %>
+                </p>
+
+            </div>
+
+
+            <!-- ENROLL -->
+
+            <% if (user) { %>
+
+                <form
+                    action="/course/enroll/<%= course._id %>"
+                    method="POST">
+
+                    <input
+                        type="hidden"
+                        name="_csrf"
+                        value="<%= csrfToken %>">
+
+                    <button
+                        type="submit"
+                        class="enroll-now-btn">
+
+                        <i class="fa-solid fa-user-plus"></i>
+
+                        Enroll Now
+
+                    </button>
+
+                </form>
+
+            <% } else { %>
+
+                <a
+                    href="/login"
+                    class="enroll-now-btn">
+
+                    <i class="fa-solid fa-right-to-bracket"></i>
+
+                    Login to Enroll
+
+                </a>
+
+            <% } %>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<%- include("layouts/footer") %>

@@ -1,0 +1,432 @@
+/* =========================================
+   ENROLLMENT PAGE
+========================================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+.main-content {
+    min-width: 0;
+}
+
+.enrollment-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+    min-width: 0;
+}
+
+.enrollment-stat-card {
+    background: #ffffff;
+    border: 1px solid #edf0f5;
+    border-radius: 16px;
+    padding: 22px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+}
+
+.stat-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 13px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 21px;
+}
+
+.stat-icon.total {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.stat-icon.pending {
+    background: #fff7ed;
+    color: #ea580c;
+}
+
+.stat-icon.approved {
+    background: #f0fdf4;
+    color: #16a34a;
+}
+
+.stat-icon.rejected {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.enrollment-stat-card h3 {
+    font-size: 25px;
+    color: #0f172a;
+    margin: 0 0 4px;
+}
+
+.enrollment-stat-card p {
+    margin: 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+
+/* =========================================
+   ENROLLMENT TABLE CARD
+========================================= */
+
+.enrollment-table-card {
+    background: #ffffff;
+    border: 1px solid #edf0f5;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+    overflow: hidden;
+    min-width: 0;
+}
+
+.table-header {
+    padding: 25px 28px;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.table-header h2 {
+    margin: 0 0 6px;
+    font-size: 21px;
+    color: #0f172a;
+}
+
+.table-header p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+
+/* =========================================
+   TABLE
+========================================= */
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.table-responsive::-webkit-scrollbar {
+    height: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #94a3b8;
+    border-radius: 999px;
+    border: 2px solid #f1f5f9;
+}
+
+.enrollment-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 980px;
+}
+
+.enrollment-table thead {
+    background: #f8fafc;
+}
+
+.enrollment-table th {
+    padding: 15px 18px;
+    text-align: left;
+    font-size: 12px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.enrollment-table td {
+    padding: 17px 18px;
+    border-top: 1px solid #f1f5f9;
+    color: #334155;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.enrollment-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+.enrollment-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+
+/* =========================================
+   STUDENT INFO
+========================================= */
+
+.student-info {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 170px;
+}
+
+.student-avatar {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 50%;
+
+    background: #eff6ff;
+    color: #2563eb;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    flex-shrink: 0;
+}
+
+.student-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.student-avatar i {
+    font-size: 17px;
+}
+
+.student-info strong {
+    color: #0f172a;
+    font-size: 14px;
+}
+
+
+/* =========================================
+   COURSE INFO
+========================================= */
+
+.course-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 180px;
+}
+
+.course-info strong {
+    color: #0f172a;
+    font-size: 14px;
+}
+
+.course-info small {
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 6px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-badge.approved {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.status-badge.pending {
+    background: #ffedd5;
+    color: #c2410c;
+}
+
+.status-badge.rejected {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+
+/* =========================================
+   ACTION BUTTONS
+========================================= */
+
+.enrollment-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.enrollment-actions form {
+    margin: 0;
+}
+
+.action-btn {
+    min-width: 78px;
+    height: 36px;
+    padding: 0 12px;
+
+    border: 1px solid transparent;
+    border-radius: 9px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    cursor: pointer;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+
+    transition: background-color 0.2s ease, border-color 0.2s ease,
+        color 0.2s ease, transform 0.2s ease;
+}
+
+.action-btn:hover {
+    transform: translateY(-1px);
+}
+
+.action-btn:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.25);
+    outline-offset: 2px;
+}
+
+.approve-btn {
+    background: #16a34a;
+    border-color: #15803d;
+    color: #ffffff;
+}
+
+.approve-btn:hover {
+    background: #15803d;
+    border-color: #166534;
+}
+
+.reject-btn {
+    background: #f97316;
+    border-color: #ea580c;
+    color: #ffffff;
+}
+
+.reject-btn:hover {
+    background: #ea580c;
+    border-color: #c2410c;
+}
+
+.delete-btn {
+    background: #dc2626;
+    border-color: #b91c1c;
+    color: #ffffff;
+}
+
+.delete-btn:hover {
+    background: #b91c1c;
+    border-color: #991b1b;
+}
+
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
+.empty-enrollments {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.empty-enrollments > i {
+    width: 75px;
+    height: 75px;
+
+    border-radius: 50%;
+
+    background: #eff6ff;
+    color: #2563eb;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 20px;
+
+    font-size: 30px;
+}
+
+.empty-enrollments h3 {
+    margin: 0 0 8px;
+    color: #0f172a;
+}
+
+.empty-enrollments p {
+    margin: 0;
+    color: #64748b;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1100px) {
+
+    .enrollment-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .table-header {
+        padding: 22px;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .enrollment-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .enrollment-stat-card {
+        padding: 18px;
+    }
+
+    .table-header {
+        padding: 20px;
+    }
+
+    .enrollment-table {
+        min-width: 900px;
+    }
+
+    .enrollment-table th,
+    .enrollment-table td {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+}

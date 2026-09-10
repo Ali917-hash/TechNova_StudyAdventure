@@ -1,0 +1,428 @@
+<%
+const currentPage = "enrollments";
+%>
+
+<%- include("../layouts/adminDashboardHeader") %>
+
+<%- include("../partials/adminSidebar") %>
+
+
+<div class="main-content">
+
+    <div class="page-header">
+
+        <div>
+            <h1>Enrollments</h1>
+
+            <p>
+                Manage student course enrollments
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- Statistics -->
+
+    <div class="enrollment-stats">
+
+        <div class="enrollment-stat-card">
+
+            <div class="stat-icon total">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+
+            <div>
+                <h3>
+                    <%= enrollments.length %>
+                </h3>
+
+                <p>Total Enrollments</p>
+            </div>
+
+        </div>
+
+
+        <div class="enrollment-stat-card">
+
+            <div class="stat-icon pending">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+
+            <div>
+
+                <h3>
+                    <%= enrollments.filter(e => e.status === "pending").length %>
+                </h3>
+
+                <p>Pending</p>
+
+            </div>
+
+        </div>
+
+
+        <div class="enrollment-stat-card">
+
+            <div class="stat-icon approved">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <div>
+
+                <h3>
+                    <%= enrollments.filter(e => e.status === "approved").length %>
+                </h3>
+
+                <p>Approved</p>
+
+            </div>
+
+        </div>
+
+
+        <div class="enrollment-stat-card">
+
+            <div class="stat-icon rejected">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </div>
+
+            <div>
+
+                <h3>
+                    <%= enrollments.filter(e => e.status === "rejected").length %>
+                </h3>
+
+                <p>Rejected</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Enrollment Table -->
+
+    <div class="enrollment-table-card">
+
+        <div class="table-header">
+
+            <div>
+
+                <h2>All Enrollments</h2>
+
+                <p>
+                    Review and manage student registrations
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <% if (enrollments.length === 0) { %>
+
+            <div class="empty-enrollments">
+
+                <i class="fa-solid fa-graduation-cap"></i>
+
+                <h3>No Enrollments Found</h3>
+
+                <p>
+                    No students have enrolled in any course yet.
+                </p>
+
+            </div>
+
+        <% } else { %>
+
+
+        <div class="table-responsive">
+
+            <table class="enrollment-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+
+                        <th>Student</th>
+
+                        <th>Email</th>
+
+                        <th>Course</th>
+
+                        <th>Category</th>
+
+                        <th>Price</th>
+
+                        <th>Date</th>
+
+                        <th>Status</th>
+
+                        <th>Actions</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <% enrollments.forEach((enrollment, index) => { %>
+
+                        <tr>
+
+                            <td>
+                                <%= index + 1 %>
+                            </td>
+
+
+                            <!-- Student -->
+
+                            <td>
+
+                                <div class="student-info">
+
+                                    <div class="student-avatar">
+
+                                        <% if (
+                                            enrollment.student &&
+                                            enrollment.student.profileImage
+                                        ) { %>
+
+                                            <img
+                                                src="/uploads/<%= enrollment.student.profileImage %>"
+                                                alt="Student">
+
+                                        <% } else { %>
+
+                                            <i class="fa-solid fa-user"></i>
+
+                                        <% } %>
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <strong>
+
+                                            <%= enrollment.student
+                                                ? enrollment.student.firstName + " " +
+                                                  enrollment.student.lastName
+                                                : "Unknown Student" %>
+
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- Email -->
+
+                            <td>
+
+                                <%= enrollment.student
+                                    ? enrollment.student.email
+                                    : "N/A" %>
+
+                            </td>
+
+
+                            <!-- Course -->
+
+                            <td>
+
+                                <div class="course-info">
+
+                                    <strong>
+
+                                        <%= enrollment.course
+                                            ? enrollment.course.title
+                                            : "Course Deleted" %>
+
+                                    </strong>
+
+                                    <% if (enrollment.course) { %>
+
+                                        <small>
+                                            <%= enrollment.course.instructor %>
+                                        </small>
+
+                                    <% } %>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- Category -->
+
+                            <td>
+
+                                <%= enrollment.course
+                                    ? enrollment.course.category
+                                    : "N/A" %>
+
+                            </td>
+
+
+                            <!-- Price -->
+
+                            <td>
+
+                                Rs.
+
+                                <%= enrollment.course
+                                    ? enrollment.course.price
+                                    : 0 %>
+
+                            </td>
+
+
+                            <!-- Date -->
+
+                            <td>
+
+                                <%= new Date(
+                                    enrollment.enrolledAt
+                                ).toLocaleDateString() %>
+
+                            </td>
+
+
+                            <!-- Status -->
+
+                            <td>
+
+                                <% if (
+                                    enrollment.status === "approved"
+                                ) { %>
+
+                                    <span class="status-badge approved">
+                                        <i class="fa-solid fa-check"></i>
+                                        Approved
+                                    </span>
+
+                                <% } else if (
+                                    enrollment.status === "rejected"
+                                ) { %>
+
+                                    <span class="status-badge rejected">
+                                        <i class="fa-solid fa-xmark"></i>
+                                        Rejected
+                                    </span>
+
+                                <% } else { %>
+
+                                    <span class="status-badge pending">
+                                        <i class="fa-solid fa-clock"></i>
+                                        Pending
+                                    </span>
+
+                                <% } %>
+
+                            </td>
+
+
+                            <!-- Actions -->
+
+                            <td>
+
+                                <div class="enrollment-actions">
+
+
+                                    <% if (
+                                        enrollment.status !== "approved"
+                                    ) { %>
+
+                                        <form
+                                            action="/admin/enrollments/approve/<%= enrollment._id %>"
+                                            method="POST">
+
+                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                                            <button
+                                                type="submit"
+                                                class="action-btn approve-btn"
+                                                data-confirm="Approve this enrollment?">
+
+                                                <i class="fa-solid fa-check"></i>
+                                                Approve
+
+                                            </button>
+
+                                        </form>
+                                    <% } %>
+
+
+                                    <% if (
+                                        enrollment.status !== "rejected"
+                                    ) { %>
+
+                                        <form
+                                            action="/admin/enrollments/reject/<%= enrollment._id %>"
+                                            method="POST">
+
+                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                                            <button
+                                                type="submit"
+                                                class="action-btn reject-btn"
+                                                data-confirm="Reject this enrollment?">
+
+                                                <i class="fa-solid fa-xmark"></i>
+                                                Reject
+
+                                            </button>
+
+                                        </form>
+
+                                    <% } %>
+
+
+                                    <form
+                                        action="/admin/enrollments/delete/<%= enrollment._id %>"
+                                        method="POST">
+
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                                        <button
+                                            type="submit"
+                                            class="action-btn delete-btn"
+                                            data-confirm="Delete this enrollment permanently?">
+
+                                            <i class="fa-solid fa-trash"></i>
+                                            Delete
+
+                                        </button>
+
+                                    </form>
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    <% }) %>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <% } %>
+
+    </div>
+
+</div>
+
+
+<%- include("../layouts/dashboardFooter") %>

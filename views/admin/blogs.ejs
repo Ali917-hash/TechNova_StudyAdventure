@@ -1,0 +1,460 @@
+<%
+const currentPage = "blogs";
+%>
+
+<%- include("../layouts/adminDashboardHeader") %>
+
+<%- include("../partials/adminSidebar") %>
+
+
+<div class="main-content">
+
+
+    <!-- ==========================================
+         PAGE HEADER
+    =========================================== -->
+
+    <div class="admin-page-header">
+
+        <div>
+
+            <h1>
+                Blog Management
+            </h1>
+
+            <p>
+                Create and manage TechNova blog posts.
+            </p>
+
+        </div>
+
+
+        <a
+            href="/admin/blog/add"
+            class="save-btn"
+        >
+
+            <i class="fa-solid fa-plus"></i>
+
+            Add Blog
+
+        </a>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         STATISTICS
+    =========================================== -->
+
+    <div class="cards">
+
+
+        <div class="card">
+
+            <i class="fa-solid fa-newspaper"></i>
+
+            <h2>
+                <%= totalBlogs %>
+            </h2>
+
+            <p>
+                Total Blogs
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <i class="fa-solid fa-circle-check"></i>
+
+            <h2>
+                <%= publishedBlogs %>
+            </h2>
+
+            <p>
+                Published
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <i class="fa-solid fa-file"></i>
+
+            <h2>
+                <%= draftBlogs %>
+            </h2>
+
+            <p>
+                Drafts
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <i class="fa-solid fa-star"></i>
+
+            <h2>
+                <%= featuredBlogs %>
+            </h2>
+
+            <p>
+                Featured
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         BLOG LIST
+    =========================================== -->
+
+    <div class="messages-card">
+
+
+        <div class="messages-card-header">
+
+            <div>
+
+                <h2>
+                    Blog Posts
+                </h2>
+
+                <p>
+                    Manage published and draft articles.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <% if (!blogs || blogs.length === 0) { %>
+
+            <div class="empty-messages">
+
+                <i class="fa-solid fa-newspaper"></i>
+
+                <h3>
+                    No Blog Posts
+                </h3>
+
+                <p>
+                    Create your first TechNova blog post.
+                </p>
+
+            </div>
+
+        <% } else { %>
+
+
+            <div class="table-wrapper">
+
+                <table class="messages-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                #
+                            </th>
+
+                            <th>
+                                Blog
+                            </th>
+
+                            <th>
+                                Category
+                            </th>
+
+                            <th>
+                                Author
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Featured
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <% blogs.forEach(
+                            (blog, index) => {
+                        %>
+
+                            <tr>
+
+
+                                <td>
+                                    <%= index + 1 %>
+                                </td>
+
+
+                                <td>
+
+                                    <div
+                                        class="sender-info"
+                                    >
+
+                                        <div
+                                            class="sender-avatar"
+                                        >
+
+                                            <i
+                                                class="fa-solid fa-newspaper"
+                                            ></i>
+
+                                        </div>
+
+
+                                        <strong>
+                                            <%= blog.title %>
+                                        </strong>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+                                    <%= blog.category %>
+                                </td>
+
+
+                                <td>
+                                    <%= blog.author %>
+                                </td>
+
+
+                                <td>
+
+                                    <% if (
+                                        blog.isPublished
+                                    ) { %>
+
+                                        <span
+                                            class="message-status replied"
+                                        >
+
+                                            <i
+                                                class="fa-solid fa-circle-check"
+                                            ></i>
+
+                                            Published
+
+                                        </span>
+
+                                    <% } else { %>
+
+                                        <span
+                                            class="message-status waiting"
+                                        >
+
+                                            <i
+                                                class="fa-solid fa-file"
+                                            ></i>
+
+                                            Draft
+
+                                        </span>
+
+                                    <% } %>
+
+                                </td>
+
+
+                                <td>
+
+                                    <% if (
+                                        blog.isFeatured
+                                    ) { %>
+
+                                        <span
+                                            class="message-status replied"
+                                        >
+
+                                            <i
+                                                class="fa-solid fa-star"
+                                            ></i>
+
+                                            Yes
+
+                                        </span>
+
+                                    <% } else { %>
+
+                                        <span>
+                                            No
+                                        </span>
+
+                                    <% } %>
+
+                                </td>
+
+
+                                <td>
+
+                                    <%= new Date(
+                                        blog.createdAt
+                                    ).toLocaleDateString() %>
+
+                                </td>
+
+
+                                <td>
+
+                                    <div
+                                        class="message-actions"
+                                    >
+
+                                        <a
+                                            href="/blog/<%= blog.slug %>"
+                                            class="view-btn"
+                                            title="View Blog"
+                                            target="_blank"
+                                        >
+
+                                            <i
+                                                class="fa-solid fa-eye"
+                                            ></i>
+
+                                        </a>
+
+
+                                        <a
+                                            href="/admin/blog/edit/<%= blog._id %>"
+                                            class="view-btn"
+                                            title="Edit Blog"
+                                        >
+
+                                            <i
+                                                class="fa-solid fa-pen"
+                                            ></i>
+
+                                        </a>
+
+
+                                        <form
+                                            action="/admin/blog/toggle-published/<%= blog._id %>"
+                                            method="POST"
+                                            style="display:inline;"
+                                        >
+
+                                            <input
+                                                type="hidden"
+                                                name="_csrf"
+                                                value="<%= csrfToken %>"
+                                            >
+
+                                            <button
+                                                type="submit"
+                                                class="view-btn"
+                                                title="Toggle Published"
+                                            >
+
+                                                <i class="fa-solid fa-power-off"></i>
+
+                                            </button>
+
+                                        </form>
+
+
+                                        <form
+                                            action="/admin/blog/toggle-featured/<%= blog._id %>"
+                                            method="POST"
+                                            style="display:inline;"
+                                        >
+
+                                            <input
+                                                type="hidden"
+                                                name="_csrf"
+                                                value="<%= csrfToken %>"
+                                            >
+
+                                            <button
+                                                type="submit"
+                                                class="view-btn"
+                                                title="Toggle Featured"
+                                            >
+
+                                                <i class="fa-solid fa-star"></i>
+
+                                            </button>
+
+                                        </form>
+
+
+                                        <form
+                                            action="/admin/blog/delete/<%= blog._id %>"
+                                            method="POST"
+                                            style="display:inline;"
+                                            data-confirm="Are you sure you want to delete this blog post?"
+                                        >
+
+                                            <input
+                                                type="hidden"
+                                                name="_csrf"
+                                                value="<%= csrfToken %>"
+                                            >
+
+                                            <button
+                                                type="submit"
+                                                class="delete-btn"
+                                                title="Delete Blog"
+                                            >
+
+                                                <i class="fa-solid fa-trash"></i>
+
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        <% }) %>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        <% } %>
+
+
+    </div>
+
+</div>
+
+
+<%- include("../layouts/dashboardFooter") %>

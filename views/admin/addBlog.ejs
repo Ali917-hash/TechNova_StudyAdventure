@@ -1,0 +1,227 @@
+<%
+const currentPage = "blogs";
+%>
+
+<%- include("../layouts/adminDashboardHeader") %>
+
+<%- include("../partials/adminSidebar") %>
+
+
+<div class="main-content">
+
+
+    <div class="admin-page-header">
+
+        <div>
+
+            <h1>
+                Add New Blog
+            </h1>
+
+            <p>
+                Create a new article for the TechNova Blog.
+            </p>
+
+        </div>
+
+
+        <a
+            href="/admin/blogs"
+            class="back-btn"
+        >
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            Back to Blogs
+
+        </a>
+
+    </div>
+
+
+
+    <div class="form-container">
+
+
+        <form
+            action="/admin/blog/add"
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+
+            <div class="form-group">
+
+                <label>
+                    Blog Title
+                </label>
+
+                <input
+                    type="text"
+                    name="title"
+                    placeholder="The Future of AI in Web Development"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label>
+                        Category
+                    </label>
+
+                    <input
+                        type="text"
+                        name="category"
+                        placeholder="Technology"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Author
+                    </label>
+
+                    <input
+                        type="text"
+                        name="author"
+                        value="<%= user.firstName %> <%= user.lastName %>"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Featured Image
+                </label>
+
+                <input
+                    type="file"
+                    name="image"
+                    accept=".jpg,.jpeg,.png,.webp"
+                >
+
+                <small>
+                    Recommended: 1200 × 700 px.
+                </small>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Short Excerpt
+                </label>
+
+                <textarea
+                    name="excerpt"
+                    rows="4"
+                    maxlength="500"
+                    placeholder="Write a short summary of the article..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Full Content
+                </label>
+
+                <textarea
+                    name="content"
+                    rows="14"
+                    placeholder="Write the complete blog article..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label>
+                        Publishing
+                    </label>
+
+                    <select
+                        name="isPublished"
+                    >
+
+                        <option value="true">
+                            Published
+                        </option>
+
+                        <option value="false">
+                            Draft
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Featured
+                    </label>
+
+                    <select
+                        name="isFeatured"
+                    >
+
+                        <option value="false">
+                            No
+                        </option>
+
+                        <option value="true">
+                            Yes
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="save-btn"
+            >
+
+                <i class="fa-solid fa-plus"></i>
+
+                Publish Blog
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<%- include("../layouts/dashboardFooter") %>

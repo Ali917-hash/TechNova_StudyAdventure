@@ -1,0 +1,239 @@
+<%- include("layouts/header") %>
+
+
+<article class="portfolio-details-page">
+
+
+    <div class="portfolio-details-container">
+
+
+        <!-- ==========================================
+             HEADER
+        =========================================== -->
+
+        <div class="portfolio-details-header">
+
+            <span class="project-category">
+
+                <%= project.category %>
+
+            </span>
+
+
+            <h1>
+                <%= project.title %>
+            </h1>
+
+
+            <p>
+                <%= project.description %>
+            </p>
+
+
+        </div>
+
+
+
+        <!-- ==========================================
+             IMAGE
+        =========================================== -->
+
+        <div class="portfolio-details-image">
+
+            <img
+                src="/uploads/<%= project.image %>"
+                alt="<%= project.title %>"
+            >
+
+        </div>
+
+
+
+        <!-- ==========================================
+             DETAILS
+        =========================================== -->
+
+        <div class="portfolio-details-content">
+
+
+            <% if (project.technologies &&
+                   project.technologies.length > 0) { %>
+
+
+                <div class="portfolio-tech-section">
+
+                    <h2>
+                        Technologies
+                    </h2>
+
+
+                    <div class="tech-stack">
+
+                        <% project.technologies.forEach(
+                            technology => {
+                        %>
+
+                            <span class="tech-pill">
+
+                                <%= technology %>
+
+                            </span>
+
+                        <% }) %>
+
+                    </div>
+
+                </div>
+
+
+            <% } %>
+
+
+            <% if (project.content) { %>
+
+                <div class="portfolio-project-content">
+
+                    <h2>
+                        Project Details
+                    </h2>
+
+
+                    <div>
+                        <%= project.content %>
+                    </div>
+
+                </div>
+
+            <% } %>
+
+
+            <div class="portfolio-project-actions">
+
+
+                <% if (project.projectUrl) { %>
+
+                    <a
+                        href="<%= project.projectUrl %>"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="cta-btn btn"
+                    >
+
+                        <i
+                            class="fa-solid fa-arrow-up-right-from-square"
+                        ></i>
+
+                        Live Project
+
+                    </a>
+
+                <% } %>
+
+
+                <% if (project.githubUrl) { %>
+
+                    <a
+                        href="<%= project.githubUrl %>"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="cta-btn secondary btn1"
+                    >
+
+                        <i
+                            class="fa-brands fa-github"
+                        ></i>
+
+                        GitHub
+
+                    </a>
+
+                <% } %>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ==========================================
+             RELATED PROJECTS
+        =========================================== -->
+
+        <% if (
+            relatedProjects &&
+            relatedProjects.length > 0
+        ) { %>
+
+
+            <section
+                class="related-projects"
+            >
+
+                <h2>
+                    Related Projects
+                </h2>
+
+
+                <div class="projects-grid">
+
+
+                    <% relatedProjects.forEach(
+                        related => {
+                    %>
+
+
+                        <a
+                            href="/portfolio/project/<%= related.slug %>"
+                            class="project-card"
+                        >
+
+                            <div class="project-image">
+
+                                <img
+                                    src="/uploads/<%= related.image %>"
+                                    alt="<%= related.title %>"
+                                >
+
+                            </div>
+
+
+                            <div class="project-card-body">
+
+                                <span
+                                    class="project-category"
+                                >
+
+                                    <%= related.category %>
+
+                                </span>
+
+
+                                <h3 class="project-title">
+
+                                    <%= related.title %>
+
+                                </h3>
+
+                            </div>
+
+                        </a>
+
+
+                    <% }) %>
+
+
+                </div>
+
+            </section>
+
+
+        <% } %>
+
+
+    </div>
+
+</article>
+
+
+<%- include("layouts/footer") %>

@@ -1,0 +1,272 @@
+<aside class="sidebar">
+
+    <!-- Logo -->
+    <div class="sidebar-logo">
+
+        <div class="logo-icon">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+
+        <div>
+            <h2>TechNova</h2>
+            <span>Admin Panel</span>
+        </div>
+
+    </div>
+
+
+    <!-- Admin Profile -->
+    <div class="sidebar-profile">
+
+        <div class="sidebar-avatar">
+
+            <% if (user && user.profileImage) { %>
+
+                <img
+                    src="/uploads/<%= user.profileImage %>"
+                    alt="Admin">
+
+            <% } else { %>
+
+                <i class="fa-solid fa-user-shield"></i>
+
+            <% } %>
+
+        </div>
+
+
+        <div class="sidebar-user-info">
+
+            <h3>
+                <%= user.firstName %>
+                <%= user.lastName %>
+            </h3>
+
+            <span>Administrator</span>
+
+        </div>
+
+    </div>
+
+
+    <!-- Navigation -->
+    <nav class="sidebar-navigation">
+
+        <p class="menu-title">
+            ADMIN MENU
+        </p>
+
+        <ul>
+
+            <!-- Dashboard -->
+            <li>
+                <a
+                    href="/admin/dashboard"
+                    class="<%= currentPage === 'dashboard' ? 'active' : '' %>">
+
+                    <i class="fa-solid fa-chart-line"></i>
+
+                    <span>Dashboard</span>
+
+                </a>
+            </li>
+
+
+            <!-- All Courses -->
+            <li>
+                <a
+                    href="/admin/courses"
+                    class="<%= currentPage === 'courses' ? 'active' : '' %>">
+
+                    <i class="fa-solid fa-book"></i>
+
+                    <span>All Courses</span>
+
+                </a>
+            </li>
+
+            <!-- Students -->
+           <li>
+                <a
+                    href="/admin/students"
+                    class="<%= currentPage === 'students' ? 'active' : '' %>">
+
+                    <i class="fa-solid fa-users"></i>
+
+                    <span>Students</span>
+
+                </a>
+            </li>
+
+            <!-- Enrollments -->
+            <li>
+                <a
+                    href="/admin/enrollments"
+                    class="<%= currentPage === 'enrollments' ? 'active' : '' %>">
+
+                    <i class="fa-solid fa-graduation-cap"></i>
+
+                    <span>Enrollments</span>
+                </a>
+            </li>
+
+
+            <!-- Messages -->
+            <li>
+
+                <a
+                    href="/admin/messages"
+                    class="<%= currentPage === 'messages' ? 'active' : '' %>">
+
+                    <i class="fa-solid fa-envelope"></i>
+
+                    <span>Messages</span>
+
+                </a>
+
+            </li>
+
+            <!-- Blogs -->
+            <li>
+
+                <a
+                    href="/admin/blogs"
+                    class="<%= currentPage === 'blogs' ? 'active' : '' %>"
+                >
+
+                    <i class="fa-solid fa-newspaper"></i>
+
+                    <span>
+                        Blog
+                    </span>
+
+                </a>
+
+            </li>
+
+            <!-- Portfolio -->
+            <li>
+
+                <a
+                    href="/admin/portfolio"
+                    class="<%= currentPage === 'portfolio' ? 'active' : '' %>"
+                >
+
+                    <i class="fa-solid fa-briefcase"></i>
+
+                    <span>
+                        Portfolio
+                    </span>
+
+                </a>
+
+            </li>
+
+            <!-- Team -->
+             <li>
+
+                <a
+                    href="/admin/team"
+                    class="<%= currentPage === 'team' ? 'active' : '' %>"
+                >
+
+                    <i class="fa-solid fa-people-group"></i>
+
+                    <span>
+                        Team
+                    </span>
+
+                </a>
+
+            </li>
+
+            <!-- Site Settings  -->
+            <li>
+                <a
+                    href="/admin/site-settings"
+                    class="<%= currentPage === 'site-settings' ? 'active' : '' %>"
+                >
+
+                    <i class="fa-solid fa-gear"></i>
+
+                    <span>
+                        Website Settings
+                    </span>
+
+                </a>
+            </li>
+
+        </ul>
+
+
+        <!-- Account -->
+        <p class="menu-title">
+            ACCOUNT
+        </p>
+
+        <ul>
+
+            <!-- Profile -->
+            <li>
+                <a
+                    href="/admin/profile"
+                    class="<%= currentPage === 'profile' ? 'active' : '' %>">
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <span>Profile</span>
+
+                </a>
+            </li>
+
+            <!-- Logout -->
+            <li class="logout-item">
+
+                <form action="/logout" method="POST">
+
+                    <input
+                        type="hidden"
+                        name="_csrf"
+                        value="<%= csrfToken %>"
+                    >
+
+                    <button
+                        type="submit"
+                        class="logout-btn"
+                    >
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Logout</span>
+                    </button>
+
+                </form>
+
+            </li>
+
+        </ul>
+
+    </nav>
+
+
+    <!-- Sidebar Bottom -->
+    <a
+        href="/admin/help"
+        class="sidebar-bottom admin-help-link"
+    >
+
+        <i class="fa-solid fa-circle-question"></i>
+
+        <div>
+
+            <strong>
+                TechNova Admin
+            </strong>
+
+            <small>
+                Help & system information
+            </small>
+
+        </div>
+
+    </a>
+
+</aside>

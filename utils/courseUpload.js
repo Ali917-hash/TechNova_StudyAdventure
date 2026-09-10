@@ -1,0 +1,342 @@
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
+const crypto = require("crypto");
+
+// ==========================================
+// UPLOAD DIRECTORIES
+// ==========================================
+
+const imagePath =
+    path.join(
+        __dirname,
+        "../public/uploads"
+    );
+
+const materialPath =
+    path.join(
+        __dirname,
+        "../public/uploads/course-materials"
+    );
+
+
+// ==========================================
+// CREATE DIRECTORIES
+// ==========================================
+
+if (!fs.existsSync(imagePath)) {
+
+    fs.mkdirSync(
+        imagePath,
+        {
+            recursive: true
+        }
+    );
+
+}
+
+if (!fs.existsSync(materialPath)) {
+
+    fs.mkdirSync(
+        materialPath,
+        {
+            recursive: true
+        }
+    );
+
+}
+
+
+// ==========================================
+// STORAGE
+// ==========================================
+
+const storage = multer.diskStorage({
+
+    destination: function (req, file, cb) {
+
+        if (file.fieldname === "image") {
+
+            return cb(
+                null,
+                imagePath
+            );
+
+        }
+
+
+        if (
+            file.fieldname === "content" ||
+            file.fieldname === "contentFiles" ||
+            file.fieldname === "contentFolder"
+        ) {
+
+            return cb(
+                null,
+                materialPath
+            );
+
+        }
+
+
+        return cb(
+            new Error(
+                "Invalid file field."
+            )
+        );
+
+    },
+
+    filename: function (req, file, cb) {
+
+        const extension =
+            path.extname(
+                file.originalname
+            ).toLowerCase();
+
+        const baseName =
+            path.basename(
+                file.originalname,
+                extension
+            )
+            .replace(
+                /[^a-zA-Z0-9_-]/g,
+                "-"
+            )
+            .replace(
+                /-+/g,
+                "-"
+            )
+            .replace(
+                /^-+|-+$/g,
+                ""
+            )
+            .substring(
+                0,
+                80
+            ) || "file";
+
+        const randomName =
+            crypto
+                .randomBytes(16)
+                .toString("hex");
+
+        const uniqueName =
+            Date.now() +
+            "-" +
+            randomName +
+            "-" +
+            baseName +
+            extension;
+
+        cb(
+            null,
+            uniqueName
+        );
+    }
+
+});
+
+
+// ==========================================
+// EXACT ALLOWLISTS
+// ==========================================
+
+const imageExtensions =
+    new Set([
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".webp"
+    ]);
+
+const imageMimeTypes =
+    new Set([
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+    ]);
+
+
+const materialMimeTypes = {
+
+    ".pdf":
+        new Set([
+            "application/pdf"
+        ]),
+
+    ".mp4":
+        new Set([
+            "video/mp4"
+        ]),
+
+    ".webm":
+        new Set([
+            "video/webm"
+        ]),
+
+    ".mov":
+        new Set([
+            "video/quicktime"
+        ]),
+
+    ".avi":
+        new Set([
+            "video/x-msvideo",
+            "video/avi"
+        ]),
+
+    ".mkv":
+        new Set([
+            "video/x-matroska"
+        ]),
+
+    ".doc":
+        new Set([
+            "application/msword"
+        ]),
+
+    ".docx":
+        new Set([
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ]),
+
+    ".ppt":
+        new Set([
+            "application/vnd.ms-powerpoint"
+        ]),
+
+    ".pptx":
+        new Set([
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+        ]),
+
+    ".txt":
+        new Set([
+            "text/plain"
+        ])
+
+};
+
+
+// ==========================================
+// FILE FILTER
+// ==========================================
+
+const fileFilter = (
+    req,
+    file,
+    cb
+) => {
+
+    const extension =
+        path.extname(
+            file.originalname
+        ).toLowerCase();
+
+
+    // ======================================
+    // COURSE IMAGE
+    // ======================================
+
+    if (
+        file.fieldname === "image"
+    ) {
+
+        if (
+            imageExtensions.has(extension) &&
+            imageMimeTypes.has(file.mimetype)
+        ) {
+
+            return cb(
+                null,
+                true
+            );
+
+        }
+
+
+        return cb(
+            new Error(
+                "Only JPG, JPEG, PNG and WEBP images are allowed."
+            )
+        );
+
+    }
+
+
+    // ======================================
+    // COURSE MATERIAL
+    // ======================================
+
+    if (
+        file.fieldname === "content" ||
+        file.fieldname === "contentFiles" ||
+        file.fieldname === "contentFolder"
+    ) {
+
+        const allowedMimeTypes =
+            materialMimeTypes[
+                extension
+            ];
+
+
+        if (
+            allowedMimeTypes &&
+            allowedMimeTypes.has(
+                file.mimetype
+            )
+        ) {
+
+            return cb(
+                null,
+                true
+            );
+
+        }
+
+
+        return cb(
+            new Error(
+                "Unsupported course material file type."
+            )
+        );
+
+    }
+
+
+    return cb(
+        new Error(
+            "Invalid file field."
+        )
+    );
+
+};
+
+
+// ==========================================
+// MULTER CONFIGURATION
+// ==========================================
+
+module.exports = multer({
+
+    storage,
+
+    fileFilter,
+
+    limits: {
+
+        fileSize:
+            500 * 1024 * 1024,
+
+        files: 100,
+
+        // Prevent excessive multipart fields
+        fields: 100,
+
+        // Prevent excessive parts
+        parts: 150
+
+    }
+
+});

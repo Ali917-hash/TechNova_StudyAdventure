@@ -1,0 +1,307 @@
+<%- include("../layouts/userDashboardHeader") %>
+
+<main class="certificate-page">
+
+    <!-- ==========================================
+         TOP NAVIGATION
+    =========================================== -->
+
+    <div class="certificate-topbar">
+
+        <a
+            href="/certificates"
+            class="certificate-back-link"
+        >
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Certificates
+        </a>
+
+        <button
+            type="button"
+            class="certificate-print-btn"
+            data-print-page
+        >
+            <i class="fa-solid fa-print"></i>
+            Print Certificate
+        </button>
+
+    </div>
+
+
+    <!-- ==========================================
+         CERTIFICATE
+    =========================================== -->
+
+    <div class="certificate-wrapper">
+
+        <div class="professional-certificate">
+
+            <!-- Decorative corners -->
+
+            <div class="certificate-corner top-left"></div>
+            <div class="certificate-corner top-right"></div>
+            <div class="certificate-corner bottom-left"></div>
+            <div class="certificate-corner bottom-right"></div>
+
+
+            <div class="certificate-inner">
+
+
+                <!-- ======================================
+                     HEADER
+                ======================================= -->
+
+                <div class="certificate-header">
+
+                    <div class="certificate-brand-mark">
+
+                        <i class="fa-solid fa-graduation-cap"></i>
+
+                    </div>
+
+                    <div>
+
+                        <div class="certificate-brand-name">
+                            TechNova
+                        </div>
+
+                        <div class="certificate-brand-tagline">
+                            Skill Learning & Career Development Platform
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Decorative line -->
+
+                <div class="certificate-divider">
+
+                    <span></span>
+
+                    <i class="fa-solid fa-star"></i>
+
+                    <span></span>
+
+                </div>
+
+
+                <!-- ======================================
+                     MAIN TITLE
+                ======================================= -->
+
+                <div class="certificate-title-section">
+
+                    <p class="certificate-small-heading">
+                        CERTIFICATE OF
+                    </p>
+
+                    <h1>
+                        COMPLETION
+                    </h1>
+
+                    <p class="certificate-award-text">
+                        This certificate is proudly presented to
+                    </p>
+
+                </div>
+
+
+                <!-- ======================================
+                     STUDENT
+                ======================================= -->
+
+                <div class="certificate-student-section">
+
+                    <h2>
+
+                        <%= certificate.user.firstName %>
+                        <%= certificate.user.lastName %>
+
+                    </h2>
+
+                    <div class="student-name-line"></div>
+
+                </div>
+
+
+                <!-- ======================================
+                     COURSE
+                ======================================= -->
+
+                <div class="certificate-course-section">
+
+                    <p>
+                        for successfully completing
+                    </p>
+
+                    <h3>
+
+                        <%= certificate.course.title %>
+
+                    </h3>
+
+
+                    <% if (certificate.course.instructor) { %>
+
+                        <div class="certificate-instructor">
+
+                            <span>
+                                Instructor
+                            </span>
+
+                            <strong>
+                                <%= certificate.course.instructor %>
+                            </strong>
+
+                        </div>
+
+                    <% } %>
+
+                </div>
+
+
+                <!-- ======================================
+                     LOWER INFORMATION
+                ======================================= -->
+
+                <div class="certificate-lower-area">
+
+
+                    <!-- LEFT: SIGNATURE -->
+
+                    <div class="certificate-signature">
+
+                        <div class="signature-line"></div>
+
+                        <strong>
+                            TechNova
+                        </strong>
+
+                        <span>
+                            Authorized Signatory
+                        </span>
+
+                    </div>
+
+
+                    <!-- CENTER: CERTIFICATE DETAILS -->
+
+                    <div class="certificate-meta">
+
+                        <div class="certificate-meta-item">
+
+                            <span>
+                                Certificate ID
+                            </span>
+
+                            <strong>
+                                <%= certificate.certificateId %>
+                            </strong>
+
+                        </div>
+
+
+                        <div class="certificate-meta-item">
+
+                            <span>
+                                Issue Date
+                            </span>
+
+                            <strong>
+
+                                <%= new Date(
+                                    certificate.issuedAt
+                                ).toLocaleDateString(
+                                    "en-US",
+                                    {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric"
+                                    }
+                                ) %>
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- RIGHT: QR -->
+
+                    <div class="certificate-qr-section">
+
+                        <% if (qrCode) { %>
+
+                            <div class="certificate-qr-box">
+
+                                <img
+                                    src="<%= qrCode %>"
+                                    alt="Certificate Verification QR Code"
+                                >
+
+                            </div>
+
+                        <% } %>
+
+                        <span>
+                            Scan to verify
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ======================================
+                     FOOTER
+                ======================================= -->
+
+                <div class="certificate-footer">
+
+                    <div class="certificate-footer-left">
+
+                        <i class="fa-solid fa-shield-check"></i>
+
+                        <span>
+                            Official TechNova Certificate
+                        </span>
+
+                    </div>
+
+
+                    <div class="certificate-footer-center">
+
+                        <span>
+                            Certificate of Achievement
+                        </span>
+
+                    </div>
+
+
+                    <div class="certificate-footer-right">
+
+                        <a
+                            href="/certificates/verify/<%= certificate.certificateId %>"
+                            target="_blank"
+                        >
+                            Verify Certificate
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<%- include("../layouts/dashboardFooter") %>

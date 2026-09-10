@@ -1,0 +1,778 @@
+<%- include("layouts/header") %>
+
+
+<!-- =====================================================
+     HERO
+====================================================== -->
+
+<%
+const hero =
+    siteSettings?.heroes?.home || {};
+%>
+
+
+<section
+    class="hero"
+    id="home"
+>
+
+    <div class="container hero-inner">
+
+
+        <!-- HERO TEXT -->
+
+        <div class="hero-text">
+
+
+            <% if (hero.badge) { %>
+
+                <span class="hero-badge">
+
+                    <%= hero.badge %>
+
+                </span>
+
+            <% } %>
+
+
+            <h1>
+
+                <%= hero.title || "Elevate Your Business with" %>
+
+                <br>
+
+                <span>
+
+                    <%= hero.highlight ||
+                        "Next-Gen Technology Solutions"
+                    %>
+
+                </span>
+
+            </h1>
+
+
+            <p>
+
+                <%= hero.description ||
+                    "At TechNova, we bridge the gap between vision and reality."
+                %>
+
+            </p>
+
+
+            <div class="hero-cta">
+
+                <a
+                    class="cta-btn"
+                    href="<%= hero.buttonLink || '/registration' %>"
+                >
+
+                    <%= hero.buttonText || 'Get Started' %>
+
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- HERO IMAGE -->
+
+        <% if (hero.image) { %>
+
+            <div
+                class="hero-image has-image"
+                style="
+                    background-image:
+                    url('/uploads/<%= hero.image %>');
+                "
+            ></div>
+
+        <% } else { %>
+
+            <div class="hero-image"></div>
+
+        <% } %>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+       WHY CHOOSE TECHNOVA
+====================================================== -->
+
+<section class="home">
+    <div class="home-container">
+        <h2>
+            <%= siteSettings.homeWhyChooseTitle ||
+                "Why Choose TechNova?"
+            %>
+        </h2>
+
+        <p>
+            <%= siteSettings.homeWhyChooseDescription ||
+                "We provide everything you need to succeed in the tech industry."
+            %>
+        </p>
+
+        <div class="box-container">
+            <%
+                const whyChooseItems =
+                    (siteSettings.homeWhyChooseItems || [])
+                        .sort((a, b) => a.order - b.order);
+            %>
+
+            <% whyChooseItems.forEach(
+                item => {
+            %>
+
+                <div class="box">
+
+                    <i class="<%= item.icon %>"></i>
+
+                    <h4>
+                        <%= item.title %>
+                    </h4>
+
+                    <p>
+                        <%= item.description %>
+                    </p>
+                </div>
+
+            <% }) %>
+        </div>
+    </div>
+</section>
+
+<!-- =====================================================
+     DYNAMIC PLATFORM STATISTICS
+====================================================== -->
+
+<section class="stats-bar">
+
+
+    <div class="stat-item">
+
+        <div class="stat-number">
+
+            <%= totalStudents || 0 %>
+
+        </div>
+
+        <div class="stat-label">
+
+            Students Registered
+
+        </div>
+
+    </div>
+
+
+
+    <div class="stat-item">
+
+        <div class="stat-number">
+
+            <%= totalInstructors || 0 %>
+
+        </div>
+
+        <div class="stat-label">
+
+            Expert Instructors
+
+        </div>
+
+    </div>
+
+
+
+    <div class="stat-item">
+
+        <div class="stat-number">
+
+            <%= totalCourses || 0 %>
+
+        </div>
+
+        <div class="stat-label">
+
+            Courses Available
+
+        </div>
+
+    </div>
+
+
+
+    <div class="stat-item">
+
+        <div class="stat-number">
+
+            <%= totalCertificates || 0 %>
+
+        </div>
+
+        <div class="stat-label">
+
+            Certificates Issued
+
+        </div>
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+     FEATURED COURSES
+====================================================== -->
+
+<section class="home-dynamic-section">
+
+    <div class="home-dynamic-container">
+
+
+        <div class="home-section-header">
+
+            <div>
+
+                <span class="home-section-label">
+                    LEARN
+                </span>
+
+                <h2>
+                    Featured Courses
+                </h2>
+
+                <p>
+                    Explore the latest courses available
+                    on the TechNova learning platform.
+                </p>
+
+            </div>
+
+
+            <a
+                href="/services"
+                class="home-view-all"
+            >
+
+                View All Courses
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+
+
+        <% if (
+            featuredCourses &&
+            featuredCourses.length > 0
+        ) { %>
+
+
+            <div class="home-courses-grid">
+
+
+                <% featuredCourses.forEach(
+                    course => {
+                %>
+
+
+                    <article
+                        class="home-course-card"
+                    >
+
+
+                        <div class="home-course-image">
+
+                            <img
+                                src="/uploads/<%= course.image %>"
+                                alt="<%= course.title %>"
+                                loading="lazy"
+                            >
+
+                        </div>
+
+
+                        <div class="home-course-body">
+
+
+                            <span
+                                class="home-course-category"
+                            >
+
+                                <%= course.category %>
+
+                            </span>
+
+
+                            <h3>
+
+                                <%= course.title %>
+
+                            </h3>
+
+
+                            <p>
+
+                                <i
+                                    class="fa-solid fa-user"
+                                ></i>
+
+                                <%= course.instructor %>
+
+                            </p>
+
+
+                            <div
+                                class="home-course-bottom"
+                            >
+
+                                <strong>
+
+                                    Rs. <%= course.price %>
+
+                                </strong>
+
+
+                                <a
+                                    href="/course/<%= course._id %>"
+                                >
+
+                                    View Course
+
+                                    <i
+                                        class="fa-solid fa-arrow-right"
+                                    ></i>
+
+                                </a>
+
+                            </div>
+
+
+                        </div>
+
+                    </article>
+
+
+                <% }) %>
+
+
+            </div>
+
+
+        <% } else { %>
+
+
+            <div class="home-empty-state">
+
+                <i class="fa-solid fa-book-open"></i>
+
+                <h3>
+                    Courses Coming Soon
+                </h3>
+
+                <p>
+                    New courses will appear here when
+                    they are added to TechNova.
+                </p>
+
+            </div>
+
+
+        <% } %>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FEATURED PROJECTS
+====================================================== -->
+
+<section class="home-dynamic-section">
+
+    <div class="home-dynamic-container">
+
+
+        <div class="home-section-header">
+
+            <div>
+
+                <span class="home-section-label">
+                    PORTFOLIO
+                </span>
+
+                <h2>
+                    Featured Projects
+                </h2>
+
+                <p>
+                    Discover projects and practical work
+                    created by the TechNova community.
+                </p>
+
+            </div>
+
+
+            <a
+                href="/portfolio"
+                class="home-view-all"
+            >
+
+                View Portfolio
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+
+
+        <% if (
+            featuredProjects &&
+            featuredProjects.length > 0
+        ) { %>
+
+
+            <div class="home-projects-grid">
+
+
+                <% featuredProjects.forEach(
+                    project => {
+                %>
+
+
+                    <article
+                        class="home-project-card"
+                    >
+
+
+                        <div
+                            class="home-project-image"
+                        >
+
+                            <img
+                                src="/uploads/<%= project.image %>"
+                                alt="<%= project.title %>"
+                                loading="lazy"
+                            >
+
+                        </div>
+
+
+                        <div
+                            class="home-project-body"
+                        >
+
+                            <span
+                                class="home-project-category"
+                            >
+
+                                <%= project.category %>
+
+                            </span>
+
+
+                            <h3>
+
+                                <%= project.title %>
+
+                            </h3>
+
+
+                            <p>
+
+                                <%= project.description %>
+
+                            </p>
+
+
+                            <a
+                                href="/portfolio/project/<%= project.slug %>"
+                            >
+
+                                View Project
+
+                                <i
+                                    class="fa-solid fa-arrow-right"
+                                ></i>
+
+                            </a>
+
+                        </div>
+
+                    </article>
+
+
+                <% }) %>
+
+
+            </div>
+
+
+        <% } else { %>
+
+
+            <div class="home-empty-state">
+
+                <i class="fa-solid fa-briefcase"></i>
+
+                <h3>
+                    Projects Coming Soon
+                </h3>
+
+                <p>
+                    Featured projects will appear here
+                    when they are published.
+                </p>
+
+            </div>
+
+
+        <% } %>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     LATEST BLOG POSTS
+====================================================== -->
+
+<section class="home-dynamic-section">
+
+    <div class="home-dynamic-container">
+
+
+        <div class="home-section-header">
+
+            <div>
+
+                <span class="home-section-label">
+                    INSIGHTS
+                </span>
+
+                <h2>
+                    Latest From Our Blog
+                </h2>
+
+                <p>
+                    Read the latest technology, career
+                    and learning insights from TechNova.
+                </p>
+
+            </div>
+
+
+            <a
+                href="/blog"
+                class="home-view-all"
+            >
+
+                Visit Blog
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+
+
+        <% if (
+            latestBlogs &&
+            latestBlogs.length > 0
+        ) { %>
+
+
+            <div class="home-blog-grid">
+
+
+                <% latestBlogs.forEach(
+                    blog => {
+                %>
+
+
+                    <article
+                        class="home-blog-card"
+                    >
+
+
+                        <div
+                            class="home-blog-image"
+                        >
+
+                            <img
+                                src="/uploads/<%= blog.image %>"
+                                alt="<%= blog.title %>"
+                                loading="lazy"
+                            >
+
+                        </div>
+
+
+                        <div
+                            class="home-blog-body"
+                        >
+
+
+                            <div
+                                class="home-blog-meta"
+                            >
+
+                                <span>
+
+                                    <i
+                                        class="fa-solid fa-tag"
+                                    ></i>
+
+                                    <%= blog.category %>
+
+                                </span>
+
+
+                                <span>
+
+                                    <i
+                                        class="fa-solid fa-calendar"
+                                    ></i>
+
+                                    <%= new Date(
+                                        blog.createdAt
+                                    ).toLocaleDateString() %>
+
+                                </span>
+
+                            </div>
+
+
+                            <h3>
+
+                                <%= blog.title %>
+
+                            </h3>
+
+
+                            <p>
+
+                                <%= blog.excerpt %>
+
+                            </p>
+
+
+                            <a
+                                href="/blog/<%= blog.slug %>"
+                            >
+
+                                Read Article
+
+                                <i
+                                    class="fa-solid fa-arrow-right"
+                                ></i>
+
+                            </a>
+
+
+                        </div>
+
+                    </article>
+
+
+                <% }) %>
+
+
+            </div>
+
+
+        <% } else { %>
+
+
+            <div class="home-empty-state">
+
+                <i class="fa-solid fa-newspaper"></i>
+
+                <h3>
+                    No Blog Posts Yet
+                </h3>
+
+                <p>
+                    New articles will appear here
+                    when they are published.
+                </p>
+
+            </div>
+
+
+        <% } %>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     HOME CTA
+====================================================== -->
+
+<section class="cta-section">
+
+    <div class="cta-container">
+
+
+        <h2>
+
+            <%= siteSettings.homeCtaTitle ||
+                "Ready to Start Your Journey?"
+            %>
+
+        </h2>
+
+
+        <p>
+
+            <%= siteSettings.homeCtaDescription ||
+                "Join TechNova and start building practical technology skills for your future."
+            %>
+
+        </p>
+
+
+        <a
+            href="<%= siteSettings.homeCtaButtonLink || '/registration' %>"
+            class="cta-primary-btn"
+        >
+
+            <%= siteSettings.homeCtaButtonText ||
+                "Get Started Today"
+            %>
+
+
+            <i class="fas fa-arrow-right"></i>
+
+        </a>
+
+
+    </div>
+
+</section>
+
+<%- include("layouts/footer") %>

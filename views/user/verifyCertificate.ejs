@@ -1,0 +1,377 @@
+<%- include("../layouts/userDashboardHeader") %>
+
+<main class="main-content certificate-verification-page">
+
+    <!-- ==========================================
+         TOP NAVIGATION
+    =========================================== -->
+
+    <div class="verification-topbar">
+
+        <a
+            href="/certificates"
+            class="verification-back"
+        >
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Certificates
+        </a>
+
+        <div class="verification-brand">
+            <i class="fa-solid fa-graduation-cap"></i>
+            TechNova
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         VERIFICATION CARD
+    =========================================== -->
+
+    <div class="verification-container">
+
+        <% if (!certificate) { %>
+
+            <!-- ==========================================
+                 INVALID CERTIFICATE
+            =========================================== -->
+
+            <div class="verification-card invalid">
+
+                <div class="verification-status-icon">
+
+                    <i class="fa-solid fa-circle-xmark"></i>
+
+                </div>
+
+                <span class="verification-badge invalid-badge">
+                    INVALID
+                </span>
+
+                <h1>
+                    Certificate Not Found
+                </h1>
+
+                <p class="verification-description">
+
+                    The certificate ID you entered could not
+                    be verified in the TechNova system.
+
+                </p>
+
+
+                <div class="verification-invalid-id">
+
+                    <span>
+                        Certificate ID
+                    </span>
+
+                    <strong>
+                        <%= certificateId %>
+                    </strong>
+
+                </div>
+
+
+                <a
+                    href="/certificates"
+                    class="verification-main-btn"
+                >
+
+                    <i class="fa-solid fa-arrow-left"></i>
+
+                    Back to Certificates
+
+                </a>
+
+            </div>
+
+
+        <% } else { %>
+
+
+            <!-- ==========================================
+                 VALID CERTIFICATE
+            =========================================== -->
+
+            <div class="verification-card valid">
+
+
+                <!-- STATUS -->
+
+                <div class="verification-status-icon">
+
+                    <i class="fa-solid fa-circle-check"></i>
+
+                </div>
+
+
+                <span class="verification-badge valid-badge">
+
+                    VERIFIED
+
+                </span>
+
+
+                <h1>
+                    Valid Certificate
+                </h1>
+
+
+                <p class="verification-description">
+
+                    This certificate has been successfully
+                    verified through the official TechNova
+                    certificate verification system.
+
+                </p>
+
+
+                <!-- ==========================================
+                     STUDENT
+                =========================================== -->
+
+                <div class="verified-student">
+
+                    <div class="verified-student-avatar">
+
+                        <i class="fa-solid fa-user"></i>
+
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Certificate Holder
+                        </span>
+
+                        <h2>
+
+                            <%= certificate.user.firstName %>
+                            <%= certificate.user.lastName %>
+
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==========================================
+                     DETAILS
+                =========================================== -->
+
+                <div class="verification-details">
+
+
+                    <div class="verification-row">
+
+                        <div class="verification-label">
+
+                            <i class="fa-solid fa-book"></i>
+
+                            <span>
+                                Course
+                            </span>
+
+                        </div>
+
+
+                        <strong>
+
+                            <%= certificate.course.title %>
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="verification-row">
+
+                        <div class="verification-label">
+
+                            <i class="fa-solid fa-chalkboard-user"></i>
+
+                            <span>
+                                Instructor
+                            </span>
+
+                        </div>
+
+
+                        <strong>
+
+                            <%= certificate.course.instructor %>
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="verification-row">
+
+                        <div class="verification-label">
+
+                            <i class="fa-solid fa-id-card"></i>
+
+                            <span>
+                                Certificate ID
+                            </span>
+
+                        </div>
+
+
+                        <strong class="certificate-id-text">
+
+                            <%= certificate.certificateId %>
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="verification-row">
+
+                        <div class="verification-label">
+
+                            <i class="fa-solid fa-calendar"></i>
+
+                            <span>
+                                Issued Date
+                            </span>
+
+                        </div>
+
+
+                        <strong>
+
+                            <%= new Date(
+                                certificate.issuedAt
+                            ).toLocaleDateString(
+                                "en-US",
+                                {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric"
+                                }
+                            ) %>
+
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- ==========================================
+                     QR VERIFICATION
+                =========================================== -->
+
+                <div class="verification-qr-section">
+
+                    <div class="qr-card">
+
+                        <div class="qr-title">
+
+                            <i class="fa-solid fa-qrcode"></i>
+
+                            Scan to Verify
+
+                        </div>
+
+
+                        <div class="qr-image-wrapper">
+
+                            <img
+                                src="<%= qrCode %>"
+                                alt="Certificate Verification QR Code"
+                                class="verification-qr"
+                            >
+
+                        </div>
+
+
+                        <p>
+
+                            Scan this QR code to verify
+                            the authenticity of this certificate.
+
+                        </p>
+
+
+                        <a
+                            href="<%= verificationUrl %>"
+                            target="_blank"
+                            class="verification-url"
+                        >
+
+                            <%= verificationUrl %>
+
+                        </a>
+
+                    </div>
+
+
+                    <div class="verification-security">
+
+                        <i class="fa-solid fa-shield-check"></i>
+
+                        <div>
+
+                            <strong>
+                                Official Verification
+                            </strong>
+
+                            <p>
+                                This certificate record is
+                                stored and verified by TechNova.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==========================================
+                     FOOTER
+                =========================================== -->
+
+                <div class="verification-footer">
+
+                    <div>
+
+                        <strong>
+                            TechNova
+                        </strong>
+
+                        <span>
+                            Skill Learning & Career Development Platform
+                        </span>
+
+                    </div>
+
+
+                    <div class="verification-footer-check">
+
+                        <i class="fa-solid fa-circle-check"></i>
+
+                        Authentic Certificate
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        <% } %>
+
+    </div>
+
+</main>
+
+
+<%- include("../layouts/dashboardFooter") %>

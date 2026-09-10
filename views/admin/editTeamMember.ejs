@@ -1,0 +1,263 @@
+<%
+const currentPage = "team";
+%>
+
+<%- include("../layouts/adminDashboardHeader") %>
+
+<%- include("../partials/adminSidebar") %>
+
+
+<div class="main-content">
+
+
+    <div class="admin-page-header">
+
+        <div>
+
+            <h1>
+                Edit Team Member
+            </h1>
+
+            <p>
+                Update leadership team information.
+            </p>
+
+        </div>
+
+
+        <a
+            href="/admin/team"
+            class="back-btn"
+        >
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            Back to Team
+
+        </a>
+
+    </div>
+
+
+    <div class="form-container">
+
+
+        <form
+            action="/admin/team/update/<%= member._id %>"
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+
+            <div class="form-group">
+
+                <label>
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    name="name"
+                    value="<%= member.name %>"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Position / Title
+                </label>
+
+                <input
+                    type="text"
+                    name="title"
+                    value="<%= member.title %>"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Experience
+                </label>
+
+                <input
+                    type="text"
+                    name="experience"
+                    value="<%= member.experience %>"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Current Image
+                </label>
+
+                <div
+                    style="
+                        margin-bottom:15px;
+                        padding:15px;
+                        background:#f8fafc;
+                        border-radius:10px;
+                    "
+                >
+
+                    <img
+                        src="/uploads/<%= member.image %>"
+                        alt="<%= member.name %>"
+                        style="
+                            width:100px;
+                            height:100px;
+                            border-radius:50%;
+                            object-fit:cover;
+                        "
+                    >
+
+                </div>
+
+
+                <label>
+                    Replace Image
+                </label>
+
+                <input
+                    type="file"
+                    name="image"
+                    accept=".jpg,.jpeg,.png,.webp"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Bio
+                </label>
+
+                <textarea
+                    name="bio"
+                    rows="4"
+                    maxlength="500"
+                ><%= member.bio %></textarea>
+
+            </div>
+
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label>
+                        LinkedIn URL
+                    </label>
+
+                    <input
+                        type="url"
+                        name="linkedin"
+                        value="<%= member.linkedin %>"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Instagram URL
+                    </label>
+
+                    <input
+                        type="url"
+                        name="instagram"
+                        value="<%= member.instagram %>"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="form-row">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Visibility
+                    </label>
+
+                    <select name="isPublished">
+
+                        <option
+                            value="true"
+                            <%= member.isPublished
+                                ? "selected"
+                                : "" %>
+                        >
+                            Published
+                        </option>
+
+                        <option
+                            value="false"
+                            <%= !member.isPublished
+                                ? "selected"
+                                : "" %>
+                        >
+                            Hidden
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Display Order
+                    </label>
+
+                    <input
+                        type="number"
+                        name="order"
+                        value="<%= member.order %>"
+                        min="0"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="save-btn"
+            >
+
+                <i class="fa-solid fa-floppy-disk"></i>
+
+                Update Team Member
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<%- include("../layouts/dashboardFooter") %>

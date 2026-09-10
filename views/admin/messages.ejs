@@ -1,0 +1,857 @@
+<%
+const currentPage = "messages";
+%>
+
+<%- include("../layouts/adminDashboardHeader") %>
+
+<%- include("../partials/adminSidebar") %>
+
+
+<div class="main-content">
+
+    <!-- ==========================================
+         PAGE HEADER
+    =========================================== -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                Messages
+            </h1>
+
+            <p>
+                Messages received from website visitors.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         MESSAGE STATISTICS
+    =========================================== -->
+
+    <div class="message-stats">
+
+
+        <!-- Total -->
+
+        <div class="message-stat-card">
+
+            <div class="stat-icon">
+
+                <i class="fa-solid fa-envelope"></i>
+
+            </div>
+
+            <div>
+
+                <h3>
+                    <%= totalMessages || 0 %>
+                </h3>
+
+                <p>
+                    Total Messages
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Replied -->
+
+        <div class="message-stat-card">
+
+            <div class="stat-icon">
+
+                <i class="fa-solid fa-circle-check"></i>
+
+            </div>
+
+            <div>
+
+                <h3>
+                    <%= repliedMessages || 0 %>
+                </h3>
+
+                <p>
+                    Replied
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Waiting -->
+
+        <div class="message-stat-card">
+
+            <div class="stat-icon">
+
+                <i class="fa-solid fa-clock"></i>
+
+            </div>
+
+            <div>
+
+                <h3>
+                    <%= waitingMessages || 0 %>
+                </h3>
+
+                <p>
+                    Waiting for Reply
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- Latest Message -->
+
+        <div class="message-stat-card">
+
+            <div class="stat-icon">
+
+                <i class="fa-solid fa-calendar-days"></i>
+
+            </div>
+
+            <div>
+
+                <h3>
+
+                    <%= latestMessage
+                        ? new Date(
+                            latestMessage.createdAt
+                        ).toLocaleDateString()
+                        : "—"
+                    %>
+
+                </h3>
+
+                <p>
+                    Latest Message
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         SEARCH + FILTER
+    =========================================== -->
+
+    <div class="message-controls">
+
+
+        <!-- Search -->
+
+        <form
+            action="/admin/messages"
+            method="GET"
+            class="message-search-form"
+        >
+
+            <div class="message-search-box">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input
+                    type="text"
+                    name="search"
+                    value="<%= search || '' %>"
+                    placeholder="Search by name, email or subject..."
+                    autocomplete="off"
+                >
+
+
+                <% if (filter && filter !== "all") { %>
+
+                    <input
+                        type="hidden"
+                        name="filter"
+                        value="<%= filter %>"
+                    >
+
+                <% } %>
+
+
+                <button
+                    type="submit"
+                    class="message-search-btn"
+                >
+
+                    Search
+
+                </button>
+
+            </div>
+
+        </form>
+
+
+        <!-- Clear Search -->
+
+        <% if (search) { %>
+
+            <a
+                href="/admin/messages<%= filter && filter !== 'all' ? '?filter=' + filter : '' %>"
+                class="clear-search-btn"
+            >
+
+                <i class="fa-solid fa-xmark"></i>
+
+                Clear
+
+            </a>
+
+        <% } %>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         MESSAGE FILTERS
+    =========================================== -->
+
+    <div class="message-filters">
+
+        <div class="filter-title">
+
+            <i class="fa-solid fa-filter"></i>
+
+            <span>
+                Filter Messages
+            </span>
+
+        </div>
+
+
+        <div class="filter-buttons">
+
+            <a
+                href="/admin/messages<%= search ? '?search=' + encodeURIComponent(search) : '' %>"
+                class="message-filter-btn
+                <%= filter === 'all' ? 'active' : '' %>"
+            >
+
+                <i class="fa-solid fa-inbox"></i>
+
+                All
+
+                <span>
+                    <%= totalMessages || 0 %>
+                </span>
+
+            </a>
+
+
+            <a
+                href="/admin/messages?filter=replied<%= search ? '&search=' + encodeURIComponent(search) : '' %>"
+                class="message-filter-btn
+                <%= filter === 'replied' ? 'active' : '' %>"
+            >
+
+                <i class="fa-solid fa-check"></i>
+
+                Replied
+
+                <span>
+                    <%= repliedMessages || 0 %>
+                </span>
+
+            </a>
+
+
+            <a
+                href="/admin/messages?filter=waiting<%= search ? '&search=' + encodeURIComponent(search) : '' %>"
+                class="message-filter-btn
+                <%= filter === 'waiting' ? 'active' : '' %>"
+            >
+
+                <i class="fa-solid fa-clock"></i>
+
+                Waiting
+
+                <span>
+                    <%= waitingMessages || 0 %>
+                </span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         MESSAGES CARD
+    =========================================== -->
+
+    <div class="messages-card">
+
+
+        <div class="messages-card-header">
+
+            <div>
+
+                <h2>
+                    Contact Messages
+                </h2>
+
+                <p>
+                    Manage messages submitted through
+                    the contact form.
+                </p>
+
+            </div>
+
+
+            <div class="message-result-count">
+
+                <% if (matchingMessages > 0) { %>
+
+                    Showing
+
+                    <strong>
+                        <%= startItem %>
+                    </strong>
+
+                    -
+
+                    <strong>
+                        <%= endItem %>
+                    </strong>
+
+                    of
+
+                    <strong>
+                        <%= matchingMessages %>
+                    </strong>
+
+                <% } else { %>
+
+                    No matching messages
+
+                <% } %>
+
+            </div>
+
+        </div>
+
+
+
+        <% if (messages.length === 0) { %>
+
+
+            <!-- ==================================
+                 EMPTY STATE
+            =================================== -->
+
+            <div class="empty-messages">
+
+                <i class="fa-solid fa-envelope-open"></i>
+
+                <h3>
+                    No Messages Found
+                </h3>
+
+                <p>
+
+                    <% if (search) { %>
+
+                        No messages matched
+                        "<strong><%= search %></strong>".
+
+                    <% } else if (filter === "replied") { %>
+
+                        There are no replied messages yet.
+
+                    <% } else if (filter === "waiting") { %>
+
+                        There are no messages waiting for a reply.
+
+                    <% } else { %>
+
+                        There are currently no messages
+                        from visitors.
+
+                    <% } %>
+
+                </p>
+
+
+                <% if (search) { %>
+
+                    <a
+                        href="/admin/messages<%= filter && filter !== 'all' ? '?filter=' + filter : '' %>"
+                        class="clear-search-empty-btn"
+                    >
+
+                        <i class="fa-solid fa-arrow-left"></i>
+
+                        Back to All Messages
+
+                    </a>
+
+                <% } %>
+
+            </div>
+
+
+        <% } else { %>
+
+
+            <!-- ==========================================
+                 TABLE
+            =========================================== -->
+
+            <div class="table-wrapper">
+
+                <table class="messages-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                #
+                            </th>
+
+                            <th>
+                                Name
+                            </th>
+
+                            <th>
+                                Email
+                            </th>
+
+                            <th>
+                                Phone
+                            </th>
+
+                            <th>
+                                Subject
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        <% messages.forEach(
+                            (message, index) => {
+                        %>
+
+
+                            <tr>
+
+
+                                <!-- Number -->
+
+                                <td>
+
+                                    <%= startItem + index %>
+
+                                </td>
+
+
+                                <!-- Name -->
+
+                                <td>
+
+                                    <div class="sender-info">
+
+                                        <div class="sender-avatar">
+
+                                            <i class="fa-solid fa-user"></i>
+
+                                        </div>
+
+
+                                        <strong>
+
+                                            <%= message.name %>
+
+                                        </strong>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- Email -->
+
+                                <td>
+
+                                    <a
+                                        href="mailto:<%= message.email %>"
+                                        class="email-link"
+                                    >
+
+                                        <%= message.email %>
+
+                                    </a>
+
+                                </td>
+
+
+                                <!-- Phone -->
+
+                                <td>
+
+                                    <a
+                                        href="tel:<%= message.phone %>"
+                                        class="phone-link"
+                                    >
+
+                                        <%= message.phone %>
+
+                                    </a>
+
+                                </td>
+
+
+                                <!-- Subject -->
+
+                                <td>
+
+                                    <span
+                                        class="subject-text"
+                                    >
+
+                                        <%= message.subject %>
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- STATUS -->
+
+                                <td>
+
+                                    <% if (
+                                        message.isReplied
+                                    ) { %>
+
+                                        <span
+                                            class="message-status replied"
+                                        >
+
+                                            <i
+                                                class="fa-solid fa-circle-check"
+                                            ></i>
+
+                                            Replied
+
+                                        </span>
+
+                                    <% } else { %>
+
+                                        <span
+                                            class="message-status waiting"
+                                        >
+
+                                            <i
+                                                class="fa-solid fa-clock"
+                                            ></i>
+
+                                            Waiting
+
+                                        </span>
+
+                                    <% } %>
+
+                                </td>
+
+
+                                <!-- DATE -->
+
+                                <td>
+
+                                    <%= new Date(
+                                        message.createdAt
+                                    ).toLocaleDateString() %>
+
+                                </td>
+
+
+                                <!-- ACTIONS -->
+
+                                <td>
+
+                                    <div
+                                        class="message-actions"
+                                    >
+
+                                        <a
+                                            href="/admin/messages/view/<%= message._id %>"
+                                            class="view-btn"
+                                            title="View Message"
+                                        >
+
+                                            <i
+                                                class="fa-solid fa-eye"
+                                            ></i>
+
+                                        </a>
+
+
+                                        <form
+                                            action="/admin/messages/delete/<%= message._id %>"
+                                            method="POST"
+                                            style="display:inline;"
+                                            data-confirm="Are you sure you want to delete this message?"
+                                        >
+                                            <input
+                                                type="hidden"
+                                                name="_csrf"
+                                                value="<%= csrfToken %>"
+                                            >
+
+                                            <button
+                                                type="submit"
+                                                class="delete-btn"
+                                                title="Delete Message"
+                                            >
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+
+                            </tr>
+
+
+                        <% }) %>
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+
+            <!-- ==========================================
+                 PAGINATION
+            =========================================== -->
+
+            <% if (totalPages > 1) { %>
+
+                <div class="message-pagination">
+
+
+                    <!-- Previous -->
+
+                    <% if (page > 1) { %>
+
+                        <a
+                            href="/admin/messages?page=<%= page - 1 %><%= filter && filter !== 'all' ? '&filter=' + filter : '' %><%= search ? '&search=' + encodeURIComponent(search) : '' %>"
+                            class="pagination-btn"
+                        >
+
+                            <i class="fa-solid fa-chevron-left"></i>
+
+                            Previous
+
+                        </a>
+
+                    <% } else { %>
+
+                        <span
+                            class="pagination-btn disabled"
+                        >
+
+                            <i class="fa-solid fa-chevron-left"></i>
+
+                            Previous
+
+                        </span>
+
+                    <% } %>
+
+
+
+                    <!-- Page Numbers -->
+
+                    <div class="pagination-pages">
+
+                        <%
+                            const visiblePages = 5;
+
+                            let startPage =
+                                Math.max(
+                                    1,
+                                    page - 2
+                                );
+
+                            let endPage =
+                                Math.min(
+                                    totalPages,
+                                    startPage + visiblePages - 1
+                                );
+
+                            if (
+                                endPage - startPage + 1
+                                < visiblePages
+                            ) {
+
+                                startPage =
+                                    Math.max(
+                                        1,
+                                        endPage - visiblePages + 1
+                                    );
+
+                            }
+                        %>
+
+
+                        <% if (startPage > 1) { %>
+
+                            <a
+                                href="/admin/messages?page=1<%= filter && filter !== 'all' ? '&filter=' + filter : '' %><%= search ? '&search=' + encodeURIComponent(search) : '' %>"
+                                class="pagination-page"
+                            >
+                                1
+                            </a>
+
+
+                            <% if (startPage > 2) { %>
+
+                                <span
+                                    class="pagination-dots"
+                                >
+                                    ...
+                                </span>
+
+                            <% } %>
+
+                        <% } %>
+
+
+                        <% for (
+                            let pageNumber = startPage;
+                            pageNumber <= endPage;
+                            pageNumber++
+                        ) { %>
+
+
+                            <a
+                                href="/admin/messages?page=<%= pageNumber %><%= filter && filter !== 'all' ? '&filter=' + filter : '' %><%= search ? '&search=' + encodeURIComponent(search) : '' %>"
+                                class="pagination-page <%= pageNumber === page ? 'active' : '' %>"
+                            >
+
+                                <%= pageNumber %>
+
+                            </a>
+
+
+                        <% } %>
+
+
+                        <% if (endPage < totalPages) { %>
+
+
+                            <% if (endPage < totalPages - 1) { %>
+
+                                <span
+                                    class="pagination-dots"
+                                >
+                                    ...
+                                </span>
+
+                            <% } %>
+
+
+                            <a
+                                href="/admin/messages?page=<%= totalPages %><%= filter && filter !== 'all' ? '&filter=' + filter : '' %><%= search ? '&search=' + encodeURIComponent(search) : '' %>"
+                                class="pagination-page"
+                            >
+
+                                <%= totalPages %>
+
+                            </a>
+
+                        <% } %>
+
+                    </div>
+
+
+
+                    <!-- Next -->
+
+                    <% if (page < totalPages) { %>
+
+                        <a
+                            href="/admin/messages?page=<%= page + 1 %><%= filter && filter !== 'all' ? '&filter=' + filter : '' %><%= search ? '&search=' + encodeURIComponent(search) : '' %>"
+                            class="pagination-btn"
+                        >
+
+                            Next
+
+                            <i class="fa-solid fa-chevron-right"></i>
+
+                        </a>
+
+                    <% } else { %>
+
+                        <span
+                            class="pagination-btn disabled"
+                        >
+
+                            Next
+
+                            <i class="fa-solid fa-chevron-right"></i>
+
+                        </span>
+
+                    <% } %>
+
+
+                </div>
+
+            <% } %>
+
+
+        <% } %>
+
+
+    </div>
+
+
+</div>
+
+
+<%- include("../layouts/dashboardFooter") %>

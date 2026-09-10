@@ -1,0 +1,187 @@
+/* ==========================================
+   CERTIFICATES PAGE
+========================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+.certificates-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+
+/* Certificate Card */
+
+.certificate-card {
+    background: white;
+    border-radius: 18px;
+    padding: 28px;
+    display: flex;
+    gap: 22px;
+    align-items: center;
+    border: 1px solid #e8edf5;
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+    transition: 0.3s ease;
+}
+
+.certificate-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(15, 23, 42, 0.10);
+}
+
+
+/* Icon */
+
+.certificate-icon {
+    width: 75px;
+    height: 75px;
+    flex-shrink: 0;
+    border-radius: 18px;
+
+    background: #eff6ff;
+    color: #2563eb;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.certificate-icon i {
+    font-size: 35px;
+}
+
+
+/* Content */
+
+.certificate-content h2 {
+    font-size: 20px;
+    color: #0f172a;
+    margin-bottom: 7px;
+}
+
+.certificate-label {
+    color: #2563eb;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.certificate-id,
+.certificate-date {
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.certificate-id strong {
+    color: #334155;
+}
+
+
+/* Button */
+
+.certificate-actions {
+    margin-top: 15px;
+}
+
+.view-certificate-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 10px 16px;
+
+    background: #2563eb;
+    color: white;
+
+    border-radius: 8px;
+
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: 0.25s ease;
+}
+
+.view-certificate-btn:hover {
+    background: #1d4ed8;
+}
+
+
+/* Empty */
+
+.certificate-empty {
+    background: white;
+    border-radius: 20px;
+    padding: 60px 30px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+}
+
+.empty-icon {
+    width: 85px;
+    height: 85px;
+    margin: 0 auto 20px;
+
+    border-radius: 50%;
+
+    background: #eff6ff;
+    color: #2563eb;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.empty-icon i {
+    font-size: 40px;
+}
+
+.certificate-empty h2 {
+    margin-bottom: 10px;
+    color: #0f172a;
+}
+
+.certificate-empty p {
+    color: #64748b;
+    margin-bottom: 25px;
+}
+
+.browse-courses-btn {
+    display: inline-block;
+
+    padding: 12px 20px;
+
+    background: #2563eb;
+    color: white;
+
+    border-radius: 8px;
+
+    text-decoration: none;
+}
+
+
+/* Responsive */
+
+@media (max-width: 900px) {
+
+    .certificates-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .certificate-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+}

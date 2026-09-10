@@ -1,0 +1,1291 @@
+<%- include("../layouts/userDashboardHeader") %>
+<meta
+    name="csrf-token"
+    content="<%= csrfToken %>"
+>
+
+<%- include("../partials/dashboardSidebar", {
+    currentPage: "courses"
+}) %>
+
+<div
+    id="courseLearningData"
+    data-course-id="<%= course._id %>"
+    data-current-material="<%= currentMaterial || '' %>"
+    style="display:none;">
+</div>
+<main class="main-content">
+    
+
+    <!-- ==========================================
+         COURSE HEADER
+    =========================================== -->
+
+    <div class="learning-header">
+
+        <a href="/dashboard" class="back-btn">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Dashboard
+        </a>
+
+        <h1>
+            <%= course.title %>
+        </h1>
+
+        <p>
+            Instructor:
+            <strong>
+                <%= course.instructor %>
+            </strong>
+        </p>
+
+    </div>
+
+
+    <!-- ==========================================
+         PROGRESS SUMMARY
+    =========================================== -->
+
+    <div class="learning-progress-card">
+
+        <div class="learning-progress-header">
+
+            <div>
+
+                <h3>
+                    Course Progress
+                </h3>
+
+                <p>
+
+                    <span id="completedCount">
+                        0
+                    </span>
+
+                    /
+
+                    <span id="totalCount">
+                        0
+                    </span>
+
+                    materials completed
+
+                </p>
+
+            </div>
+
+            <strong id="progressPercentage">
+                0%
+            </strong>
+
+        </div>
+
+
+        <div class="learning-progress-track">
+
+            <div
+                id="learningProgressFill"
+                class="learning-progress-fill"
+                style="width:0%;"
+            >
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         COURSE LEARNING AREA
+    =========================================== -->
+
+    <div class="learning-container">
+
+
+        <!-- ==========================================
+             COURSE MATERIAL SIDEBAR
+        =========================================== -->
+
+        <aside class="lesson-sidebar">
+
+            <h2>
+
+                <i class="fa-solid fa-book"></i>
+
+                Course Material
+
+            </h2>
+
+
+            <% if (materials && materials.length > 0) { %>
+
+
+                <div class="lesson-list">
+
+
+                    <% materials.forEach((material, index) => { %>
+
+
+                        <%
+                            const isCurrent =
+                                currentMaterial === material.filename;
+
+                            const isCompleted =
+                                Array.isArray(completedMaterials) &&
+                                completedMaterials.includes(
+                                    material.filename
+                                );
+                        %>
+
+
+                        <div
+                            class="lesson-item material-item <%= isCurrent ? 'active' : '' %> <%= isCompleted ? 'completed-material' : '' %>"
+                            data-material="<%= index %>"
+                        >
+
+                            <span class="lesson-number">
+
+                                <span class="material-number">
+                                    <%= index + 1 %>
+                                </span>
+
+
+                                <% if (isCompleted) { %>
+
+                                    <span class="material-check visible">
+
+                                        ✓
+
+                                    </span>
+
+                                <% } %>
+
+                            </span>
+
+
+                            <span class="lesson-title">
+
+                                <%
+                                    const displayName =
+                                        material.originalName
+                                            ? material.originalName
+                                                .split(/[\\\/]/)
+                                                .pop()
+                                            : material.filename;
+                                %>
+
+                                <%= displayName %>
+
+                            </span>
+
+                        </div>
+
+
+                    <% }) %>
+
+
+                </div>
+
+
+            <% } else if (lessons && lessons.length > 0) { %>
+
+
+                <!-- ==========================================
+                     OLD LESSON SYSTEM
+                =========================================== -->
+
+                <h2 style="margin-top:20px;">
+
+                    Course Lessons
+
+                </h2>
+
+
+                <div class="lesson-list">
+
+
+                    <% lessons.forEach((lesson, index) => { %>
+
+
+                        <div
+                            class="lesson-item old-lesson-item <%= index === 0 ? 'active' : '' %>"
+                            data-lesson="<%= lesson._id %>"
+                        >
+
+                            <span class="lesson-number">
+
+                                <%= index + 1 %>
+
+                            </span>
+
+
+                            <span class="lesson-title">
+
+                                <%= lesson.title %>
+
+                            </span>
+
+                        </div>
+
+
+                    <% }) %>
+
+
+                </div>
+
+
+            <% } else { %>
+
+
+                <div class="no-lessons">
+
+                    <i class="fa-solid fa-book-open"></i>
+
+                    <p>
+
+                        No course material available yet.
+
+                    </p>
+
+                </div>
+
+
+            <% } %>
+
+        </aside>
+
+
+        <!-- ==========================================
+             MAIN MATERIAL AREA
+        =========================================== -->
+
+        <section class="lesson-content">
+
+
+            <% if (materials && materials.length > 0) { %>
+
+
+                <% materials.forEach((material, index) => { %>
+
+
+                    <%
+
+                        const displayName =
+                            material.originalName
+                                ? material.originalName
+                                    .split(/[\\\/]/)
+                                    .pop()
+                                : material.filename;
+
+
+                        const fileName =
+                            material.filename || "";
+
+
+                        const mimeType =
+                            material.mimetype || "";
+
+
+                        const extension =
+                            fileName
+                                .split(".")
+                                .pop()
+                                .toLowerCase();
+
+
+                       
+
+                        const materialUrl =
+                            "/learn/course/" +
+                            course._id +
+                            "/material/" +
+                            index;
+
+                        // ==========================================
+                        // MATERIAL STATE
+                        // ==========================================
+
+                        const isCompleted =
+                            Array.isArray(completedMaterials) &&
+                            completedMaterials.includes(
+                                material.filename
+                            );
+
+
+                        const isCurrent =
+                            currentMaterial ===
+                            material.filename;
+
+                    %>
+
+
+                    <!-- ==========================================
+                         EACH MATERIAL PANEL
+                    =========================================== -->
+
+                    <article
+                        class="lesson-panel material-panel"
+                        id="material-<%= index %>"
+                        data-current="<%= isCurrent ? 'true' : 'false' %>"
+                    >
+
+
+                        <!-- MATERIAL HEADER -->
+
+                        <div class="lesson-heading">
+
+                            <span>
+
+                                Course Material
+
+                            </span>
+
+
+                            <h2>
+
+                                <%= displayName %>
+
+                            </h2>
+
+                        </div>
+
+
+                        <!-- ==========================================
+                             VIDEO
+                        =========================================== -->
+
+                        <% if (
+                            mimeType.startsWith("video/") ||
+                            ["mp4", "webm", "mov", "m4v"].includes(extension)
+                        ) { %>
+
+
+                            <div class="lesson-video">
+
+                                <h3>
+
+                                    <i class="fa-solid fa-video"></i>
+
+                                    Video Lesson
+
+                                </h3>
+
+
+                                <video
+                                    controls
+                                    width="100%"
+                                    preload="metadata"
+                                >
+
+                                    <source
+                                        src="<%= materialUrl %>"
+                                        type="<%= mimeType || 'video/mp4' %>"
+                                    >
+
+
+                                    Your browser does not support
+                                    video playback.
+
+
+                                </video>
+
+                            </div>
+
+
+                        <!-- ==========================================
+                             PDF
+                        =========================================== -->
+
+                        <% } else if (
+                            mimeType === "application/pdf" ||
+                            extension === "pdf"
+                        ) { %>
+
+
+                            <div class="lesson-pdf">
+
+                                <h3>
+
+                                    <i class="fa-solid fa-file-pdf"></i>
+
+                                    PDF Course Material
+
+                                </h3>
+
+
+                                <iframe
+                                    src="<%= materialUrl %>"
+                                    width="100%"
+                                    height="700"
+                                    style="border:none;"
+                                >
+                                </iframe>
+
+
+                                <div style="margin-top:15px;">
+
+                                    <a
+                                        href="<%= materialUrl %>"
+                                        target="_blank"
+                                        class="material-btn"
+                                    >
+
+                                        <i class="fa-solid fa-up-right-from-square"></i>
+
+                                        Open PDF in New Tab
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+
+                        <!-- ==========================================
+                             TEXT
+                        =========================================== -->
+
+                        <% } else if (extension === "txt") { %>
+
+
+                            <div class="lesson-text">
+
+                                <h3>
+
+                                    <i class="fa-solid fa-file-lines"></i>
+
+                                    Text Material
+
+                                </h3>
+
+
+                                <p>
+
+                                    This material is available
+                                    for download.
+
+                                </p>
+
+
+                                <a
+                                    href="<%= materialUrl %>"
+                                    target="_blank"
+                                    class="material-btn"
+                                >
+
+                                    <i class="fa-solid fa-download"></i>
+
+                                    Open Text File
+
+                                </a>
+
+                            </div>
+
+
+                        <!-- ==========================================
+                             OTHER FILES
+                        =========================================== -->
+
+                        <% } else { %>
+
+
+                            <div class="empty-learning">
+
+                                <i class="fa-solid fa-file"></i>
+
+
+                                <h2>
+
+                                    <%= displayName %>
+
+                                </h2>
+
+
+                                <p>
+
+                                    This course material is available
+                                    for download.
+
+                                </p>
+
+
+                                <a
+                                    href="<%= materialUrl %>"
+                                    target="_blank"
+                                    class="material-btn"
+                                >
+
+                                    <i class="fa-solid fa-download"></i>
+
+                                    Open / Download Material
+
+                                </a>
+
+                            </div>
+
+
+                        <% } %>
+
+
+                        <!-- ==========================================
+                             MARK COMPLETE
+                        =========================================== -->
+
+                        <div class="material-completion">
+
+
+                            <button
+                                type="button"
+                                class="complete-material-btn <%= isCompleted ? 'completed' : '' %>"
+                                data-material-index="<%= index %>"
+                                data-material-file="<%= material.filename %>"
+                                <%= isCompleted ? 'disabled' : '' %>
+                            >
+
+                                <i class="fa-solid fa-check"></i>
+
+
+                                <span>
+
+                                    <%= isCompleted
+                                        ? "Completed"
+                                        : "Mark as Complete" %>
+
+                                </span>
+
+                            </button>
+
+
+                            <div
+                                class="completed-message"
+                                id="completed-message-<%= index %>"
+                                data-completed="<%= isCompleted ? 'true' : 'false' %>"
+                            >
+
+                                <i class="fa-solid fa-circle-check"></i>
+
+                                Material Completed
+
+                            </div>
+
+
+                        </div>
+
+
+                    </article>
+
+
+                <% }) %>
+
+
+            <% } else if (lessons && lessons.length > 0) { %>
+
+
+                <!-- ==========================================
+                     OLD LESSON SYSTEM
+                =========================================== -->
+
+
+                <% lessons.forEach((lesson, index) => { %>
+
+
+                    <article
+                        class="lesson-panel old-lesson-panel"
+                        id="lesson-<%= lesson._id %>"
+                        <% if (index !== 0) { %>
+                            style="display:none;"
+                        <% } %>
+                    >
+
+
+                        <div class="lesson-heading">
+
+                            <span>
+
+                                Lesson <%= index + 1 %>
+
+                            </span>
+
+
+                            <h2>
+
+                                <%= lesson.title %>
+
+                            </h2>
+
+                        </div>
+
+
+                        <% if (lesson.description) { %>
+
+                            <p class="lesson-description">
+
+                                <%= lesson.description %>
+
+                            </p>
+
+                        <% } %>
+
+
+                        <% if (lesson.content) { %>
+
+                            <div class="lesson-text">
+
+                                <%- lesson.content %>
+
+                            </div>
+
+                        <% } %>
+
+
+                        <% if (lesson.video) { %>
+
+                            <div class="lesson-video">
+
+                                <h3>
+
+                                    <i class="fa-solid fa-video"></i>
+
+                                    Video Lesson
+
+                                </h3>
+
+
+                                <video
+                                    controls
+                                    width="100%"
+                                >
+
+                                    <source
+                                        src="/uploads/<%= lesson.video %>"
+                                        type="video/mp4"
+                                    >
+
+                                </video>
+
+                            </div>
+
+                        <% } %>
+
+
+                        <% if (lesson.pdf) { %>
+
+                            <div class="lesson-pdf">
+
+                                <a
+                                    href="/uploads/<%= lesson.pdf %>"
+                                    target="_blank"
+                                    class="material-btn"
+                                >
+
+                                    <i class="fa-solid fa-file-pdf"></i>
+
+                                    Open Course PDF
+
+                                </a>
+
+                            </div>
+
+                        <% } %>
+
+
+                    </article>
+
+
+                <% }) %>
+
+
+            <% } else { %>
+
+
+                <div class="empty-learning">
+
+                    <i class="fa-solid fa-graduation-cap"></i>
+
+
+                    <h2>
+
+                        Course Material Coming Soon
+
+                    </h2>
+
+
+                    <p>
+
+                        The instructor has not uploaded
+                        learning material for this course yet.
+
+                    </p>
+
+                </div>
+
+
+            <% } %>
+
+
+        </section>
+
+    </div>
+
+</main>
+
+
+<!-- ==========================================
+     PROGRESS SCRIPT
+========================================== -->
+
+<script nonce="<%= cspNonce %>">
+    const csrfToken =
+    document
+        .querySelector('meta[name="csrf-token"]')
+        ?.getAttribute("content");
+
+    // ==========================================
+    // COURSE DATA
+    // ==========================================
+
+   const learningData =
+        document.getElementById(
+        "courseLearningData"
+    );
+
+    const courseId =
+        learningData.dataset.courseId;
+
+    const currentMaterial =
+        learningData.dataset.currentMaterial;
+
+    let completedMaterials = [];
+
+
+    // ==========================================
+    // MATERIAL ELEMENTS
+    // ==========================================
+
+    const materialItems =
+        document.querySelectorAll(".material-item");
+
+
+    const materialPanels =
+        document.querySelectorAll(".material-panel");
+
+
+    const completeButtons =
+        document.querySelectorAll(".complete-material-btn");
+
+
+    // ==========================================
+    // PROGRESS ELEMENTS
+    // ==========================================
+
+    const progressPercentage =
+        document.getElementById(
+            "progressPercentage"
+        );
+
+
+    const progressFill =
+        document.getElementById(
+            "learningProgressFill"
+        );
+
+
+    const completedCount =
+        document.getElementById(
+            "completedCount"
+        );
+
+
+    const totalCount =
+        document.getElementById(
+            "totalCount"
+        );
+
+
+    // ==========================================
+    // OPEN MATERIAL
+    // ==========================================
+
+    function openMaterial(index) {
+
+        // Hide all panels
+        materialPanels.forEach(panel => {
+
+            panel.style.display = "none";
+
+        });
+
+
+        // Remove active state
+        materialItems.forEach(item => {
+
+            item.classList.remove("active");
+
+        });
+
+
+        // Selected sidebar item
+        const selectedItem =
+            materialItems[index];
+
+
+        // Selected content panel
+        const selectedPanel =
+            materialPanels[index];
+
+
+        // Activate selected item
+        if (selectedItem) {
+
+            selectedItem.classList.add("active");
+
+        }
+
+
+        // Show selected material
+        if (selectedPanel) {
+
+            selectedPanel.style.display =
+                "block";
+
+            selectedPanel.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+        }
+
+    }
+
+
+    // ==========================================
+    // SAVE CURRENT MATERIAL
+    // ==========================================
+
+    async function saveCurrentMaterial(index) {
+
+        try {
+
+            const response =
+                await fetch(
+                    `/course/${courseId}/material/${index}/open`,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+
+                            "x-csrf-token":
+                                csrfToken
+                        }
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Unable to save current material."
+                );
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            if (!data.success) {
+
+                throw new Error(
+                    data.message ||
+                    "Unable to save current material."
+                );
+
+            }
+
+
+            console.log(
+                "Current material saved:",
+                data.currentMaterial
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "CURRENT MATERIAL ERROR:",
+                error
+            );
+
+        }
+
+    }
+
+
+    // ==========================================
+    // MATERIAL CLICK
+    // ==========================================
+
+    materialItems.forEach((item, index) => {
+
+        item.addEventListener(
+            "click",
+            async function () {
+
+                openMaterial(index);
+
+                await saveCurrentMaterial(index);
+
+            }
+        );
+
+    });
+
+
+    // ==========================================
+    // MARK BUTTON COMPLETED
+    // ==========================================
+
+    function markButtonCompleted(
+        button,
+        index
+    ) {
+
+        button.disabled = true;
+
+        button.classList.add(
+            "completed"
+        );
+
+
+        const text =
+            button.querySelector("span");
+
+
+        if (text) {
+
+            text.textContent =
+                "Completed";
+
+        }
+
+
+        const message =
+            document.getElementById(
+                "completed-message-" + index
+            );
+
+
+        if (message) {
+
+            message.style.display =
+                "block";
+
+        }
+
+
+        const check =
+            document.getElementById(
+                "sidebar-check-" + index
+            );
+
+
+        if (check) {
+
+            check.style.display =
+                "inline";
+
+        }
+
+    }
+
+
+    // ==========================================
+    // UPDATE PROGRESS UI
+    // ==========================================
+
+    function updateProgressUI(
+        percentage,
+        completedFiles
+    ) {
+
+        // Percentage
+        if (progressPercentage) {
+
+            progressPercentage.textContent =
+                percentage + "%";
+
+        }
+
+
+        // Progress bar
+        if (progressFill) {
+
+            progressFill.style.width =
+                percentage + "%";
+
+        }
+
+
+        // Total
+        if (totalCount) {
+
+            totalCount.textContent =
+                materialItems.length;
+
+        }
+
+
+        // Completed count
+        if (completedCount) {
+
+            completedCount.textContent =
+                completedFiles.length;
+
+        }
+
+
+        // Completed buttons
+        completeButtons.forEach(
+            (button, index) => {
+
+                const filename =
+                    button.dataset.materialFile;
+
+
+                const isCompleted =
+                    completedFiles.includes(
+                        filename
+                    );
+
+
+                if (isCompleted) {
+
+                    markButtonCompleted(
+                        button,
+                        index
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // ==========================================
+    // LOAD PROGRESS
+    // ==========================================
+
+    async function loadProgress() {
+
+        try {
+
+            const response =
+                await fetch(
+                    `/course/${courseId}/progress`
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Unable to load progress."
+                );
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            if (!data.success) {
+
+                return;
+
+            }
+
+            completedMaterials =
+                data.completedMaterials || [];
+
+
+            updateProgressUI(
+                data.progress || 0,
+                data.completedMaterials || []
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "LOAD PROGRESS ERROR:",
+                error
+            );
+
+        }
+
+    }
+
+
+    // ==========================================
+    // COMPLETE MATERIAL
+    // ==========================================
+
+    completeButtons.forEach(button => {
+
+        button.addEventListener(
+            "click",
+            async function (event) {
+
+                event.stopPropagation();
+
+
+                const materialIndex =
+                    Number(
+                        this.dataset.materialIndex
+                    );
+
+
+                this.disabled = true;
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            `/course/${courseId}/material/${materialIndex}/complete`,
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json",
+
+                                    "x-csrf-token":
+                                        csrfToken
+                                }
+                            }
+                        );
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            "Unable to complete material."
+                        );
+
+                    }
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (!data.success) {
+
+                        throw new Error(
+                            data.message ||
+                            "Unable to complete material."
+                        );
+
+                    }
+
+
+                    markButtonCompleted(
+                        this,
+                        materialIndex
+                    );
+
+
+                    await loadProgress();
+
+
+                } catch (error) {
+
+                    console.error(
+                        "COMPLETE MATERIAL ERROR:",
+                        error
+                    );
+
+
+                    this.disabled =
+                        false;
+
+
+                    alert(
+                        "Unable to mark this material as completed."
+                    );
+
+                }
+
+            }
+        );
+
+    });
+
+
+    // ==========================================
+    // RESTORE LAST MATERIAL
+    // ==========================================
+
+    function restoreCurrentMaterial() {
+
+        if (materialItems.length === 0) {
+
+            return;
+
+        }
+
+
+        let indexToOpen = 0;
+
+
+        if (currentMaterial) {
+
+            completeButtons.forEach(
+                (button, index) => {
+
+                    if (
+                        button.dataset.materialFile ===
+                        currentMaterial
+                    ) {
+
+                        indexToOpen = index;
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        openMaterial(indexToOpen);
+
+    }
+
+
+    // ==========================================
+    // INITIALIZE
+    // ==========================================
+
+    if (totalCount) {
+
+        totalCount.textContent =
+            materialItems.length;
+
+    }
+
+
+    restoreCurrentMaterial();
+
+    loadProgress();
+
+</script>
+
+
+<%- include("../layouts/dashboardFooter") %>

@@ -1,0 +1,162 @@
+<aside class="dashboard-sidebar">
+
+    <!-- Logo -->
+    <div class="sidebar-logo">
+        <div class="logo-icon">
+            <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+
+        <div>
+            <h2>TechNova</h2>
+            <span>Student Portal</span>
+        </div>
+    </div>
+
+
+    <!-- User Profile -->
+    <div class="sidebar-profile">
+
+        <div class="sidebar-avatar">
+
+            <% if (user && user.profileImage) { %>
+
+                <img
+                    src="/uploads/<%= user.profileImage %>"
+                    alt="Profile">
+
+            <% } else { %>
+
+                <i class="fa-solid fa-user"></i>
+
+            <% } %>
+
+        </div>
+
+        <div class="sidebar-user-info">
+
+            <h3>
+                <%= user.firstName %> <%= user.lastName %>
+            </h3>
+
+            <span>
+                <%= user.role === "user" ? "Student" : user.role %>
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- Navigation -->
+    <nav class="sidebar-navigation">
+
+        <p class="menu-title">MAIN MENU</p>
+
+        <ul>
+
+            <li>
+                <a href="/dashboard"
+                   class="<%= currentPage === '/dashboard' ? 'active' : '' %>">
+
+                    <i class="fa-solid fa-house"></i>
+                    <span>Dashboard</span>
+
+                </a>
+            </li>
+
+
+            <li>
+                <a href="/services"
+                   class="<%= currentPage === 'courses' ? 'active' : '' %>">
+
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Courses</span>
+
+                </a>
+            </li>
+
+
+            <li>
+                <a href="/profile"
+                   class="<%= currentPage === 'profile' ? 'active' : '' %>">
+
+                    <i class="fa-solid fa-user"></i>
+                    <span>Profile</span>
+
+                </a>
+            </li>
+
+            <li>
+
+                <a
+                    href="/certificates"
+                    class="<%= currentPage === 'certificates' ? 'active' : '' %>">
+
+                    <i class="fa-solid fa-certificate"></i>
+
+                    <span>
+                        Certificates
+                    </span>
+
+                </a>
+
+            </li>
+
+        </ul>
+
+
+        <p class="menu-title">ACCOUNT</p>
+
+        <ul>
+
+            <li class="logout-item">
+
+                <form action="/logout" method="POST">
+
+                    <input
+                        type="hidden"
+                        name="_csrf"
+                        value="<%= csrfToken %>"
+                    >
+
+                    <button
+                        type="submit"
+                        class="logout-btn"
+                    >
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Logout</span>
+                    </button>
+
+                </form>
+
+            </li>
+
+        </ul>
+
+    </nav>
+
+
+    <!-- Sidebar Bottom -->
+    <a
+        href="/contact"
+        class="sidebar-bottom help-link"
+        title="Contact TechNova Support"
+    >
+
+        <i class="fa-solid fa-circle-question"></i>
+
+        <div>
+
+            <strong>
+                Need Help?
+            </strong>
+
+            <small>
+                Contact our support
+            </small>
+
+        </div>
+
+    </a>
+
+</aside>

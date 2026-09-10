@@ -1,0 +1,680 @@
+<%- include("layouts/header") %>
+
+<!-- =====================================================
+     SERVICES / COURSES HERO
+====================================================== -->
+
+<%
+const hero =
+    siteSettings?.heroes?.services || {};
+%>
+
+
+<section
+    class="hero hero-service"
+    id="home"
+>
+
+
+    <div class="container hero-inner">
+
+
+        <!-- HERO TEXT -->
+
+        <div class="service-hero-text">
+
+
+            <% if (hero.badge) { %>
+
+                <span class="hero-badge">
+
+                    <%= hero.badge %>
+
+                </span>
+
+            <% } %>
+
+
+            <h1>
+
+                <%= hero.title ||
+                    "Digital Excellence"
+                %>
+
+                <br>
+
+                <span>
+
+                    <%= hero.highlight ||
+                        "Tailored to Scale Your Ambition."
+                    %>
+
+                </span>
+
+            </h1>
+
+
+            <p>
+
+                <%= hero.description ||
+                    "Explore TechNova's learning opportunities and build practical technology skills through modern, career-focused courses."
+                %>
+
+            </p>
+
+
+            <div class="hero-cta">
+
+
+                <a
+                    class="cta-btn"
+                    href="<%= hero.buttonLink || '#courses' %>"
+                >
+
+                    <%= hero.buttonText ||
+                        "Explore Courses"
+                    %>
+
+                    <i
+                        class="fa-solid fa-arrow-down"
+                    ></i>
+
+                </a>
+
+
+                <a
+                    class="service-secondary-btn"
+                    href="/registration"
+                >
+
+                    Get Started
+
+                </a>
+
+
+            </div>
+
+
+        </div>
+
+
+        <!-- HERO VISUAL -->
+
+        <% if (hero.image) { %>
+
+            <div
+                class="service-hero-visual has-image"
+                style="
+                    background-image:
+                    url('/uploads/<%= hero.image %>');
+                "
+            ></div>
+
+        <% } else { %>
+
+            <div class="service-hero-visual">
+
+                <div
+                    class="service-visual-circle"
+                ></div>
+
+
+                <div
+                    class="service-visual-card"
+                >
+
+                    <i
+                        class="fa-solid fa-graduation-cap"
+                    ></i>
+
+
+                    <span>
+                        Learn
+                    </span>
+
+                    <strong>
+                        Build
+                    </strong>
+
+                    <small>
+                        Grow
+                    </small>
+
+                </div>
+
+            </div>
+
+        <% } %>
+
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     COURSES
+====================================================== -->
+
+<section
+    class="courses-section"
+    id="courses"
+>
+
+    <div class="container">
+
+
+        <div class="courses-section-header">
+
+            <div>
+
+                <span class="section-label">
+                    LEARNING PLATFORM
+                </span>
+
+
+                <h2>
+                    Available Courses
+                </h2>
+
+
+                <p>
+                    Choose a course and start learning
+                    practical technology skills.
+                </p>
+
+            </div>
+
+
+            <div class="courses-count">
+
+                <i
+                    class="fa-solid fa-book-open"
+                ></i>
+
+                <strong>
+                    <%= courses.length %>
+                </strong>
+
+                <span>
+                    Courses
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="courses-grid">
+
+
+            <% if (
+                !courses ||
+                courses.length === 0
+            ) { %>
+
+
+                <!-- ==================================
+                     EMPTY STATE
+                =================================== -->
+
+                <div class="no-courses">
+
+                    <div class="no-courses-icon">
+
+                        <i
+                            class="fa-solid fa-book-open"
+                        ></i>
+
+                    </div>
+
+
+                    <h2>
+                        No Courses Available
+                    </h2>
+
+
+                    <p>
+                        There are currently no courses
+                        available. Please check again soon.
+                    </p>
+
+
+                    <a
+                        href="/contact"
+                        class="empty-contact-btn"
+                    >
+
+                        Contact Us
+
+                    </a>
+
+                </div>
+
+
+            <% } else { %>
+
+
+                <% courses.forEach(
+                    course => {
+                %>
+
+
+                    <article
+                        class="course-card"
+                    >
+
+
+                        <!-- COURSE IMAGE -->
+
+                        <div
+                            class="course-image"
+                        >
+
+                            <img
+                                src="/uploads/<%= course.image %>"
+                                alt="<%= course.title %>"
+                                loading="lazy"
+                            >
+
+
+                            <span
+                                class="course-level-badge"
+                            >
+
+                                <%= course.level %>
+
+                            </span>
+
+                        </div>
+
+
+
+                        <!-- COURSE BODY -->
+
+                        <div class="course-body">
+
+
+                            <span
+                                class="course-category"
+                            >
+
+                                <%= course.category %>
+
+                            </span>
+
+
+                            <h2>
+
+                                <%= course.title %>
+
+                            </h2>
+
+
+                            <div
+                                class="course-detail-line"
+                            >
+
+                                <i
+                                    class="fa-solid fa-user"
+                                ></i>
+
+                                <span>
+                                    Instructor
+                                </span>
+
+                                <strong>
+                                    <%= course.instructor %>
+                                </strong>
+
+                            </div>
+
+
+                            <div
+                                class="course-detail-line"
+                            >
+
+                                <i
+                                    class="fa-solid fa-clock"
+                                ></i>
+
+                                <span>
+                                    Duration
+                                </span>
+
+                                <strong>
+                                    <%= course.duration || "Flexible" %>
+                                </strong>
+
+                            </div>
+
+
+                            <div
+                                class="course-detail-line"
+                            >
+
+                                <i
+                                    class="fa-solid fa-signal"
+                                ></i>
+
+                                <span>
+                                    Level
+                                </span>
+
+                                <strong>
+                                    <%= course.level %>
+                                </strong>
+
+                            </div>
+
+
+                            <div
+                                class="course-price"
+                            >
+
+                                <div>
+
+                                    <small>
+                                        Course Fee
+                                    </small>
+
+                                    <strong>
+                                        Rs. <%= course.price || 0 %>
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ACTIONS -->
+
+                            <div
+                                class="course-actions"
+                            >
+
+
+                                <a
+                                    href="/course/<%= course._id %>"
+                                    class="view-detail-btn"
+                                >
+
+                                    <i
+                                        class="fa-solid fa-eye"
+                                    ></i>
+
+                                    View Details
+
+                                </a>
+
+
+                                <% if (user) { %>
+
+
+                                    <form
+                                        action="/course/enroll/<%= course._id %>"
+                                        method="POST"
+                                        class="enroll-form"
+                                    >
+
+                                        <input
+                                            type="hidden"
+                                            name="_csrf"
+                                            value="<%= csrfToken %>">
+
+                                        <button
+                                            type="submit"
+                                            class="enroll-btn"
+                                        >
+
+                                            <i
+                                                class="fa-solid fa-user-plus"
+                                            ></i>
+
+                                            Enroll Now
+
+                                        </button>
+
+                                    </form>
+
+
+                                <% } else { %>
+
+
+                                    <a
+                                        href="/login?course=<%= course._id %>"
+                                        class="enroll-btn"
+                                    >
+
+                                        <i
+                                            class="fa-solid fa-right-to-bracket"
+                                        ></i>
+
+                                        Login to Enroll
+
+                                    </a>
+
+
+                                <% } %>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </article>
+
+
+                <% }) %>
+
+
+            <% } %>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     DYNAMIC STATISTICS
+====================================================== -->
+
+<section class="stats-bar">
+
+
+    <!-- PUBLISHED PROJECTS -->
+
+    <div class="stat-item">
+
+        <div class="stat-icon">
+
+            <i class="fa-solid fa-briefcase"></i>
+
+        </div>
+
+
+        <div
+            class="stat-number"
+            data-target="<%= totalProjects || 0 %>"
+        >
+            <%= totalProjects || 0 %>
+        </div>
+
+
+        <div class="stat-label">
+
+            Published Projects
+
+        </div>
+
+    </div>
+
+
+
+    <!-- REGISTERED STUDENTS -->
+
+    <div class="stat-item">
+
+        <div class="stat-icon">
+
+            <i class="fa-solid fa-users"></i>
+
+        </div>
+
+
+        <div
+            class="stat-number"
+            data-target="<%= totalStudents || 0 %>"
+        >
+            <%= totalStudents || 0 %>
+        </div>
+
+
+        <div class="stat-label">
+
+            Registered Students
+
+        </div>
+
+    </div>
+
+
+
+    <!-- COURSES -->
+
+    <div class="stat-item">
+
+        <div class="stat-icon">
+
+            <i class="fa-solid fa-book"></i>
+
+        </div>
+
+
+        <div
+            class="stat-number"
+            data-target="<%= totalCourses || 0 %>"
+        >
+            <%= totalCourses || 0 %>
+        </div>
+
+
+        <div class="stat-label">
+
+            Courses Available
+
+        </div>
+
+    </div>
+
+
+
+    <!-- CERTIFICATES -->
+
+    <div class="stat-item">
+
+        <div class="stat-icon">
+
+            <i class="fa-solid fa-certificate"></i>
+
+        </div>
+
+
+        <div
+            class="stat-number"
+            data-target="<%= totalCertificates || 0 %>"
+        >
+            <%= totalCertificates || 0 %>
+        </div>
+
+
+        <div class="stat-label">
+
+            Certificates Issued
+
+        </div>
+
+    </div>
+
+
+</section>
+
+
+<!-- =====================================================
+     SERVICES CTA
+====================================================== -->
+
+<section class="service-cta-section">
+
+    <div class="service-cta-content">
+
+
+        <span class="section-label">
+            START YOUR JOURNEY
+        </span>
+
+
+        <h2>
+
+            <%= siteSettings.servicesCtaTitle ||
+                "Ready to Build Your Future in Technology?"
+            %>
+
+        </h2>
+
+
+        <p>
+
+            <%= siteSettings.servicesCtaDescription ||
+                "Choose a course, develop practical skills, complete your learning journey and earn certificates through TechNova."
+            %>
+
+        </p>
+
+
+        <div class="service-cta-buttons">
+
+
+            <a
+                href="<%= siteSettings.servicesCtaPrimaryLink || '/registration' %>"
+                class="service-primary-btn"
+            >
+
+                <%= siteSettings.servicesCtaPrimaryText ||
+                    "Create Account"
+                %>
+
+
+                <i
+                    class="fa-solid fa-arrow-right"
+                ></i>
+
+            </a>
+
+
+            <a
+                href="<%= siteSettings.servicesCtaSecondaryLink || '/contact' %>"
+                class="service-outline-btn"
+            >
+
+                <%= siteSettings.servicesCtaSecondaryText ||
+                    "Contact Us"
+                %>
+
+            </a>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<%- include("layouts/footer") %>

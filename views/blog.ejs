@@ -1,0 +1,312 @@
+<%- include("layouts/header") %>
+
+<!-- =====================================================
+     BLOG HERO
+====================================================== -->
+
+<%
+const hero =
+    siteSettings?.heroes?.blog || {};
+%>
+
+
+<section
+    class="hero"
+    id="home"
+>
+
+
+    <div class="container hero-inner">
+
+
+        <div class="hero-text">
+
+
+            <% if (hero.badge) { %>
+
+                <span class="hero-badge">
+
+                    <%= hero.badge %>
+
+                </span>
+
+            <% } %>
+
+
+            <h1>
+
+                <%= hero.title ||
+                    "The TechNova Journal:"
+                %>
+
+                <br>
+
+                <span>
+
+                    <%= hero.highlight ||
+                        "Decoding the Next Digital Era."
+                    %>
+
+                </span>
+
+            </h1>
+
+
+            <p>
+
+                <%= hero.description ||
+                    "Stay ahead of the curve with insights from the front lines of technology. Explore practical articles about web development, AI, programming, student life, career growth and innovation."
+                %>
+
+            </p>
+
+
+            <div class="hero-cta">
+
+                <a
+                    class="cta-btn"
+                    href="<%= hero.buttonLink || '#blog' %>"
+                >
+
+                    <%= hero.buttonText ||
+                        "Read Articles"
+                    %>
+
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+        <% if (hero.image) { %>
+
+            <div
+                class="hero-image has-image"
+                style="
+                    background-image:
+                    url('/uploads/<%= hero.image %>');
+                "
+            ></div>
+
+        <% } else { %>
+
+            <div class="hero-image"></div>
+
+        <% } %>
+
+
+    </div>
+
+</section>
+
+
+<section class="blog-section">
+
+
+    <!-- ==========================================
+         SEARCH + CATEGORIES
+    =========================================== -->
+
+    <div
+        class="blog-controls container"
+    >
+
+        <form
+            action="/blog"
+            method="GET"
+            class="blog-search-form"
+        >
+
+            <div class="blog-search-box">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input
+                    type="text"
+                    name="search"
+                    value="<%= search || '' %>"
+                    placeholder="Search articles..."
+                >
+
+                <button
+                    type="submit"
+                >
+                    Search
+                </button>
+
+            </div>
+
+        </form>
+
+
+        <div class="blog-categories">
+
+            <a
+                href="/blog"
+                class="<%= !selectedCategory ? 'active' : '' %>"
+            >
+                All
+            </a>
+
+
+            <% categories.forEach(category => { %>
+
+                <a
+                    href="/blog?category=<%= encodeURIComponent(category) %>"
+                    class="<%= selectedCategory === category ? 'active' : '' %>"
+                >
+
+                    <%= category %>
+
+                </a>
+
+            <% }) %>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         BLOG GRID
+    =========================================== -->
+
+    <div class="blog-grid container">
+
+
+        <% if (!posts || posts.length === 0) { %>
+
+
+            <div class="no-blog-posts">
+
+                <i class="fa-solid fa-newspaper"></i>
+
+                <h2>
+                    No Articles Found
+                </h2>
+
+                <p>
+                    There are currently no published articles
+                    matching your search.
+                </p>
+
+                <a
+                    href="/blog"
+                    class="blog-reset-btn"
+                >
+                    View All Articles
+                </a>
+
+            </div>
+
+
+        <% } else { %>
+
+
+            <% posts.forEach(post => { %>
+
+
+                <article class="blog-card">
+
+
+                    <div class="blog-img-wrapper">
+
+
+                        <span class="blog-badge">
+
+                            <%= post.category %>
+
+                        </span>
+
+
+                        <img
+                            src="/uploads/<%= post.image %>"
+                            alt="<%= post.title %>"
+                            class="blog-img"
+                        >
+
+                    </div>
+
+
+                    <div class="blog-content">
+
+
+                        <div class="blog-meta">
+
+
+                            <span>
+
+                                <i class="far fa-calendar"></i>
+
+                                <%= new Date(
+                                    post.createdAt
+                                ).toLocaleDateString() %>
+
+                            </span>
+
+
+                            <span>
+
+                                <i class="far fa-user"></i>
+
+                                <%= post.author %>
+
+                            </span>
+
+                        </div>
+
+
+                        <h3 class="blog-title">
+
+                            <a
+                                href="/blog/<%= post.slug %>"
+                            >
+
+                                <%= post.title %>
+
+                            </a>
+
+                        </h3>
+
+
+                        <p class="blog-excerpt">
+
+                            <%= post.excerpt %>
+
+                        </p>
+
+
+                        <a
+                            href="/blog/<%= post.slug %>"
+                            class="read-more-btn"
+                        >
+
+                            Read More
+
+                            <i
+                                class="fas fa-arrow-right"
+                            ></i>
+
+                        </a>
+
+
+                    </div>
+
+                </article>
+
+
+            <% }) %>
+
+
+        <% } %>
+
+
+    </div>
+
+</section>
+
+
+<%- include("layouts/footer") %>

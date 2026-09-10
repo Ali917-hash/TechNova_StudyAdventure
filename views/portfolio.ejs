@@ -1,0 +1,585 @@
+<%- include("layouts/header") %>
+
+<!-- =====================================================
+     PORTFOLIO HERO
+====================================================== -->
+
+<%
+const hero =
+    siteSettings?.heroes?.portfolio || {};
+%>
+
+
+<section
+    class="hero portfolio-hero"
+    id="home"
+>
+
+
+    <div class="container hero-inner">
+
+
+        <div class="hero-text">
+
+
+            <% if (hero.badge) { %>
+
+                <span class="hero-badge">
+
+                    <%= hero.badge %>
+
+                </span>
+
+            <% } %>
+
+
+            <h1>
+
+                <%= hero.title ||
+                    "Showcasing"
+                %>
+
+                <br>
+
+                <span>
+
+                    <%= hero.highlight ||
+                        "Digital Excellence"
+                    %>
+
+                </span>
+
+            </h1>
+
+
+            <p>
+
+                <%= hero.description ||
+                    "Explore TechNova projects, student work, success stories and practical solutions built with modern technologies."
+                %>
+
+            </p>
+
+
+            <div class="hero-cta">
+
+
+                <a
+                    class="cta-btn"
+                    href="<%= hero.buttonLink || '#portfolio' %>"
+                >
+
+                    <%= hero.buttonText ||
+                        "View Projects"
+                    %>
+
+                </a>
+
+
+                <a
+                    class="cta-btn secondary btn1"
+                    href="/registration"
+                >
+
+                    Get Started
+
+                </a>
+
+
+            </div>
+
+
+        </div>
+
+
+        <% if (hero.image) { %>
+
+            <div
+                class="hero-decorative has-image"
+                style="
+                    background-image:
+                    url('/uploads/<%= hero.image %>');
+                "
+            ></div>
+
+        <% } else { %>
+
+            <div class="hero-decorative"></div>
+
+        <% } %>
+
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     SUCCESS STORIES
+====================================================== -->
+
+<section>
+
+    <h2
+        class="section-title"
+        id="portfolio"
+    >
+
+        Success Stories
+
+    </h2>
+
+
+    <div class="stories-grid">
+
+
+        <% if (
+            !successStories ||
+            successStories.length === 0
+        ) { %>
+
+
+            <div class="portfolio-empty">
+
+                <i class="fa-solid fa-users"></i>
+
+                <h3>
+                    No Success Stories Yet
+                </h3>
+
+                <p>
+                    Success stories will appear here
+                    as they are added by the admin.
+                </p>
+
+            </div>
+
+
+        <% } else { %>
+
+
+            <% successStories.forEach(story => { %>
+
+
+                <div class="story-card">
+
+
+                    <img
+                        src="/uploads/<%= story.image %>"
+                        alt="<%= story.studentName || story.title %>"
+                        class="story-image"
+                    >
+
+
+                    <div class="story-content">
+
+
+                        <div class="category-tag">
+
+                            <i
+                                class="fas fa-laptop-code"
+                            ></i>
+
+                            <%= story.category %>
+
+                        </div>
+
+
+                        <h3 class="student-name">
+
+                            <%= story.studentName || story.title %>
+
+                        </h3>
+
+
+                        <% if (story.studentRole) { %>
+
+                            <p class="student-role">
+
+                                <%= story.studentRole %>
+
+                            </p>
+
+                        <% } %>
+
+
+                        <% if (story.quote) { %>
+
+                            <p class="quote">
+
+                                "<%= story.quote %>"
+
+                            </p>
+
+                        <% } %>
+
+
+                    </div>
+
+                </div>
+
+
+            <% }) %>
+
+
+        <% } %>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     STUDENT PROJECTS
+====================================================== -->
+
+<section>
+
+    <h2 class="section-title">
+        Student Projects
+    </h2>
+
+
+    <!-- ==========================================
+         SEARCH + FILTER
+    =========================================== -->
+
+    <div class="portfolio-controls">
+
+        <form
+            action="/portfolio"
+            method="GET"
+            class="portfolio-search-form"
+        >
+
+            <input
+                type="text"
+                name="search"
+                value="<%= search || '' %>"
+                placeholder="Search projects..."
+            >
+
+
+            <button
+                type="submit"
+            >
+
+                <i
+                    class="fa-solid fa-magnifying-glass"
+                ></i>
+
+                Search
+
+            </button>
+
+        </form>
+
+
+        <div class="portfolio-categories">
+
+
+            <a
+                href="/portfolio"
+                class="<%= !selectedCategory ? 'active' : '' %>"
+            >
+
+                All
+
+            </a>
+
+
+            <% categories.forEach(category => { %>
+
+
+                <a
+                    href="/portfolio?category=<%= encodeURIComponent(category) %>"
+                    class="<%= selectedCategory === category ? 'active' : '' %>"
+                >
+
+                    <%= category %>
+
+                </a>
+
+
+            <% }) %>
+
+
+        </div>
+
+    </div>
+
+
+
+    <div class="projects-grid">
+
+
+        <% if (
+            !projects ||
+            projects.length === 0
+        ) { %>
+
+
+            <div class="portfolio-empty">
+
+                <i class="fa-solid fa-folder-open"></i>
+
+                <h3>
+                    No Projects Found
+                </h3>
+
+                <p>
+                    No projects match your current search
+                    or category.
+                </p>
+
+                <a
+                    href="/portfolio"
+                    class="cta-btn btn"
+                >
+
+                    View All Projects
+
+                </a>
+
+            </div>
+
+
+        <% } else { %>
+
+
+            <% projects.forEach(project => { %>
+
+
+                <div class="project-card">
+
+
+                    <% if (project.image) { %>
+
+                        <div class="project-image">
+
+                            <img
+                                src="/uploads/<%= project.image %>"
+                                alt="<%= project.title %>"
+                                loading="lazy"
+                            >
+
+                        </div>
+
+                    <% } %>
+
+
+                    <div class="project-card-body">
+
+
+                        <div class="project-header">
+
+
+                            <span class="project-category">
+
+                                <%= project.category %>
+
+                            </span>
+
+
+                            <a
+                                href="/portfolio/project/<%= project.slug %>"
+                                class="external-link"
+                                title="View project"
+                            >
+
+                                <i
+                                    class="fas fa-external-link-alt"
+                                ></i>
+
+                            </a>
+
+                        </div>
+
+
+                        <h3 class="project-title">
+
+                            <%= project.title %>
+
+                        </h3>
+
+
+                        <p class="project-desc">
+
+                            <%= project.description %>
+
+                        </p>
+
+
+                        <div class="tech-stack">
+
+
+                            <% if (
+                                project.technologies &&
+                                project.technologies.length > 0
+                            ) { %>
+
+
+                                <% project.technologies.forEach(
+                                    technology => {
+                                %>
+
+                                    <span class="tech-pill">
+
+                                        <%= technology %>
+
+                                    </span>
+
+
+                                <% }) %>
+
+
+                            <% } %>
+
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+            <% }) %>
+
+
+        <% } %>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     IMPACT
+====================================================== -->
+
+<section class="impact-section">
+
+    <h2 class="section-title">
+        Our Impact
+    </h2>
+
+
+    <div class="impact-grid">
+
+
+        <div class="impact-item">
+
+            <div class="impact-number">
+
+                <%= totalPublished || 0 %>+
+
+            </div>
+
+            <div class="impact-label">
+
+                Published Projects
+
+            </div>
+
+        </div>
+
+
+        <div class="impact-item">
+
+            <div class="impact-number">
+
+                <%= completedProjects || 0 %>+
+
+            </div>
+
+            <div class="impact-label">
+
+                Student Projects
+
+            </div>
+
+        </div>
+
+
+        <div class="impact-item">
+
+            <div class="impact-number">
+
+                <%= hiringPartners || 0 %>+
+
+            </div>
+
+            <div class="impact-label">
+
+                Success Stories
+
+            </div>
+
+        </div>
+
+
+        <div class="impact-item">
+
+            <div class="impact-number">
+
+                TechNova
+
+            </div>
+
+            <div class="impact-label">
+
+                Building Digital Careers
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     PORTFOLIO CTA
+====================================================== -->
+
+<section class="cta-section">
+
+    <h2>
+
+        <%= siteSettings.portfolioCtaTitle ||
+            "Be Our Next Success Story"
+        %>
+
+    </h2>
+
+
+    <p>
+
+        <%= siteSettings.portfolioCtaDescription ||
+            "Join TechNova and start building your portfolio today."
+        %>
+
+    </p>
+
+
+    <a
+        href="<%= siteSettings.portfolioCtaButtonLink || '/registration' %>"
+        class="cta-btn1"
+    >
+
+        <%= siteSettings.portfolioCtaButtonText ||
+            "Start Learning"
+        %>
+
+    </a>
+
+</section>
+
+
+<%- include("layouts/footer") %>
