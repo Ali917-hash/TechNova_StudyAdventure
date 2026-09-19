@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const { Readable } = require("stream");
 const mongoose = require("mongoose");
 const Course = require("../models/Course");
 const CourseLesson = require("../models/CourseLesson");
@@ -355,7 +356,55 @@ exports.getCourseMaterial = async (req,res) => {
             /^https?:\/\//i.test(material.filename)
         ) {
 
-            return res.redirect(material.filename);
+            const blobResponse =
+                await fetch(
+                    material.filename,
+                    {
+                        headers: req.headers.range
+                            ? {
+                                Range: req.headers.range
+                            }
+                            : {}
+                    }
+                );
+
+            if (!blobResponse.ok) {
+                return res.status(404).send(
+                    "Material file not found."
+                );
+            }
+
+            res.status(blobResponse.status);
+            res.set(
+                "Content-Type",
+                material.mimetype ||
+                blobResponse.headers.get("content-type") ||
+                "application/octet-stream"
+            );
+            res.set(
+                "Content-Disposition",
+                "inline"
+            );
+            res.set(
+                "Accept-Ranges",
+                "bytes"
+            );
+
+            for (const header of [
+                "content-length",
+                "content-range"
+            ]) {
+                const value =
+                    blobResponse.headers.get(header);
+
+                if (value) {
+                    res.set(header, value);
+                }
+            }
+
+            return Readable
+                .fromWeb(blobResponse.body)
+                .pipe(res);
 
         }
 
