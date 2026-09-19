@@ -86,7 +86,7 @@ const hero =
                 class="hero-image has-image"
                 style="
                     background-image:
-                    url('/uploads/<%= hero.image %>');
+                    url('<%= uploadUrl(hero.image) %>');
                 "
             ></div>
 
@@ -223,7 +223,7 @@ const hero =
 
 
                         <img
-                            src="/uploads/<%= post.image %>"
+                            src="<%= uploadUrl(post.image) %>"
                             alt="<%= post.title %>"
                             class="blog-img"
                         >

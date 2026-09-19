@@ -31,7 +31,7 @@
             <div class="profile-image-section">
 
                 <img
-                    src="/uploads/<%= user.profileImage || 'default-profile.png' %>"
+                    src="<%= uploadUrl(user.profileImage || 'default-profile.png') %>"
                     alt="Profile Picture"
                     class="profile-image"
                     id="profilePreview"

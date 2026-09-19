@@ -132,6 +132,24 @@ app.use(
             : path.join(__dirname, "public/uploads")
     )
 );
+
+app.use((req, res, next) => {
+
+    res.locals.uploadUrl = image => {
+
+        if (!image) {
+            return "";
+        }
+
+        return /^https?:\/\//i.test(image)
+            ? image
+            : "/uploads/" + image;
+
+    };
+
+    next();
+
+});
 const nodemailer = require("nodemailer");
 const connectDB = require("./config/db");
 

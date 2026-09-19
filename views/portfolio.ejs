@@ -98,7 +98,7 @@ const hero =
                 class="hero-decorative has-image"
                 style="
                     background-image:
-                    url('/uploads/<%= hero.image %>');
+                    url('<%= uploadUrl(hero.image) %>');
                 "
             ></div>
 
@@ -165,7 +165,7 @@ const hero =
 
 
                     <img
-                        src="/uploads/<%= story.image %>"
+                        src="<%= uploadUrl(story.image) %>"
                         alt="<%= story.studentName || story.title %>"
                         class="story-image"
                     >
@@ -360,7 +360,7 @@ const hero =
                         <div class="project-image">
 
                             <img
-                                src="/uploads/<%= project.image %>"
+                                src="<%= uploadUrl(project.image) %>"
                                 alt="<%= project.title %>"
                                 loading="lazy"
                             >

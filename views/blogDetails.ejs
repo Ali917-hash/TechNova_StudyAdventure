@@ -68,7 +68,7 @@
         <div class="blog-details-image">
 
             <img
-                src="/uploads/<%= blog.image %>"
+                src="<%= uploadUrl(blog.image) %>"
                 alt="<%= blog.title %>"
             >
 
@@ -130,7 +130,7 @@
                         >
 
                             <img
-                                src="/uploads/<%= related.image %>"
+                                src="<%= uploadUrl(related.image) %>"
                                 alt="<%= related.title %>"
                             >
 

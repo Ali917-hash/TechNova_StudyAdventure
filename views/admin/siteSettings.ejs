@@ -304,7 +304,7 @@ navigation.forEach(
                             <% if (homeHero.image) { %>
 
                                 <img
-                                    src="/uploads/<%= homeHero.image %>"
+                                    src="<%= uploadUrl(homeHero.image) %>"
                                     alt="Home Hero"
                                 >
 
@@ -732,7 +732,7 @@ navigation.forEach(
                         <% if (settings.storyImage) { %>
 
                             <img
-                                src="/uploads/<%= settings.storyImage %>"
+                                src="<%= uploadUrl(settings.storyImage) %>"
                                 alt="Story Image"
                             >
 

@@ -21,7 +21,7 @@
             <% if (user && user.profileImage) { %>
 
                 <img
-                    src="/uploads/<%= user.profileImage %>"
+                    src="<%= uploadUrl(user.profileImage) %>"
                     alt="Profile">
 
             <% } else { %>

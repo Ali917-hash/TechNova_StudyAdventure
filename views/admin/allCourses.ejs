@@ -78,7 +78,7 @@ const currentPage = "courses";
 
                         <td><%= index+1 %></td>
 
-                        <td> <img src="/uploads/<%= course.image %>"
+                        <td> <img src="<%= uploadUrl(course.image) %>"
                             width="120"
                             height="80"
                             style="object-fit:contain;border-radius:6px;">

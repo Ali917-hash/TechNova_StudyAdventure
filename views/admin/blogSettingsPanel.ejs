@@ -22,7 +22,7 @@
             <div class="form-group">
                 <label>Hero Image</label>
                 <div class="settings-image-preview">
-                    <% if (hero.image) { %><img src="/uploads/<%= hero.image %>" alt="Blog hero"><% } else { %><div class="no-image">No hero image uploaded.</div><% } %>
+                    <% if (hero.image) { %><img src="<%= uploadUrl(hero.image) %>" alt="Blog hero"><% } else { %><div class="no-image">No hero image uploaded.</div><% } %>
                 </div>
                 <input type="file" name="heroImage" accept=".jpg,.jpeg,.png,.webp">
             </div>

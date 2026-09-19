@@ -2,6 +2,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const crypto = require("crypto");
+const { put } = require("@vercel/blob");
 
 // ==========================================
 // UPLOAD DIRECTORY
@@ -26,7 +27,7 @@ if (!fs.existsSync(uploadPath)) {
 // STORAGE
 // ==========================================
 
-const storage = multer.diskStorage({
+const localStorage = multer.diskStorage({
 
     destination: function (req, file, cb) {
 
@@ -85,6 +86,51 @@ const storage = multer.diskStorage({
 
 });
 
+const blobStorage = {
+
+    _handleFile: async function (req, file, cb) {
+
+        try {
+
+            const extension =
+                path.extname(file.originalname).toLowerCase();
+
+            const filename =
+                Date.now() + "-" +
+                crypto.randomBytes(16).toString("hex") +
+                extension;
+
+            const blob = await put(
+                filename,
+                file.stream,
+                {
+                    access: "public",
+                    contentType: file.mimetype
+                }
+            );
+
+            cb(null, {
+                filename: blob.url,
+                path: blob.url,
+                size: blob.size
+            });
+
+        } catch (error) {
+
+            cb(error);
+
+        }
+
+    },
+
+    _removeFile: function (req, file, cb) {
+
+        cb(null);
+
+    }
+
+};
+
 // ==========================================
 // IMAGE FILE FILTER
 // ==========================================
@@ -139,7 +185,10 @@ const fileFilter = (
 
 module.exports = multer({
 
-    storage,
+    storage:
+        process.env.VERCEL
+            ? blobStorage
+            : localStorage,
 
     fileFilter,
 

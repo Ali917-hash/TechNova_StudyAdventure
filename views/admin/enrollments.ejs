@@ -194,7 +194,7 @@ const currentPage = "enrollments";
                                         ) { %>
 
                                             <img
-                                                src="/uploads/<%= enrollment.student.profileImage %>"
+                                                src="<%= uploadUrl(enrollment.student.profileImage) %>"
                                                 alt="Student">
 
                                         <% } else { %>

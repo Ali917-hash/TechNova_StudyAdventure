@@ -41,7 +41,7 @@
         <div class="portfolio-details-image">
 
             <img
-                src="/uploads/<%= project.image %>"
+                src="<%= uploadUrl(project.image) %>"
                 alt="<%= project.title %>"
             >
 
@@ -191,7 +191,7 @@
                             <div class="project-image">
 
                                 <img
-                                    src="/uploads/<%= related.image %>"
+                                    src="<%= uploadUrl(related.image) %>"
                                     alt="<%= related.title %>"
                                 >
 

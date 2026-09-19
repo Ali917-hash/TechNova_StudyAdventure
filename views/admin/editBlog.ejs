@@ -120,7 +120,7 @@ const currentPage = "blogs";
                 >
 
                     <img
-                        src="/uploads/<%= blog.image %>"
+                        src="<%= uploadUrl(blog.image) %>"
                         alt="<%= blog.title %>"
                         style="
                             width:220px;

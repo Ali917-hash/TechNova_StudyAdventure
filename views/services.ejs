@@ -106,7 +106,7 @@ const hero =
                 class="service-hero-visual has-image"
                 style="
                     background-image:
-                    url('/uploads/<%= hero.image %>');
+                    url('<%= uploadUrl(hero.image) %>');
                 "
             ></div>
 
@@ -273,7 +273,7 @@ const hero =
                         >
 
                             <img
-                                src="/uploads/<%= course.image %>"
+                                src="<%= uploadUrl(course.image) %>"
                                 alt="<%= course.title %>"
                                 loading="lazy"
                             >

@@ -85,7 +85,7 @@ const hero =
                 class="hero-right has-image"
                 style="
                     background-image:
-                    url('/uploads/<%= hero.image %>');
+                    url('<%= uploadUrl(hero.image) %>');
                 "
             ></div>
 
@@ -152,7 +152,7 @@ const hero =
         <div class="story-image">
 
             <img
-                src="/uploads/<%= siteSettings.storyImage || 'about.webp' %>"
+                src="<%= uploadUrl(siteSettings.storyImage || 'about.webp') %>"
                 alt="<%= siteSettings.storyTitle || 'TechNova Story' %>"
                 loading="lazy"
                 decoding="async"
@@ -418,7 +418,7 @@ const hero =
                         <div class="profile-circle">
 
                             <img
-                                src="/uploads/<%= member.image %>"
+                                src="<%= uploadUrl(member.image) %>"
                                 alt="<%= member.name %>"
                                 loading="lazy"
                             >
