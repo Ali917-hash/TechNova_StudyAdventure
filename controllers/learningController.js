@@ -356,18 +356,17 @@ exports.getCourseMaterial = async (req,res) => {
         // BUILD SAFE FILE PATH
         // ======================================
 
-        const filePath =
-            path.resolve(
-                __dirname,
-                "../public/uploads/course-materials",
-                material.filename
-            );
-
-
-        const materialDirectory =
-            path.resolve(
+        const materialDirectory = process.env.VERCEL
+            ? path.join("/tmp", "uploads", "course-materials")
+            : path.resolve(
                 __dirname,
                 "../public/uploads/course-materials"
+            );
+
+        const filePath =
+            path.join(
+                materialDirectory,
+                material.filename
             );
 
 
