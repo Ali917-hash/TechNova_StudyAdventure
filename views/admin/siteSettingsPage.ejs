@@ -56,6 +56,23 @@ const field = (name, fallback = "") => settings[name] || fallback;
 
             <% if (page === 'home') { %>
                 <div class="settings-section">
+                    <div class="settings-section-title"><i class="fa-solid fa-wand-magic-sparkles"></i><div><h2>Brand Logo</h2><p>Upload the logo used across the public website, admin panel, and student portal.</p></div></div>
+                    <div class="logo-settings-row">
+                        <div class="brand-logo-preview">
+                            <% if (settings.brandLogo) { %>
+                                <img src="<%= uploadUrl(settings.brandLogo) %>" alt="Current TechNova logo">
+                            <% } else { %>
+                                <span>TN</span>
+                            <% } %>
+                        </div>
+                        <div class="logo-settings-fields">
+                            <label for="brandLogo">Logo image</label>
+                            <input id="brandLogo" type="file" name="brandLogo" accept=".jpg,.jpeg,.png,.webp,.svg">
+                            <small>Transparent PNG or WEBP is recommended.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-section">
                     <div class="settings-section-title"><i class="fa-solid fa-house"></i><div><h2>Why Choose TechNova</h2><p>Manage the four feature cards on the home page.</p></div></div>
                     <div class="form-group"><label>Section Title</label><input name="homeWhyChooseTitle" value="<%= field('homeWhyChooseTitle', 'Why Choose TechNova?') %>"></div>
                     <div class="form-group"><label>Section Description</label><textarea name="homeWhyChooseDescription" rows="3"><%= field('homeWhyChooseDescription') %></textarea></div>

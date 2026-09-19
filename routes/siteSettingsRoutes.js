@@ -48,7 +48,7 @@ router.post(
         {
             name: "storyImage",
             maxCount: 1
-        }
+        },
     ]),
     doubleCsrfProtection,
     controller.updateSettings
@@ -64,6 +64,10 @@ router.post(
         },
         {
             name: "storyImage",
+            maxCount: 1
+        },
+        {
+            name: "brandLogo",
             maxCount: 1
         }
     ]),

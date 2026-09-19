@@ -1,5 +1,20 @@
 const Blog = require("../models/Blog");
 const SiteSettings = require("../models/SiteSettings");
+const BlogView = require("../models/BlogView");
+const BlogReaction = require("../models/BlogReaction");
+const BlogComment = require("../models/BlogComment");
+
+function getVisitorKey(req) {
+
+    const userId =
+        req.session?.user?._id ||
+        req.session?.user?.id;
+
+    return userId
+        ? `user:${userId}`
+        : `session:${req.sessionID}`;
+
+}
 
 
 // ==========================================
@@ -23,221 +38,266 @@ function createSlug(title) {
 // ==========================================
 
 async function generateUniqueSlug(title, existingId = null) {
-
     const baseSlug = createSlug(title);
-
     let slug = baseSlug;
-
     let counter = 1;
 
     while (true) {
-
-        const query = {
-            slug
-        };
+        const query = { slug };
 
         if (existingId) {
-
-            query._id = {
-                $ne: existingId
-            };
-
+            query._id = { $ne: existingId };
         }
 
-
-        const existing =
-            await Blog.findOne(query);
-
-
-        if (!existing) {
+        if (!await Blog.findOne(query)) {
             return slug;
         }
 
-
         counter++;
-
-        slug =
-            `${baseSlug}-${counter}`;
-
+        slug = `${baseSlug}-${counter}`;
     }
-
 }
-
-
-// ==========================================
-// PUBLIC - ALL BLOGS
-// ==========================================
 
 exports.blogs = async (req, res) => {
 
     try {
-
-        const category =
-            req.query.category
-                ? req.query.category.trim()
-                : "";
-
-        const search =
-            req.query.search
-                ? req.query.search.trim()
-                : "";
-
-
-        const query = {
-            isPublished: true
-        };
-
+        const category = req.query.category?.trim() || "";
+        const search = req.query.search?.trim() || "";
+        const query = { isPublished: true };
 
         if (category) {
-
             query.category = category;
-
         }
-
 
         if (search) {
-
             query.$or = [
-
-                {
-                    title: {
-                        $regex: search,
-                        $options: "i"
-                    }
-                },
-
-                {
-                    excerpt: {
-                        $regex: search,
-                        $options: "i"
-                    }
-                },
-
-                {
-                    content: {
-                        $regex: search,
-                        $options: "i"
-                    }
-                }
-
+                { title: { $regex: search, $options: "i" } },
+                { excerpt: { $regex: search, $options: "i" } },
+                { content: { $regex: search, $options: "i" } }
             ];
-
         }
 
+        const [posts, categories] = await Promise.all([
+            Blog.find(query).sort({ createdAt: -1 }).lean(),
+            Blog.distinct("category", { isPublished: true })
+        ]);
 
-        const posts =
-            await Blog
-                .find(query)
-                .sort({
-                    createdAt: -1
-                })
-                .lean();
-
-
-        const categories =
-            await Blog.distinct(
-                "category",
-                {
-                    isPublished: true
-                }
-            );
-
-
-        res.render(
-            "blog",
-            {
-                user:
-                    req.session.user || null,
-
-                posts,
-
-                categories,
-
-                selectedCategory:
-                    category,
-
-                search
-
-            }
-        );
-
-
+        return res.render("blog", {
+            user: req.session.user || null,
+            posts,
+            categories,
+            selectedCategory: category,
+            search
+        });
     } catch (error) {
-
-        console.error(
-            "PUBLIC BLOG ERROR:",
-            error
-        );
-
-
-        res.status(500).send(
-            "Unable to load blog."
-        );
-
+        console.error("PUBLIC BLOG ERROR:", error);
+        return res.status(500).send("Unable to load blog.");
     }
-
 };
-
-
-// ==========================================
-// PUBLIC - BLOG DETAILS
-// ==========================================
 
 exports.blogDetails = async (req, res) => {
 
     try {
 
-        const blog =
-            await Blog.findOne({
-
-                slug:
-                    req.params.slug,
-
-                isPublished: true
-
-            }).lean();
-
+        const blog = await Blog.findOne({
+            slug: req.params.slug,
+            isPublished: true
+        }).lean();
 
         if (!blog) {
-
-            return res.status(404).send(
-                "Blog post not found."
-            );
-
+            return res.status(404).send("Blog post not found.");
         }
 
+        const visitorKey = getVisitorKey(req);
+        let isNewView = false;
 
-        // Increment views
-
-        await Blog.updateOne(
-
-            {
-                _id: blog._id
-            },
-
-            {
-                $inc: {
-                    views: 1
-                }
+        try {
+            await BlogView.create({ blog: blog._id, visitorKey });
+            isNewView = true;
+        } catch (error) {
+            if (error.code !== 11000) {
+                throw error;
             }
+        }
 
+        if (isNewView) {
+            await Blog.updateOne(
+                { _id: blog._id },
+                { $inc: { views: 1 } }
+            );
+            blog.views = (blog.views || 0) + 1;
+        }
+
+        const [comments, reactionCounts, visitorReaction, relatedPosts] =
+            await Promise.all([
+                BlogComment.find({
+                    blog: blog._id,
+                    status: "approved"
+                })
+                    .sort({ createdAt: -1 })
+                    .lean(),
+
+                BlogReaction.aggregate([
+                    { $match: { blog: blog._id } },
+                    {
+                        $group: {
+                            _id: "$reaction",
+                            count: { $sum: 1 }
+                        }
+                    }
+                ]),
+
+                BlogReaction.findOne({
+                    blog: blog._id,
+                    visitorKey
+                })
+                    .select("reaction")
+                    .lean(),
+
+                Blog.find({
+                    _id: { $ne: blog._id },
+                    category: blog.category,
+                    isPublished: true
+                })
+                    .sort({ createdAt: -1 })
+                    .limit(3)
+                    .lean()
+            ]);
+
+        const reactions = {
+            like: 0,
+            insightful: 0,
+            helpful: 0
+        };
+
+        reactionCounts.forEach(item => {
+            reactions[item._id] = item.count;
+        });
+
+        return res.render("blogDetails", {
+            user: req.session.user || null,
+            blog,
+            relatedPosts,
+            comments,
+            reactions,
+            visitorReaction: visitorReaction?.reaction || ""
+        });
+
+    } catch (error) {
+
+        console.error("BLOG DETAILS ERROR:", error);
+        return res.status(500).send("Unable to load blog post.");
+
+    }
+
+};
+
+exports.reactToBlog = async (req, res) => {
+
+    try {
+
+        const reaction = String(req.body.reaction || "").trim();
+
+        if (!["like", "insightful", "helpful"].includes(reaction)) {
+            return res.status(400).send("Invalid reaction.");
+        }
+
+        const blog = await Blog.findOne({
+            slug: req.params.slug,
+            isPublished: true
+        }).select("_id slug").lean();
+
+        if (!blog) {
+            return res.status(404).send("Blog post not found.");
+        }
+
+        await BlogReaction.findOneAndUpdate(
+            { blog: blog._id, visitorKey: getVisitorKey(req) },
+            { reaction },
+            { upsert: true, new: true, setDefaultsOnInsert: true }
         );
 
+        return res.redirect(`/blog/${blog.slug}#community`);
 
-        const relatedPosts =
-            await Blog.find({
+    } catch (error) {
+        console.error("BLOG REACTION ERROR:", error);
+        return res.status(500).send("Unable to save reaction.");
+    }
 
-                _id: {
-                    $ne: blog._id
-                },
+};
 
-                category:
-                    blog.category,
+exports.commentOnBlog = async (req, res) => {
 
-                isPublished: true
+    try {
 
-            })
-            .sort({
+        const name = String(req.body.name || "").trim();
+        const email = String(req.body.email || "").trim();
+        const content = String(req.body.content || "").trim();
+
+        if (!name || !content || name.length > 80 || content.length > 1000) {
+            return res.status(400).send("Please provide a name and a comment under 1000 characters.");
+        }
+
+        const blog = await Blog.findOne({
+            slug: req.params.slug,
+            isPublished: true
+        }).select("_id slug").lean();
+
+        if (!blog) {
+            return res.status(404).send("Blog post not found.");
+        }
+
+        await BlogComment.create({
+            blog: blog._id,
+            name,
+            email,
+            content,
+            status: "approved"
+        });
+
+        return res.redirect(`/blog/${blog.slug}#community`);
+
+    } catch (error) {
+        console.error("BLOG COMMENT ERROR:", error);
+        return res.status(500).send("Unable to save comment.");
+    }
+
+};
+/*
+                    BlogComment.find({
+                        blog: blog._id,
+                        status: "approved"
+                    })
+                        .sort({ createdAt: -1 })
+                        .lean(),
+
+                    BlogReaction.aggregate([
+                        { $match: { blog: blog._id } },
+                        {
+                            $group: {
+                                _id: "$reaction",
+                                count: { $sum: 1 }
+                            }
+                        }
+                    ]),
+
+                    BlogReaction.findOne({
+                        blog: blog._id,
+                        visitorKey
+                    })
+                        .select("reaction")
+                        .lean()
+                ]);
+
+            const reactions = {
+                like: 0,
+                insightful: 0,
+                helpful: 0
+            };
+
+            reactionCounts.forEach(item => {
+                reactions[item._id] = item.count;
+            });
                 createdAt: -1
             })
             .limit(3)
@@ -261,8 +321,98 @@ exports.blogDetails = async (req, res) => {
     } catch (error) {
 
         console.error(
+                    comments,
+                    reactions,
+                    visitorReaction:
+                        visitorReaction?.reaction || ""
             "BLOG DETAILS ERROR:",
             error
+        // PUBLIC - BLOG REACTION
+        // ==========================================
+
+        exports.reactToBlog = async (req, res) => {
+
+            try {
+
+                const reaction =
+                    String(req.body.reaction || "").trim();
+
+                if (!["like", "insightful", "helpful"].includes(reaction)) {
+                    return res.status(400).send("Invalid reaction.");
+                }
+
+                const blog = await Blog.findOne({
+                    slug: req.params.slug,
+                    isPublished: true
+                }).select("_id slug").lean();
+
+                if (!blog) {
+                    return res.status(404).send("Blog post not found.");
+                }
+
+                await BlogReaction.findOneAndUpdate(
+                    {
+                        blog: blog._id,
+                        visitorKey: getVisitorKey(req)
+                    },
+                    { reaction },
+                    { upsert: true, new: true, setDefaultsOnInsert: true }
+                );
+
+                return res.redirect(`/blog/${blog.slug}#community`);
+
+            } catch (error) {
+
+                console.error("BLOG REACTION ERROR:", error);
+                return res.status(500).send("Unable to save reaction.");
+
+            }
+
+        };
+
+        // ==========================================
+        // PUBLIC - BLOG COMMENT
+        // ==========================================
+
+        exports.commentOnBlog = async (req, res) => {
+
+            try {
+
+                const name = String(req.body.name || "").trim();
+                const email = String(req.body.email || "").trim();
+                const content = String(req.body.content || "").trim();
+
+                if (!name || !content || name.length > 80 || content.length > 1000) {
+                    return res.status(400).send("Please provide a name and a comment under 1000 characters.");
+                }
+
+                const blog = await Blog.findOne({
+                    slug: req.params.slug,
+                    isPublished: true
+                }).select("_id slug").lean();
+
+                if (!blog) {
+                    return res.status(404).send("Blog post not found.");
+                }
+
+                await BlogComment.create({
+                    blog: blog._id,
+                    name,
+                    email,
+                    content,
+                    status: "approved"
+                });
+
+                return res.redirect(`/blog/${blog.slug}#community`);
+
+            } catch (error) {
+
+                console.error("BLOG COMMENT ERROR:", error);
+                return res.status(500).send("Unable to save comment.");
+
+            }
+
+        };
         );
 
 
@@ -274,6 +424,8 @@ exports.blogDetails = async (req, res) => {
 
 };
 
+
+*/
 
 // ==========================================
 // ADMIN - ALL BLOGS

@@ -139,13 +139,15 @@ const allowedExtensions = new Set([
     ".jpg",
     ".jpeg",
     ".png",
-    ".webp"
+    ".webp",
+    ".svg"
 ]);
 
 const allowedMimeTypes = new Set([
     "image/jpeg",
     "image/png",
-    "image/webp"
+    "image/webp",
+    "image/svg+xml"
 ]);
 
 const fileFilter = (

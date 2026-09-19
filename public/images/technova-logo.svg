@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">TechNova TN logo</title>
+  <defs>
+    <linearGradient id="letter" x1="150" y1="120" x2="370" y2="390" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#dbeafe"/>
+    </linearGradient>
+  </defs>
+  <path d="M94 337c66 49 160 67 244 34 45-18 79-47 100-83" fill="none" stroke="#0891b2" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="426" cy="269" r="12" fill="#06b6d4"/>
+  <path d="M128 137h256v61h-97v188h-62V198h-97z" fill="#172554"/>
+  <path d="M177 270l75 76 84-128v91l-84 93-75-77z" fill="#2563eb"/>
+  <path d="M143 403h226" fill="none" stroke="#0891b2" stroke-width="9" stroke-linecap="round"/>
+</svg>

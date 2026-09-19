@@ -138,6 +138,79 @@
                             <div>
 
                                 <span>
+                            <section class="blog-community" id="community">
+
+                                <div class="blog-community-header">
+                                    <div>
+                                        <span class="blog-community-kicker">Join the conversation</span>
+                                        <h2>What do you think?</h2>
+                                    </div>
+                                    <span class="blog-comment-count"><%= comments.length %> comments</span>
+                                </div>
+
+                                <div class="blog-reactions">
+                                    <span>React to this article</span>
+                                    <div class="blog-reaction-actions">
+                                        <% [
+                                            ['like', 'fa-heart', 'Like'],
+                                            ['insightful', 'fa-lightbulb', 'Insightful'],
+                                            ['helpful', 'fa-thumbs-up', 'Helpful']
+                                        ].forEach(([value, icon, label]) => { %>
+                                            <form action="/blog/<%= blog.slug %>/reaction" method="POST">
+                                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                                <input type="hidden" name="reaction" value="<%= value %>">
+                                                <button class="blog-reaction-btn <%= visitorReaction === value ? 'selected' : '' %>" type="submit">
+                                                    <i class="fa-solid <%= icon %>"></i>
+                                                    <span><%= label %></span>
+                                                    <strong><%= reactions[value] || 0 %></strong>
+                                                </button>
+                                            </form>
+                                        <% }) %>
+                                    </div>
+                                </div>
+
+                                <div class="blog-community-grid">
+                                    <form class="blog-comment-form" action="/blog/<%= blog.slug %>/comment" method="POST">
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                        <h3>Leave a comment</h3>
+                                        <p>Share a question, suggestion, or useful perspective.</p>
+                                        <div class="blog-comment-fields">
+                                            <input type="text" name="name" maxlength="80" placeholder="Your name" required>
+                                            <input type="email" name="email" maxlength="160" placeholder="Email (optional)">
+                                        </div>
+                                        <textarea name="content" maxlength="1000" rows="5" placeholder="Write your comment or suggestion..." required></textarea>
+                                        <button class="blog-comment-submit" type="submit">
+                                            <i class="fa-solid fa-paper-plane"></i>
+                                            Post comment
+                                        </button>
+                                    </form>
+
+                                    <div class="blog-comments-list">
+                                        <h3>Reader thoughts</h3>
+                                        <% if (comments.length === 0) { %>
+                                            <div class="blog-comments-empty">
+                                                <i class="fa-regular fa-comments"></i>
+                                                <p>Be the first to share an idea.</p>
+                                            </div>
+                                        <% } else { %>
+                                            <% comments.forEach(comment => { %>
+                                                <article class="blog-comment">
+                                                    <div class="blog-comment-avatar"><%= comment.name.charAt(0).toUpperCase() %></div>
+                                                    <div>
+                                                        <div class="blog-comment-meta">
+                                                            <strong><%= comment.name %></strong>
+                                                            <time><%= new Date(comment.createdAt).toLocaleDateString() %></time>
+                                                        </div>
+                                                        <p><%= comment.content %></p>
+                                                    </div>
+                                                </article>
+                                            <% }) %>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </section>
+
+
                                     <%= related.category %>
                                 </span>
 

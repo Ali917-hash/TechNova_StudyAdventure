@@ -35,6 +35,18 @@ router.get(
     blogController.blogDetails
 );
 
+router.post(
+    "/blog/:slug/reaction",
+    doubleCsrfProtection,
+    blogController.reactToBlog
+);
+
+router.post(
+    "/blog/:slug/comment",
+    doubleCsrfProtection,
+    blogController.commentOnBlog
+);
+
 
 // ==========================================
 // ADMIN - ALL BLOGS

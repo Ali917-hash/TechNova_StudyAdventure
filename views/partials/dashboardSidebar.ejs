@@ -3,7 +3,11 @@
     <!-- Logo -->
     <div class="sidebar-logo">
         <div class="logo-icon">
-            <i class="fa-solid fa-graduation-cap"></i>
+            <% if (siteSettings?.brandLogo) { %>
+                <img src="<%= uploadUrl(siteSettings.brandLogo) %>" alt="TechNova logo">
+            <% } else { %>
+                <i class="fa-solid fa-graduation-cap"></i>
+            <% } %>
         </div>
 
         <div>

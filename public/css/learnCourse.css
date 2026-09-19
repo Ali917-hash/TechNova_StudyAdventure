@@ -24,9 +24,10 @@
 
 .learning-container {
     display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 25px;
+    grid-template-columns: minmax(230px, 280px) minmax(0, 1fr);
+    gap: 18px;
     align-items: start;
+    min-width: 0;
 }
 
 
@@ -37,6 +38,7 @@
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+    min-width: 0;
 }
 
 .lesson-sidebar h2 {
@@ -94,6 +96,10 @@
 .lesson-title {
     font-size: 14px;
     font-weight: 500;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 
@@ -105,6 +111,8 @@
     padding: 30px;
     min-height: 500px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+    min-width: 0;
+    overflow: hidden;
 }
 
 
@@ -123,6 +131,19 @@
 .lesson-heading h2 {
     margin: 7px 0 0;
     font-size: 26px;
+    overflow-wrap: anywhere;
+}
+
+.lesson-panel,
+.lesson-pdf,
+.lesson-video {
+    min-width: 0;
+}
+
+.lesson-pdf iframe,
+.lesson-video video {
+    display: block;
+    max-width: 100%;
 }
 
 

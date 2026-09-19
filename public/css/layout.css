@@ -977,3 +977,13 @@ header .technova-menu-toggle:hover {
     }
 
 }
+
+header .brand .logo-image {
+    width: 54px;
+    height: 54px;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    box-shadow: none;
+    object-fit: contain;
+}

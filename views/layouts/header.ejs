@@ -104,9 +104,11 @@
             class="brand"
         >
 
-            <span class="logo">
-                TN
-            </span>
+            <% if (siteSettings?.brandLogo) { %>
+                <img class="logo logo-image" src="<%= uploadUrl(siteSettings.brandLogo) %>" alt="TechNova logo">
+            <% } else { %>
+                <span class="logo">TN</span>
+            <% } %>
 
 
             <span>

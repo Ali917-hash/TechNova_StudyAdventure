@@ -133,6 +133,11 @@ const defaultHero = {
 const siteSettingsSchema = new mongoose.Schema(
     {
 
+        brandLogo: {
+            type: String,
+            default: ""
+        },
+
         // =================================================
         // PAGE HEROES
         // =================================================

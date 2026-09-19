@@ -260,7 +260,6 @@ exports.updateSettings = async (
         const settings =
             await getSettings();
 
-
         // =================================================
         // HERO UPDATE
         // =================================================
@@ -1010,6 +1009,10 @@ exports.updatePageSettings = async (req, res) => {
         if (page === "home") {
             const hero = settings.heroes?.home?.toObject?.() || settings.heroes?.home || {};
             const image = files.heroImage?.[0]?.filename || hero.image || "";
+
+            if (files.brandLogo?.[0]?.filename) {
+                settings.brandLogo = files.brandLogo[0].filename;
+            }
 
             settings.set("heroes.home", {
                 ...hero,
