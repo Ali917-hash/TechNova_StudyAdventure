@@ -1,5 +1,7 @@
 const SiteSettings =
     require("../models/SiteSettings");
+const TeamMember =
+    require("../models/TeamMember");
 
 
 // =====================================================
@@ -79,6 +81,10 @@ exports.settingsPage = async (
     req,
     res
 ) => {
+
+    return res.redirect(
+        "/admin/site-settings/home"
+    );
 
     try {
 
@@ -937,4 +943,198 @@ exports.updateSettings = async (
 
     }
 
+};
+
+const SETTINGS_PAGES = new Set([
+    "home",
+    "about",
+    "services",
+    "portfolio",
+    "blog",
+    "contact"
+]);
+
+exports.pageSettings = async (req, res) => {
+    if (!SETTINGS_PAGES.has(req.params.page)) {
+        return res.status(404).send("Settings page not found.");
+    }
+
+    try {
+        const settings = await getSettings();
+
+        let teamData = {};
+
+        if (req.params.page === "about") {
+            const [teamMembers, totalMembers, publishedMembers, hiddenMembers] =
+                await Promise.all([
+                    TeamMember.find().sort({ order: 1, createdAt: 1 }).lean(),
+                    TeamMember.countDocuments(),
+                    TeamMember.countDocuments({ isPublished: true }),
+                    TeamMember.countDocuments({ isPublished: false })
+                ]);
+
+            teamData = {
+                teamMembers,
+                totalMembers,
+                publishedMembers,
+                hiddenMembers
+            };
+        }
+
+        return res.render("admin/siteSettingsPage", {
+            user: req.session.user,
+            settings,
+            page: req.params.page,
+            success: req.query.success === "1",
+            currentPage: `settings-${req.params.page}`,
+            ...teamData
+        });
+    } catch (error) {
+        console.error("SITE SETTINGS PAGE ERROR:", error);
+        return res.status(500).send("Unable to load website settings.");
+    }
+};
+
+exports.updatePageSettings = async (req, res) => {
+    const page = req.params.page;
+
+    if (!SETTINGS_PAGES.has(page)) {
+        return res.status(404).send("Settings page not found.");
+    }
+
+    try {
+        const settings = await getSettings();
+        const body = req.body;
+        const files = req.files || {};
+
+        if (page === "home") {
+            const hero = settings.heroes?.home?.toObject?.() || settings.heroes?.home || {};
+            const image = files.heroImage?.[0]?.filename || hero.image || "";
+
+            settings.set("heroes.home", {
+                ...hero,
+                badge: body.heroBadge || "",
+                title: body.heroTitle || "",
+                highlight: body.heroHighlight || "",
+                description: body.heroDescription || "",
+                buttonText: body.heroButtonText || "Get Started",
+                buttonLink: body.heroButtonLink || "/registration",
+                image,
+                enabled: parseBoolean(body.heroEnabled, true)
+            });
+
+            settings.homeWhyChooseTitle = body.homeWhyChooseTitle || "Why Choose TechNova?";
+            settings.homeWhyChooseDescription = body.homeWhyChooseDescription || "";
+            settings.homeWhyChooseItems = [1, 2, 3, 4].map((number) => ({
+                icon: body[`homeFeature${number}Icon`] || "fa-solid fa-star",
+                title: body[`homeFeature${number}Title`] || "",
+                description: body[`homeFeature${number}Description`] || "",
+                order: number
+            }));
+            settings.homeCtaTitle = body.homeCtaTitle || "Ready to Start Your Journey?";
+            settings.homeCtaDescription = body.homeCtaDescription || "";
+            settings.homeCtaButtonText = body.homeCtaButtonText || "Get Started Today";
+            settings.homeCtaButtonLink = body.homeCtaButtonLink || "/registration";
+            settings.navigation = [
+                ["/", "navHome"],
+                ["/about", "navAbout"],
+                ["/services", "navServices"],
+                ["/portfolio", "navPortfolio"],
+                ["/blog", "navBlog"],
+                ["/contact", "navContact"]
+            ].map(([path, key], index) => ({
+                path,
+                label: body[`${key}Label`] || path,
+                visible: parseBoolean(body[`${key}Visible`], true),
+                order: index + 1
+            }));
+        }
+
+        if (page === "about") {
+            const hero = settings.heroes?.about?.toObject?.() || settings.heroes?.about || {};
+            settings.set("heroes.about", {
+                ...hero,
+                badge: body.heroBadge || "",
+                title: body.heroTitle || "",
+                highlight: body.heroHighlight || "",
+                description: body.heroDescription || "",
+                buttonText: body.heroButtonText || "Get Started",
+                buttonLink: body.heroButtonLink || "/registration",
+                image: files.heroImage?.[0]?.filename || hero.image || "",
+                enabled: parseBoolean(body.heroEnabled, true)
+            });
+            settings.storyTitle = body.storyTitle || "Our Story";
+            settings.storyText1 = body.storyText1 || "";
+            settings.storyText2 = body.storyText2 || "";
+            settings.storyText3 = body.storyText3 || "";
+            settings.storyImage = files.storyImage?.[0]?.filename || settings.storyImage || "about.webp";
+            settings.missionTitle = body.missionTitle || "Our Mission";
+            settings.missionText = body.missionText || "";
+            settings.visionTitle = body.visionTitle || "Our Vision";
+            settings.visionText = body.visionText || "";
+            settings.coreValues = [1, 2, 3].map((number) => ({
+                icon: body[`coreValue${number}Icon`] || "fa-solid fa-star",
+                title: body[`coreValue${number}Title`] || "",
+                description: body[`coreValue${number}Description`] || ""
+            }));
+        }
+
+        if (["services", "portfolio", "blog", "contact"].includes(page)) {
+            const hero = settings.heroes?.[page]?.toObject?.() || settings.heroes?.[page] || {};
+            settings.set(`heroes.${page}`, {
+                ...hero,
+                badge: body.heroBadge || "",
+                title: body.heroTitle || "",
+                highlight: body.heroHighlight || "",
+                description: body.heroDescription || "",
+                buttonText: body.heroButtonText || "Get Started",
+                buttonLink: body.heroButtonLink || "/registration",
+                image: files.heroImage?.[0]?.filename || hero.image || "",
+                enabled: parseBoolean(body.heroEnabled, true)
+            });
+        }
+
+        if (page === "services") {
+            settings.servicesCtaTitle = body.servicesCtaTitle || "Ready to Build Your Future in Technology?";
+            settings.servicesCtaDescription = body.servicesCtaDescription || "";
+            settings.servicesCtaPrimaryText = body.servicesCtaPrimaryText || "Create Account";
+            settings.servicesCtaPrimaryLink = body.servicesCtaPrimaryLink || "/registration";
+            settings.servicesCtaSecondaryText = body.servicesCtaSecondaryText || "Contact Us";
+            settings.servicesCtaSecondaryLink = body.servicesCtaSecondaryLink || "/contact";
+        }
+
+        if (page === "portfolio") {
+            settings.portfolioCtaTitle = body.portfolioCtaTitle || "Be Our Next Success Story";
+            settings.portfolioCtaDescription = body.portfolioCtaDescription || "";
+            settings.portfolioCtaButtonText = body.portfolioCtaButtonText || "Start Learning";
+            settings.portfolioCtaButtonLink = body.portfolioCtaButtonLink || "/registration";
+        }
+
+        if (page === "contact") {
+            settings.contactAddress = body.contactAddress || "";
+            settings.contactPhone = body.contactPhone || "";
+            settings.contactEmail = body.contactEmail || "";
+            settings.contactHours = body.contactHours || "";
+            settings.contactFaqs = [1, 2, 3, 4].map((number) => ({
+                question: body[`faq${number}Question`] || "",
+                answer: body[`faq${number}Answer`] || "",
+                visible: parseBoolean(body[`faq${number}Visible`], true),
+                order: number
+            }));
+        }
+
+        await settings.save();
+        if (page === "portfolio") {
+            return res.redirect("/admin/portfolio?settingsSuccess=1");
+        }
+
+        if (page === "blog") {
+            return res.redirect("/admin/blogs?settingsSuccess=1");
+        }
+
+        return res.redirect(`/admin/site-settings/${page}?success=1`);
+    } catch (error) {
+        console.error("UPDATE PAGE SETTINGS ERROR:", error);
+        return res.status(500).send("Unable to update page settings.");
+    }
 };

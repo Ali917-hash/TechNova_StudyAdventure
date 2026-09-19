@@ -1,4 +1,5 @@
 const Blog = require("../models/Blog");
+const SiteSettings = require("../models/SiteSettings");
 
 
 // ==========================================
@@ -311,6 +312,10 @@ exports.adminBlogs = async (req, res) => {
                 isFeatured: true
             });
 
+        const settings =
+            await SiteSettings.findOne() ||
+            await SiteSettings.create({});
+
 
         res.render(
             "admin/blogs",
@@ -328,6 +333,11 @@ exports.adminBlogs = async (req, res) => {
                 draftBlogs,
 
                 featuredBlogs,
+
+                settings,
+
+                settingsSuccess:
+                    req.query.settingsSuccess === "1",
 
                 currentPage:
                     "blogs"

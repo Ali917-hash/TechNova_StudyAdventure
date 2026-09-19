@@ -56,6 +56,67 @@
     overflow: hidden;
 }
 
+/* Keep embedded page settings distinct from management statistics and tables. */
+.page-settings-panel {
+    margin-top: 8px;
+    margin-bottom: 42px;
+}
+
+.page-settings-panel + .cards {
+    margin-top: 0;
+}
+
+.cards + .messages-card {
+    margin-top: 42px;
+}
+
+.about-team-panel {
+    margin-top: 42px;
+}
+
+.about-team-panel .settings-section-title {
+    align-items: center;
+}
+
+.team-add-btn {
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.team-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin: 28px 0 32px;
+}
+
+.team-stats-grid .card {
+    margin: 0;
+}
+
+.about-team-panel .message-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.about-team-panel .message-actions form {
+    display: inline-flex;
+}
+
+.about-team-panel .sender-avatar {
+    flex: 0 0 38px;
+    overflow: hidden;
+}
+
+.about-team-panel .sender-avatar img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
 
 /* =========================================================
    SETTINGS SECTION
@@ -551,6 +612,14 @@
 ========================================================= */
 
 @media (max-width: 900px) {
+
+    .team-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .team-add-btn {
+        margin-left: 0;
+    }
 
     .settings-section {
         padding:

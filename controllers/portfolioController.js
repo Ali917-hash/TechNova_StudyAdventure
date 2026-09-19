@@ -1,4 +1,5 @@
 const Portfolio = require("../models/Portfolio");
+const SiteSettings = require("../models/SiteSettings");
 
 
 // ==========================================
@@ -411,6 +412,10 @@ exports.adminPortfolio =
 
                 });
 
+            const settings =
+                await SiteSettings.findOne() ||
+                await SiteSettings.create({});
+
 
             res.render(
                 "admin/portfolio",
@@ -430,6 +435,11 @@ exports.adminPortfolio =
                     featuredProjects,
 
                     successStories,
+
+                    settings,
+
+                    settingsSuccess:
+                        req.query.settingsSuccess === "1",
 
                     currentPage:
                         "portfolio"

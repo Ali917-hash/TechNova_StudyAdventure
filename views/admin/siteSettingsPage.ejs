@@ -1,0 +1,100 @@
+<%
+const currentPage = `settings-${page}`;
+const hero = settings.heroes?.[page] || {};
+const features = settings.homeWhyChooseItems || [];
+const values = settings.coreValues || [];
+const navigation = settings.navigation || [];
+const navMap = {};
+navigation.forEach(item => { navMap[item.path] = item; });
+const field = (name, fallback = "") => settings[name] || fallback;
+%>
+
+<%- include("../layouts/adminDashboardHeader") %>
+<%- include("../partials/adminSidebar") %>
+
+<div class="main-content">
+    <div class="admin-page-header">
+        <div>
+            <h1><%= page.charAt(0).toUpperCase() + page.slice(1) %> Page Settings</h1>
+            <p>Manage content and appearance for the <%= page %> page.</p>
+        </div>
+    </div>
+
+    <% if (success) { %>
+        <div class="settings-success">
+            <i class="fa-solid fa-circle-check"></i>
+            <span><%= page.charAt(0).toUpperCase() + page.slice(1) %> settings updated successfully.</span>
+        </div>
+    <% } %>
+
+    <div class="form-container">
+        <form action="/admin/site-settings/<%= page %>" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+            <div class="settings-section">
+                <div class="settings-section-title">
+                    <i class="fa-solid fa-image"></i>
+                    <div><h2><%= page.charAt(0).toUpperCase() + page.slice(1) %> Hero</h2><p>Edit the hero content shown at the top of this page.</p></div>
+                </div>
+                <div class="form-group"><label>Badge</label><input name="heroBadge" value="<%= hero.badge || '' %>"></div>
+                <div class="form-group"><label>Hero Title</label><input name="heroTitle" value="<%= hero.title || '' %>"></div>
+                <div class="form-group"><label>Highlight Text</label><input name="heroHighlight" value="<%= hero.highlight || '' %>"></div>
+                <div class="form-group"><label>Description</label><textarea name="heroDescription" rows="5"><%= hero.description || '' %></textarea></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Button Text</label><input name="heroButtonText" value="<%= hero.buttonText || '' %>"></div>
+                    <div class="form-group"><label>Button Link</label><input name="heroButtonLink" value="<%= hero.buttonLink || '' %>"></div>
+                </div>
+                <div class="form-group">
+                    <label>Hero Image</label>
+                    <div class="settings-image-preview">
+                        <% if (hero.image) { %><img src="/uploads/<%= hero.image %>" alt="Hero image"><% } else { %><div class="no-image">No hero image uploaded.</div><% } %>
+                    </div>
+                    <input type="file" name="heroImage" accept=".jpg,.jpeg,.png,.webp">
+                </div>
+                <div class="form-group"><label>Hero Status</label><select name="heroEnabled"><option value="true" <%= hero.enabled !== false ? 'selected' : '' %>>Enabled</option><option value="false" <%= hero.enabled === false ? 'selected' : '' %>>Disabled</option></select></div>
+            </div>
+
+            <% if (page === 'home') { %>
+                <div class="settings-section">
+                    <div class="settings-section-title"><i class="fa-solid fa-house"></i><div><h2>Why Choose TechNova</h2><p>Manage the four feature cards on the home page.</p></div></div>
+                    <div class="form-group"><label>Section Title</label><input name="homeWhyChooseTitle" value="<%= field('homeWhyChooseTitle', 'Why Choose TechNova?') %>"></div>
+                    <div class="form-group"><label>Section Description</label><textarea name="homeWhyChooseDescription" rows="3"><%= field('homeWhyChooseDescription') %></textarea></div>
+                    <% for (let i = 0; i < 4; i++) { %>
+                        <div class="settings-subsection"><h3>Feature <%= i + 1 %></h3><div class="form-group"><label>Icon Class</label><input name="homeFeature<%= i + 1 %>Icon" value="<%= features[i]?.icon || '' %>"></div><div class="form-group"><label>Title</label><input name="homeFeature<%= i + 1 %>Title" value="<%= features[i]?.title || '' %>"></div><div class="form-group"><label>Description</label><textarea name="homeFeature<%= i + 1 %>Description" rows="3"><%= features[i]?.description || '' %></textarea></div></div>
+                    <% } %>
+                </div>
+                <div class="settings-section">
+                    <div class="settings-section-title"><i class="fa-solid fa-bullhorn"></i><div><h2>Home Call To Action</h2><p>Manage the final call-to-action section.</p></div></div>
+                    <div class="form-group"><label>Title</label><input name="homeCtaTitle" value="<%= field('homeCtaTitle') %>"></div><div class="form-group"><label>Description</label><textarea name="homeCtaDescription" rows="4"><%= field('homeCtaDescription') %></textarea></div><div class="form-row"><div class="form-group"><label>Button Text</label><input name="homeCtaButtonText" value="<%= field('homeCtaButtonText') %>"></div><div class="form-group"><label>Button Link</label><input name="homeCtaButtonLink" value="<%= field('homeCtaButtonLink', '/registration') %>"></div></div>
+                </div>
+                <div class="settings-section">
+                    <div class="settings-section-title"><i class="fa-solid fa-bars"></i><div><h2>Navigation</h2><p>Change menu labels and visibility.</p></div></div>
+                    <% const navItems = [['/', 'Home'], ['/about', 'About'], ['/services', 'Services'], ['/portfolio', 'Portfolio'], ['/blog', 'Blog'], ['/contact', 'Contact']]; %>
+                    <% navItems.forEach(([path, label]) => { const key = `nav${label}`; %><div class="form-row"><div class="form-group"><label><%= label %> Label</label><input name="<%= key %>Label" value="<%= navMap[path]?.label || label %>"></div><div class="form-group"><label><%= label %> Visibility</label><select name="<%= key %>Visible"><option value="true" <%= navMap[path]?.visible !== false ? 'selected' : '' %>>Visible</option><option value="false" <%= navMap[path]?.visible === false ? 'selected' : '' %>>Hidden</option></select></div></div><% }); %>
+                </div>
+            <% } %>
+
+            <% if (page === 'about') { %>
+                <div class="settings-section"><div class="settings-section-title"><i class="fa-solid fa-book-open"></i><div><h2>Our Story</h2><p>Manage the About page story and supporting image.</p></div></div><div class="form-group"><label>Story Title</label><input name="storyTitle" value="<%= field('storyTitle', 'Our Story') %>"></div><div class="form-group"><label>Paragraph 1</label><textarea name="storyText1" rows="4"><%= field('storyText1') %></textarea></div><div class="form-group"><label>Paragraph 2</label><textarea name="storyText2" rows="4"><%= field('storyText2') %></textarea></div><div class="form-group"><label>Paragraph 3</label><textarea name="storyText3" rows="4"><%= field('storyText3') %></textarea></div><div class="form-group"><label>Story Image</label><div class="settings-image-preview"><img src="/uploads/<%= settings.storyImage || 'about.webp' %>" alt="Story image"></div><input type="file" name="storyImage" accept=".jpg,.jpeg,.png,.webp"></div></div>
+                <div class="settings-section"><div class="settings-section-title"><i class="fa-solid fa-bullseye"></i><div><h2>Mission and Vision</h2><p>Manage the purpose and direction displayed on About.</p></div></div><div class="form-group"><label>Mission Title</label><input name="missionTitle" value="<%= field('missionTitle') %>"></div><div class="form-group"><label>Mission Text</label><textarea name="missionText" rows="4"><%= field('missionText') %></textarea></div><div class="form-group"><label>Vision Title</label><input name="visionTitle" value="<%= field('visionTitle') %>"></div><div class="form-group"><label>Vision Text</label><textarea name="visionText" rows="4"><%= field('visionText') %></textarea></div></div>
+                <div class="settings-section"><div class="settings-section-title"><i class="fa-solid fa-star"></i><div><h2>Core Values</h2><p>Manage the three About page values.</p></div></div><% for (let i = 0; i < 3; i++) { %><div class="settings-subsection"><h3>Core Value <%= i + 1 %></h3><div class="form-group"><label>Icon Class</label><input name="coreValue<%= i + 1 %>Icon" value="<%= values[i]?.icon || '' %>"></div><div class="form-group"><label>Title</label><input name="coreValue<%= i + 1 %>Title" value="<%= values[i]?.title || '' %>"></div><div class="form-group"><label>Description</label><textarea name="coreValue<%= i + 1 %>Description" rows="3"><%= values[i]?.description || '' %></textarea></div></div><% } %></div>
+            <% } %>
+
+            <% if (page === 'services') { %><div class="settings-section"><div class="settings-section-title"><i class="fa-solid fa-bullhorn"></i><div><h2>Services Call To Action</h2><p>Manage the CTA displayed below the courses.</p></div></div><div class="form-group"><label>Title</label><input name="servicesCtaTitle" value="<%= field('servicesCtaTitle') %>"></div><div class="form-group"><label>Description</label><textarea name="servicesCtaDescription" rows="4"><%= field('servicesCtaDescription') %></textarea></div><div class="form-row"><div class="form-group"><label>Primary Button Text</label><input name="servicesCtaPrimaryText" value="<%= field('servicesCtaPrimaryText') %>"></div><div class="form-group"><label>Primary Button Link</label><input name="servicesCtaPrimaryLink" value="<%= field('servicesCtaPrimaryLink') %>"></div></div><div class="form-row"><div class="form-group"><label>Secondary Button Text</label><input name="servicesCtaSecondaryText" value="<%= field('servicesCtaSecondaryText') %>"></div><div class="form-group"><label>Secondary Button Link</label><input name="servicesCtaSecondaryLink" value="<%= field('servicesCtaSecondaryLink') %>"></div></div></div><% } %>
+
+            <% if (page === 'portfolio') { %><div class="settings-section"><div class="settings-section-title"><i class="fa-solid fa-briefcase"></i><div><h2>Portfolio Call To Action</h2><p>Manage the CTA displayed below portfolio projects.</p></div></div><div class="form-group"><label>Title</label><input name="portfolioCtaTitle" value="<%= field('portfolioCtaTitle') %>"></div><div class="form-group"><label>Description</label><textarea name="portfolioCtaDescription" rows="4"><%= field('portfolioCtaDescription') %></textarea></div><div class="form-row"><div class="form-group"><label>Button Text</label><input name="portfolioCtaButtonText" value="<%= field('portfolioCtaButtonText') %>"></div><div class="form-group"><label>Button Link</label><input name="portfolioCtaButtonLink" value="<%= field('portfolioCtaButtonLink') %>"></div></div></div><% } %>
+
+            <% if (page === 'contact') { %><div class="settings-section"><div class="settings-section-title"><i class="fa-solid fa-address-book"></i><div><h2>Contact Information</h2><p>Manage contact details shown to visitors.</p></div></div><div class="form-group"><label>Address</label><textarea name="contactAddress" rows="3"><%= field('contactAddress') %></textarea></div><div class="form-group"><label>Phone</label><input name="contactPhone" value="<%= field('contactPhone') %>"></div><div class="form-group"><label>Email</label><input type="email" name="contactEmail" value="<%= field('contactEmail') %>"></div><div class="form-group"><label>Business Hours</label><textarea name="contactHours" rows="4"><%= field('contactHours') %></textarea></div></div><div class="settings-section"><div class="settings-section-title"><i class="fa-solid fa-circle-question"></i><div><h2>Contact FAQs</h2><p>Manage frequently asked questions.</p></div></div><% for (let i = 1; i <= 4; i++) { const faq = (settings.contactFaqs || [])[i - 1] || {}; %><div class="settings-subsection"><h3>FAQ <%= i %></h3><div class="form-group"><label>Question</label><input name="faq<%= i %>Question" value="<%= faq.question || '' %>"></div><div class="form-group"><label>Answer</label><textarea name="faq<%= i %>Answer" rows="4"><%= faq.answer || '' %></textarea></div><div class="form-group"><label>Status</label><select name="faq<%= i %>Visible"><option value="true" <%= faq.visible !== false ? 'selected' : '' %>>Visible</option><option value="false" <%= faq.visible === false ? 'selected' : '' %>>Hidden</option></select></div></div><% } %></div><% } %>
+
+            <% if (page === 'blog') { %><div class="settings-section"><div class="settings-section-title"><i class="fa-solid fa-newspaper"></i><div><h2>Blog Page</h2><p>Blog page settings are currently managed through the hero editor above.</p></div></div><p class="settings-help">Update the hero content and image, then save the Blog settings.</p></div><% } %>
+
+            <div class="settings-actions"><button type="submit" class="save-btn"><i class="fa-solid fa-floppy-disk"></i> Save <%= page.charAt(0).toUpperCase() + page.slice(1) %> Settings</button></div>
+        </form>
+
+        <% if (page === 'about') { %>
+            <%- include("aboutTeamPanel") %>
+        <% } %>
+    </div>
+</div>
+
+<%- include("../layouts/dashboardFooter") %>

@@ -38,6 +38,15 @@ const currentPage = "portfolio";
 
     </div>
 
+    <% if (settingsSuccess) { %>
+        <div class="settings-success">
+            <i class="fa-solid fa-circle-check"></i>
+            Portfolio page settings updated successfully.
+        </div>
+    <% } %>
+
+    <%- include("portfolioSettingsPanel") %>
+
 
 
     <!-- ==========================================

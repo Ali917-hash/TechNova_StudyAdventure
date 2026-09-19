@@ -1,0 +1,43 @@
+<div class="form-container page-settings-panel">
+    <div class="settings-section">
+        <div class="settings-section-title">
+            <i class="fa-solid fa-sliders"></i>
+            <div>
+                <h2>Portfolio Page Settings</h2>
+                <p>Update the portfolio hero and call-to-action without leaving project management.</p>
+            </div>
+        </div>
+
+        <form action="/admin/site-settings/portfolio" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <% const hero = settings.heroes?.portfolio || {}; %>
+            <div class="form-group"><label>Hero Badge</label><input name="heroBadge" value="<%= hero.badge || '' %>"></div>
+            <div class="form-group"><label>Hero Title</label><input name="heroTitle" value="<%= hero.title || '' %>"></div>
+            <div class="form-group"><label>Hero Highlight</label><input name="heroHighlight" value="<%= hero.highlight || '' %>"></div>
+            <div class="form-group"><label>Hero Description</label><textarea name="heroDescription" rows="4"><%= hero.description || '' %></textarea></div>
+            <div class="form-row">
+                <div class="form-group"><label>Button Text</label><input name="heroButtonText" value="<%= hero.buttonText || '' %>"></div>
+                <div class="form-group"><label>Button Link</label><input name="heroButtonLink" value="<%= hero.buttonLink || '' %>"></div>
+            </div>
+            <div class="form-group">
+                <label>Hero Image</label>
+                <div class="settings-image-preview">
+                    <% if (hero.image) { %><img src="/uploads/<%= hero.image %>" alt="Portfolio hero"><% } else { %><div class="no-image">No hero image uploaded.</div><% } %>
+                </div>
+                <input type="file" name="heroImage" accept=".jpg,.jpeg,.png,.webp">
+            </div>
+            <div class="form-group"><label>Hero Status</label><select name="heroEnabled"><option value="true" <%= hero.enabled !== false ? 'selected' : '' %>>Enabled</option><option value="false" <%= hero.enabled === false ? 'selected' : '' %>>Hidden</option></select></div>
+
+            <div class="settings-subsection">
+                <h3>Portfolio Call To Action</h3>
+                <div class="form-group"><label>Title</label><input name="portfolioCtaTitle" value="<%= settings.portfolioCtaTitle || '' %>"></div>
+                <div class="form-group"><label>Description</label><textarea name="portfolioCtaDescription" rows="4"><%= settings.portfolioCtaDescription || '' %></textarea></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Button Text</label><input name="portfolioCtaButtonText" value="<%= settings.portfolioCtaButtonText || '' %>"></div>
+                    <div class="form-group"><label>Button Link</label><input name="portfolioCtaButtonLink" value="<%= settings.portfolioCtaButtonLink || '' %>"></div>
+                </div>
+            </div>
+            <button type="submit" class="save-btn"><i class="fa-solid fa-floppy-disk"></i> Save Portfolio Page</button>
+        </form>
+    </div>
+</div>

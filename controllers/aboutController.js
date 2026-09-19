@@ -125,6 +125,10 @@ exports.about = async (req, res) => {
 
 exports.adminTeam = async (req, res) => {
 
+    return res.redirect(
+        "/admin/site-settings/about"
+    );
+
     try {
 
         const [

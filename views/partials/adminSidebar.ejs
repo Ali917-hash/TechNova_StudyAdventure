@@ -126,22 +126,34 @@
 
             </li>
 
-            <!-- Blogs -->
+        </ul>
+
+
+        <!-- Public Page Content -->
+        <p class="menu-title">
+            PAGE CONTENT
+        </p>
+
+        <ul>
+
+            <!-- Page Settings -->
             <li>
-
-                <a
-                    href="/admin/blogs"
-                    class="<%= currentPage === 'blogs' ? 'active' : '' %>"
-                >
-
-                    <i class="fa-solid fa-newspaper"></i>
-
-                    <span>
-                        Blog
-                    </span>
-
+                <a href="/admin/site-settings/home" class="<%= currentPage === 'settings-home' ? 'active' : '' %>">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Home Settings</span>
                 </a>
-
+            </li>
+            <li>
+                <a href="/admin/site-settings/about" class="<%= currentPage === 'settings-about' ? 'active' : '' %>">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>About Settings</span>
+                </a>
+            </li>
+            <li>
+                <a href="/admin/site-settings/services" class="<%= currentPage === 'settings-services' ? 'active' : '' %>">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    <span>Services Settings</span>
+                </a>
             </li>
 
             <!-- Portfolio -->
@@ -155,44 +167,35 @@
                     <i class="fa-solid fa-briefcase"></i>
 
                     <span>
-                        Portfolio
+                        Portfolio Settings
                     </span>
 
                 </a>
 
             </li>
 
-            <!-- Team -->
-             <li>
-
-                <a
-                    href="/admin/team"
-                    class="<%= currentPage === 'team' ? 'active' : '' %>"
-                >
-
-                    <i class="fa-solid fa-people-group"></i>
-
-                    <span>
-                        Team
-                    </span>
-
-                </a>
-
-            </li>
-
-            <!-- Site Settings  -->
+            <!-- Blogs -->
             <li>
+
                 <a
-                    href="/admin/site-settings"
-                    class="<%= currentPage === 'site-settings' ? 'active' : '' %>"
+                    href="/admin/blogs"
+                    class="<%= currentPage === 'blogs' ? 'active' : '' %>"
                 >
 
-                    <i class="fa-solid fa-gear"></i>
+                    <i class="fa-solid fa-newspaper"></i>
 
                     <span>
-                        Website Settings
+                        Blog Settings
                     </span>
 
+                </a>
+
+            </li>
+
+            <li>
+                <a href="/admin/site-settings/contact" class="<%= currentPage === 'settings-contact' ? 'active' : '' %>">
+                    <i class="fa-solid fa-address-book"></i>
+                    <span>Contact Settings</span>
                 </a>
             </li>
 

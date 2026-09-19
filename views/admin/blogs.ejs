@@ -42,6 +42,15 @@ const currentPage = "blogs";
 
     </div>
 
+    <% if (settingsSuccess) { %>
+        <div class="settings-success">
+            <i class="fa-solid fa-circle-check"></i>
+            Blog page settings updated successfully.
+        </div>
+    <% } %>
+
+    <%- include("blogSettingsPanel") %>
+
 
 
     <!-- ==========================================

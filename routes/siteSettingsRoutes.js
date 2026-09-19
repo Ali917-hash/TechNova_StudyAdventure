@@ -26,6 +26,12 @@ router.get(
     controller.settingsPage
 );
 
+router.get(
+    "/admin/site-settings/:page",
+    auth.isAdmin,
+    controller.pageSettings
+);
+
 
 // ==========================================
 // ADMIN - UPDATE WEBSITE SETTINGS
@@ -46,6 +52,23 @@ router.post(
     ]),
     doubleCsrfProtection,
     controller.updateSettings
+);
+
+router.post(
+    "/admin/site-settings/:page",
+    auth.isAdmin,
+    upload.fields([
+        {
+            name: "heroImage",
+            maxCount: 1
+        },
+        {
+            name: "storyImage",
+            maxCount: 1
+        }
+    ]),
+    doubleCsrfProtection,
+    controller.updatePageSettings
 );
 
 
