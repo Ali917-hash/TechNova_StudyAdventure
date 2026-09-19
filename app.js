@@ -77,7 +77,17 @@ app.use(
                 formAction: ["'self'"],
                 objectSrc: ["'none'"],
                 frameAncestors: ["'self'"],
-                imgSrc: ["'self'", "data:", "blob:"],
+                imgSrc: [
+                    "'self'",
+                    "data:",
+                    "blob:",
+                    "https://*.public.blob.vercel-storage.com"
+                ],
+                mediaSrc: [
+                    "'self'",
+                    "blob:",
+                    "https://*.public.blob.vercel-storage.com"
+                ],
                 fontSrc: [
                     "'self'",
                     "https://cdnjs.cloudflare.com",
