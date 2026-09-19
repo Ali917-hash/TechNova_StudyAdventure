@@ -7,10 +7,12 @@ const crypto = require("crypto");
 // UPLOAD DIRECTORY
 // ==========================================
 
-const uploadPath = path.join(
-    __dirname,
-    "../public/uploads"
-);
+const uploadPath = process.env.VERCEL
+    ? path.join("/tmp", "uploads")
+    : path.join(
+        __dirname,
+        "../public/uploads"
+    );
 
 if (!fs.existsSync(uploadPath)) {
 

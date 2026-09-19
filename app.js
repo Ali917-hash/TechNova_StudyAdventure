@@ -123,6 +123,15 @@ app.use(
         path.join(__dirname, "public")
     )
 );
+
+app.use(
+    "/uploads",
+    express.static(
+        process.env.VERCEL
+            ? "/tmp/uploads"
+            : path.join(__dirname, "public/uploads")
+    )
+);
 const nodemailer = require("nodemailer");
 const connectDB = require("./config/db");
 
@@ -532,7 +541,12 @@ app.use((error, req, res, next) => {
 // Server
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server Running On Port ${PORT}`);
-});
+
+if (!process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`Server Running On Port ${PORT}`);
+    });
+}
+
+module.exports = app;
 

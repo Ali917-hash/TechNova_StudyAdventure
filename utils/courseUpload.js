@@ -7,16 +7,20 @@ const crypto = require("crypto");
 // UPLOAD DIRECTORIES
 // ==========================================
 
-const imagePath =
-    path.join(
+const uploadRoot = process.env.VERCEL
+    ? path.join("/tmp", "uploads")
+    : path.join(
         __dirname,
         "../public/uploads"
     );
 
+const imagePath =
+    uploadRoot;
+
 const materialPath =
     path.join(
-        __dirname,
-        "../public/uploads/course-materials"
+        uploadRoot,
+        "course-materials"
     );
 
 
