@@ -515,14 +515,27 @@ app.use((error, req, res, next) => {
         return next(error);
     }
 
-    if (
-        error.code === "LIMIT_FILE_SIZE" ||
-        error.code === "LIMIT_FILE_COUNT" ||
-        error.code === "LIMIT_PART_COUNT" ||
-        error.code === "LIMIT_FIELD_COUNT"
-    ) {
+    if (error.code === "LIMIT_FILE_SIZE") {
         return res.status(413).send(
-            "Uploaded content exceeds the allowed limits."
+            "The image is too large. Each image must be 10 MB or smaller."
+        );
+    }
+
+    if (error.code === "LIMIT_FILE_COUNT") {
+        return res.status(413).send(
+            "Too many files were uploaded in one request."
+        );
+    }
+
+    if (error.code === "LIMIT_PART_COUNT") {
+        return res.status(413).send(
+            "The form contains too many fields or files."
+        );
+    }
+
+    if (error.code === "LIMIT_FIELD_COUNT") {
+        return res.status(413).send(
+            "The form contains too many fields."
         );
     }
 

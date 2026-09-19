@@ -152,11 +152,11 @@ module.exports = multer({
         // Maximum files in one multipart request
         files: 10,
 
-        // Maximum normal form fields
-        fields: 50,
+        // Site settings contains many text controls and repeated sections.
+        fields: 200,
 
         // Maximum multipart parts
-        parts: 60
+        parts: 220
 
     }
 
