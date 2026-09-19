@@ -657,7 +657,7 @@
                                 >
 
                                     <source
-                                        src="/uploads/<%= lesson.video %>"
+                                        src="<%= uploadUrl(lesson.video) %>"
                                         type="video/mp4"
                                     >
 
@@ -673,7 +673,7 @@
                             <div class="lesson-pdf">
 
                                 <a
-                                    href="/uploads/<%= lesson.pdf %>"
+                                    href="<%= uploadUrl(lesson.pdf) %>"
                                     target="_blank"
                                     class="material-btn"
                                 >

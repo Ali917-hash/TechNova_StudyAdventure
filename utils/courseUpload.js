@@ -145,11 +145,6 @@ const localStorage = multer.diskStorage({
 const blobImageStorage = {
 
     _handleFile: async function (req, file, cb) {
-
-        if (file.fieldname !== "image") {
-            return localStorage._handleFile(req, file, cb);
-        }
-
         try {
 
             const extension =
@@ -160,8 +155,13 @@ const blobImageStorage = {
                 crypto.randomBytes(16).toString("hex") +
                 extension;
 
+            const folder =
+                file.fieldname === "image"
+                    ? "course-images"
+                    : "course-materials";
+
             const blob = await put(
-                "course-images/" + filename,
+                folder + "/" + filename,
                 file.stream,
                 {
                     access: "public",
@@ -184,11 +184,6 @@ const blobImageStorage = {
     },
 
     _removeFile: function (req, file, cb) {
-
-        if (file.fieldname !== "image") {
-            return localStorage._removeFile(req, file, cb);
-        }
-
         cb(null);
 
     }

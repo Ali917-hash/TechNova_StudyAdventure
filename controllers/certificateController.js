@@ -77,6 +77,13 @@ exports.myCertificates = async (req, res) => {
                 createdAt: -1
             });
 
+        const validCertificates =
+            certificates.filter(
+                certificate =>
+                    certificate.course &&
+                    certificate.user
+            );
+
 
         // ==========================================
         // RENDER
@@ -89,7 +96,8 @@ exports.myCertificates = async (req, res) => {
                 user:
                     req.session.user,
 
-                certificates,
+                certificates:
+                    validCertificates,
 
                 currentPage:
                     "certificates"
@@ -205,6 +213,14 @@ exports.viewCertificate = async (
 
             return res.status(404).send(
                 "Certificate not found."
+            );
+
+        }
+
+        if (!certificate.course || !certificate.user) {
+
+            return res.status(404).send(
+                "Certificate data is incomplete."
             );
 
         }
@@ -346,6 +362,18 @@ exports.verifyCertificate = async (
 
                     certificateId
 
+                }
+            );
+
+        }
+
+        if (!certificate.course || !certificate.user) {
+
+            return res.render(
+                "user/verifyCertificate",
+                {
+                    certificate: null,
+                    certificateId
                 }
             );
 

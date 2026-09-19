@@ -351,6 +351,14 @@ exports.getCourseMaterial = async (req,res) => {
 
         }
 
+        if (
+            /^https?:\/\//i.test(material.filename)
+        ) {
+
+            return res.redirect(material.filename);
+
+        }
+
 
         // ======================================
         // BUILD SAFE FILE PATH
