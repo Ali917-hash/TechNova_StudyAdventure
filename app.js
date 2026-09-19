@@ -14,6 +14,18 @@ const {
 const app = express();
 const path = require("path");
 
+app.locals.uploadUrl = image => {
+
+    if (!image) {
+        return "";
+    }
+
+    return /^https?:\/\//i.test(image)
+        ? image
+        : "/uploads/" + image;
+
+};
+
 app.disable("x-powered-by");
 
 const requiredEnvironment = [
@@ -133,23 +145,6 @@ app.use(
     )
 );
 
-app.use((req, res, next) => {
-
-    res.locals.uploadUrl = image => {
-
-        if (!image) {
-            return "";
-        }
-
-        return /^https?:\/\//i.test(image)
-            ? image
-            : "/uploads/" + image;
-
-    };
-
-    next();
-
-});
 const nodemailer = require("nodemailer");
 const connectDB = require("./config/db");
 
@@ -560,6 +555,15 @@ app.use((error, req, res, next) => {
     if (error.code === "EBADCSRFTOKEN") {
         return res.status(403).send(
             "Invalid security token. Please refresh and try again."
+        );
+    }
+
+    if (
+        error.name === "BlobError" ||
+        error.message?.includes("BLOB_READ_WRITE_TOKEN")
+    ) {
+        return res.status(503).send(
+            "Image storage is not configured. Connect a Vercel Blob store and redeploy."
         );
     }
 
