@@ -15,7 +15,11 @@
     <main class="auth-shell">
         <header class="auth-header">
             <a class="brand" href="/" aria-label="TechNova home">
-                <span class="brand-mark">TN</span>
+                <% if (siteSettings?.brandLogo) { %>
+                    <img class="auth-brand-logo" src="<%= uploadUrl(siteSettings.brandLogo) %>" alt="TechNova logo">
+                <% } else { %>
+                    <span class="brand-mark">TN</span>
+                <% } %>
                 <span class="brand-name">TECHNOVA</span>
             </a>
             <a class="back-link" href="/">

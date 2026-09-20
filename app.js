@@ -177,6 +177,12 @@ app.use(methodOverride("_method"));
 
 app.set("trust proxy", 1);
 
+const userSessionLifetime =
+    1000 * 60 * 60 * 24 * 30;
+
+const adminSessionLifetime =
+    1000 * 60 * 60 * 12;
+
 app.use(
     session({
 
@@ -186,11 +192,13 @@ app.use(
         store: MongoStore.create({
             mongoUrl: process.env.MONGO_URI,
             collectionName: "sessions",
-            ttl: 60 * 60 * 24
+            ttl: 60 * 60 * 24 * 30
         }),
 
-        // Don't save sessions that haven't changed
+        // Save only changed sessions while allowing the cookie to roll forward.
         resave: false,
+
+        rolling: true,
 
         // CSRF tokens are bound to the anonymous session ID before login.
         saveUninitialized: true,
@@ -205,7 +213,7 @@ app.use(
 
             // Session lifetime
             maxAge:
-                1000 * 60 * 60 * 24, // 24 hours
+                userSessionLifetime,
 
             // HTTPS only in production
             secure:
@@ -215,6 +223,20 @@ app.use(
 
     })
 );
+
+app.use((req, res, next) => {
+
+    if (req.session?.user?.role === "admin") {
+        req.session.cookie.maxAge =
+            adminSessionLifetime;
+    } else if (req.session) {
+        req.session.cookie.maxAge =
+            userSessionLifetime;
+    }
+
+    next();
+
+});
 
 // ==========================================
 // COOKIE PARSER
