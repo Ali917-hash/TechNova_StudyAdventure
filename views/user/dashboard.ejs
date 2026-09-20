@@ -217,7 +217,7 @@
 
                                     <span class="status-active">
 
-                                        <%= item.status || "Pending" %>
+                                        <%= item.status === "approved" ? "Approved" : "Pending approval" %>
 
                                     </span>
 
@@ -264,16 +264,17 @@
 
                                 <!-- CONTINUE LEARNING -->
 
-                                <a
-                                    href="/learn/course/<%= item.course._id %>"
-                                    class="course-btn"
-                                >
-
-                                    <i class="fa-solid fa-play"></i>
-
-                                    Continue Learning
-
-                                </a>
+                                <% if (item.status === "approved") { %>
+                                    <a href="/learn/course/<%= item.course._id %>" class="course-btn">
+                                        <i class="fa-solid fa-play"></i>
+                                        Continue Learning
+                                    </a>
+                                <% } else { %>
+                                    <div class="pending-course-message">
+                                        <i class="fa-solid fa-clock"></i>
+                                        Your request is pending admin approval.
+                                    </div>
+                                <% } %>
 
 
                             </div>

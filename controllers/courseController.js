@@ -91,6 +91,22 @@ exports.courseDetails = async (req, res) => {
         }
 
 
+        let enrollment = null;
+
+        if (req.session.user) {
+            enrollment = await Enrollment.findOne({
+                student: req.session.user._id,
+                course: course._id
+            }).lean();
+        }
+
+        const enrollmentMessage =
+            req.query.enrollment === "pending"
+                ? "Your enrollment request is pending admin approval. We will notify you when your access is approved."
+                : req.query.enrollment === "already"
+                    ? "You have already requested this course. Your current enrollment is pending approval."
+                    : "";
+
         res.render(
             "courseDetails",
             {
@@ -98,7 +114,11 @@ exports.courseDetails = async (req, res) => {
                 course,
 
                 user:
-                    req.session.user || null
+                    req.session.user || null,
+
+                enrollment,
+
+                enrollmentMessage
 
             }
         );
@@ -482,7 +502,11 @@ exports.showEditCourse = async (req, res) => {
                 user:
                     req.session.user,
 
-                course
+                course,
+
+                enrollment,
+
+                enrollmentMessage
 
             }
         );
@@ -845,53 +869,6 @@ exports.showCourses = async (req, res) => {
         console.log(err);
 
         res.status(500).send(
-            err.message
-        );
-
-    }
-
-};
-
-
-// Course Details
-
-exports.courseDetails = async (req, res) => {
-
-    try {
-
-        const course =
-            await Course.findById(
-                req.params.id
-            );
-
-
-        if (!course) {
-
-            return res.send(
-                "Course not found"
-            );
-
-        }
-
-
-        res.render(
-            "courseDetails",
-            {
-
-                user:
-                    req.session.user || null,
-
-                course
-
-            }
-        );
-
-
-    } catch (err) {
-
-        console.log(err);
-
-        res.send(
             err.message
         );
 

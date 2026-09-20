@@ -743,3 +743,22 @@
     }
 
 }
+
+.enrollment-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 22px 0;
+    padding: 14px 16px;
+    color: #1e3a8a;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+    line-height: 1.5;
+}
+
+.enrollment-notice-approved {
+    color: #166534;
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+}

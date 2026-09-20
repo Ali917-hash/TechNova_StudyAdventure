@@ -7,6 +7,8 @@ const Contact = require("../models/Contact");
 const Blog = require("../models/Blog");
 const Progress = require("../models/Progress");
 const Certificate = require("../models/Certificate");
+const nodemailer = require("nodemailer");
+const getAppUrl = require("../utils/appUrl");
 
 // ==========================================
 // VALIDATE MONGODB OBJECT ID
@@ -1274,6 +1276,57 @@ exports.approveEnrollment = async (
 
 
         await enrollment.save();
+
+        const enrollmentDetails =
+            await Enrollment.findById(enrollment._id)
+                .populate("student", "firstName lastName email")
+                .populate("course", "title instructor duration")
+                .lean();
+
+        const student = enrollmentDetails?.student;
+        const course = enrollmentDetails?.course;
+
+        if (student?.email && course?.title) {
+
+            try {
+
+                const transporter =
+                    nodemailer.createTransport({
+                        host: process.env.MAIL_HOST,
+                        port: Number(process.env.MAIL_PORT || 587),
+                        secure: process.env.MAIL_SECURE === "true",
+                        auth: {
+                            user: process.env.MAIL_USER,
+                            pass: process.env.MAIL_PASS
+                        }
+                    });
+
+                const dashboardLink =
+                    `${getAppUrl()}/dashboard`;
+
+                await transporter.sendMail({
+                    from:
+                        process.env.MAIL_FROM ||
+                        process.env.MAIL_USER,
+                    to: student.email,
+                    subject: `Enrollment approved: ${course.title}`,
+                    text:
+                        `Hello ${student.firstName || "Student"},\n\n` +
+                        `Your enrollment request for "${course.title}" has been approved. ` +
+                        `You can now access the course from your dashboard:\n${dashboardLink}\n\n` +
+                        "Regards,\nTechNova"
+                });
+
+            } catch (mailError) {
+
+                console.error(
+                    "ENROLLMENT APPROVAL EMAIL ERROR:",
+                    mailError
+                );
+
+            }
+
+        }
 
 
         console.log(

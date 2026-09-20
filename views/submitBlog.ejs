@@ -1,0 +1,25 @@
+<%- include("layouts/header") %>
+
+<main class="blog-submit-page">
+    <div class="blog-submit-container">
+        <div class="blog-submit-heading">
+            <span class="blog-community-kicker">TechNova Community</span>
+            <h1>Share what you know</h1>
+            <p>Submit an article, tutorial, or practical suggestion. An admin will review it before publication.</p>
+        </div>
+
+        <form class="blog-submit-form" action="/blog/submit" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <div class="blog-comment-fields">
+                <label>Title<input type="text" name="title" maxlength="200" required></label>
+                <label>Category<input type="text" name="category" maxlength="80" placeholder="Technology" required></label>
+            </div>
+            <label>Short excerpt<textarea name="excerpt" maxlength="500" rows="3" required></textarea></label>
+            <label>Article content<textarea name="content" rows="12" required></textarea></label>
+            <label>Cover image<input type="file" name="image" accept=".jpg,.jpeg,.png,.webp,.svg"></label>
+            <button class="blog-comment-submit" type="submit"><i class="fa-solid fa-paper-plane"></i> Submit for review</button>
+        </form>
+    </div>
+</main>
+
+<%- include("layouts/footer") %>

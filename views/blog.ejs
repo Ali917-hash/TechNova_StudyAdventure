@@ -113,6 +113,13 @@ const hero =
         class="blog-controls container"
     >
 
+        <% if (user) { %>
+            <a class="blog-submit-link" href="/blog/submit">
+                <i class="fa-solid fa-pen-nib"></i>
+                Write an article
+            </a>
+        <% } %>
+
         <form
             action="/blog"
             method="GET"

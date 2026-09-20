@@ -49,6 +49,19 @@ const blogSchema = new mongoose.Schema(
             default: "TechNova"
         },
 
+        submittedBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            default: null
+        },
+
+        submissionStatus: {
+            type: String,
+            enum: ["approved", "pending", "rejected"],
+            default: "approved",
+            index: true
+        },
+
 
         // ==========================================
         // BLOG IMAGE

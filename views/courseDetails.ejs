@@ -102,10 +102,41 @@
 
             </div>
 
+            <% if (enrollmentMessage) { %>
+                <div class="enrollment-notice enrollment-notice-pending">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span><%= enrollmentMessage %></span>
+                </div>
+            <% } else if (enrollment?.status === "pending") { %>
+                <div class="enrollment-notice enrollment-notice-pending">
+                    <i class="fa-solid fa-clock"></i>
+                    <span>Your request is pending admin approval.</span>
+                </div>
+            <% } else if (enrollment?.status === "approved") { %>
+                <div class="enrollment-notice enrollment-notice-approved">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>You are approved for this course.</span>
+                </div>
+            <% } %>
+
 
             <!-- ENROLL -->
 
-            <% if (user) { %>
+            <% if (enrollment?.status === "approved") { %>
+
+                <a href="/learn/course/<%= course._id %>" class="enroll-now-btn">
+                    <i class="fa-solid fa-play"></i>
+                    Continue Learning
+                </a>
+
+            <% } else if (enrollment?.status === "pending") { %>
+
+                <button type="button" class="enroll-now-btn" disabled>
+                    <i class="fa-solid fa-clock"></i>
+                    Awaiting Approval
+                </button>
+
+            <% } else if (user) { %>
 
                 <form
                     action="/course/enroll/<%= course._id %>"

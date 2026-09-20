@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const User = require("../models/User");
+const getAppUrl = require("../utils/appUrl");
 const Enrollment = require("../models/Enrollment");
 const Progress = require("../models/Progress");
 const Certificate = require("../models/Certificate");
@@ -136,16 +137,12 @@ exports.dashboard = async (req, res) => {
 
 
         // ==========================================
-        // GET APPROVED ENROLLMENTS
+        // GET ALL ENROLLMENTS SO PENDING REQUESTS REMAIN VISIBLE
         // ==========================================
 
         const enrollments =
             await Enrollment.find({
-
-                student: studentId,
-
-                status: "approved"
-
+                student: studentId
             })
             .populate("course")
             .sort({
@@ -201,7 +198,9 @@ exports.dashboard = async (req, res) => {
         // ==========================================
 
         const enrolledCourses =
-            enrollments.length;
+            enrollments.filter(
+                enrollment => enrollment.status === "approved"
+            ).length;
 
 
         const completedCourses =
@@ -277,12 +276,21 @@ exports.showRegister = (
     const courseId =
         req.query.course || "";
 
+    const returnTo =
+        typeof req.query.returnTo === "string" &&
+        req.query.returnTo.startsWith("/") &&
+        !req.query.returnTo.startsWith("//")
+            ? req.query.returnTo
+            : "/";
+
 
     return res.render(
         "registration",
         {
 
-            courseId
+            courseId,
+
+            returnTo
 
         }
     );
@@ -302,12 +310,21 @@ exports.showLogin = (
     const courseId =
         req.query.course || "";
 
+    const returnTo =
+        typeof req.query.returnTo === "string" &&
+        req.query.returnTo.startsWith("/") &&
+        !req.query.returnTo.startsWith("//")
+            ? req.query.returnTo
+            : "/";
+
 
     return res.render(
         "login",
         {
 
-            courseId
+            courseId,
+
+            returnTo
 
         }
     );
@@ -502,7 +519,8 @@ exports.loginUser = async (
         const {
             email,
             password,
-            courseId
+            courseId,
+            returnTo
         } = req.body;
 
 
@@ -660,7 +678,11 @@ exports.loginUser = async (
                         // ==================================
 
                         return res.redirect(
-                            "/dashboard"
+                            returnTo &&
+                            returnTo.startsWith("/") &&
+                            !returnTo.startsWith("//")
+                                ? returnTo
+                                : "/"
                         );
 
                     }
@@ -718,7 +740,7 @@ exports.forgotPassword = async (req, res) => {
         user.resetPasswordExpires = Date.now() + 3600000; // 1 hour expiration
         await user.save();
 
-        const resetLink = `${process.env.APP_URL || "http://localhost:3000"}/reset-password/${token}`;
+        const resetLink = `${getAppUrl()}/reset-password/${token}`;
         
         // --- EMAIL SENDING LOGIC ---
         const transporter = nodemailer.createTransport({

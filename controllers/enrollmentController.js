@@ -126,7 +126,7 @@ exports.enrollCourse = async (req, res) => {
         if (existingEnrollment) {
 
             return res.redirect(
-                "/dashboard"
+                `/course/${courseId}?enrollment=${existingEnrollment.status === "approved" ? "approved" : "already"}`
             );
 
         }
@@ -203,7 +203,7 @@ exports.enrollCourse = async (req, res) => {
         // ==========================================
 
         return res.redirect(
-            "/dashboard"
+            `/course/${courseId}?enrollment=pending`
         );
 
 

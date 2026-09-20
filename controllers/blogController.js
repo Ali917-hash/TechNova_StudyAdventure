@@ -63,7 +63,13 @@ exports.blogs = async (req, res) => {
     try {
         const category = req.query.category?.trim() || "";
         const search = req.query.search?.trim() || "";
-        const query = { isPublished: true };
+        const query = {
+            isPublished: true,
+            $or: [
+                { submissionStatus: "approved" },
+                { submissionStatus: { $exists: false } }
+            ]
+        };
 
         if (category) {
             query.category = category;
@@ -101,7 +107,11 @@ exports.blogDetails = async (req, res) => {
 
         const blog = await Blog.findOne({
             slug: req.params.slug,
-            isPublished: true
+            isPublished: true,
+            $or: [
+                { submissionStatus: "approved" },
+                { submissionStatus: { $exists: false } }
+            ]
         }).lean();
 
         if (!blog) {
@@ -938,6 +948,81 @@ exports.toggleFeatured = async (req, res) => {
         res.status(500).send(
             "Unable to update featured status."
         );
+
+    }
+
+};
+
+exports.showSubmitBlog = (req, res) => {
+
+    return res.render("submitBlog", {
+        user: req.session.user,
+        currentPage: "/blog"
+    });
+
+};
+
+exports.submitBlog = async (req, res) => {
+
+    try {
+
+        const { title, category, excerpt, content } = req.body;
+
+        if (!title || !category || !excerpt || !content) {
+            return res.status(400).send("Please complete all blog fields.");
+        }
+
+        const slug = await generateUniqueSlug(title);
+
+        await Blog.create({
+            title: title.trim(),
+            slug,
+            category: category.trim(),
+            author: `${req.session.user.firstName || ""} ${req.session.user.lastName || ""}`.trim() || "TechNova Community",
+            submittedBy: req.session.user._id,
+            submissionStatus: "pending",
+            image: req.file?.filename || "default-blog.jpg",
+            excerpt: excerpt.trim(),
+            content: content.trim(),
+            isPublished: false,
+            isFeatured: false
+        });
+
+        return res.redirect("/blog?submitted=1");
+
+    } catch (error) {
+        console.error("SUBMIT BLOG ERROR:", error);
+        return res.status(500).send("Unable to submit blog post.");
+    }
+
+};
+
+exports.reviewSubmittedBlog = async (req, res) => {
+
+    try {
+
+        const status = req.body.status;
+
+        if (!["approved", "rejected"].includes(status)) {
+            return res.status(400).send("Invalid review status.");
+        }
+
+        const blog = await Blog.findById(req.params.id);
+
+        if (!blog) {
+            return res.status(404).send("Blog post not found.");
+        }
+
+        blog.submissionStatus = status;
+        blog.isPublished = status === "approved";
+        await blog.save();
+
+        return res.redirect("/admin/blogs");
+
+    } catch (error) {
+
+        console.error("REVIEW BLOG ERROR:", error);
+        return res.status(500).send("Unable to review blog post.");
 
     }
 

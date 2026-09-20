@@ -263,9 +263,21 @@ const currentPage = "blogs";
 
                                 <td>
 
-                                    <% if (
-                                        blog.isPublished
-                                    ) { %>
+                                    <% if (blog.submissionStatus === "pending") { %>
+
+                                        <span class="message-status waiting">
+                                            <i class="fa-solid fa-clock"></i>
+                                            Pending Review
+                                        </span>
+
+                                    <% } else if (blog.submissionStatus === "rejected") { %>
+
+                                        <span class="message-status waiting">
+                                            <i class="fa-solid fa-circle-xmark"></i>
+                                            Rejected
+                                        </span>
+
+                                    <% } else if (blog.isPublished) { %>
 
                                         <span
                                             class="message-status replied"
@@ -341,6 +353,19 @@ const currentPage = "blogs";
                                     <div
                                         class="message-actions"
                                     >
+
+                                        <% if (blog.submissionStatus === "pending") { %>
+                                            <form action="/admin/blog/review/<%= blog._id %>" method="POST" style="display:inline;">
+                                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                                <input type="hidden" name="status" value="approved">
+                                                <button type="submit" class="view-btn" title="Approve submission"><i class="fa-solid fa-check"></i></button>
+                                            </form>
+                                            <form action="/admin/blog/review/<%= blog._id %>" method="POST" style="display:inline;">
+                                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                                <input type="hidden" name="status" value="rejected">
+                                                <button type="submit" class="delete-btn" title="Reject submission"><i class="fa-solid fa-xmark"></i></button>
+                                            </form>
+                                        <% } %>
 
                                         <a
                                             href="/blog/<%= blog.slug %>"

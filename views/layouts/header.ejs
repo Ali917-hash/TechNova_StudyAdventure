@@ -177,16 +177,27 @@
         </nav>
 
 
-        <!-- CTA -->
+        <!-- ACCOUNT ACTION -->
 
-        <a
-            class="cta-btn"
-            href="<%= siteSettings?.heroes?.home?.buttonLink || '/registration' %>"
-        >
-
-            <%= siteSettings?.heroes?.home?.buttonText || 'Get Started' %>
-
-        </a>
+        <% if (user) { %>
+            <a class="header-account-link" href="/dashboard" aria-label="Open dashboard" title="Dashboard">
+                <span class="header-account-avatar">
+                    <% if (user.profileImage) { %>
+                        <img src="<%= uploadUrl(user.profileImage) %>" alt="Profile">
+                    <% } else { %>
+                        <i class="fa-solid fa-user"></i>
+                    <% } %>
+                </span>
+                <span class="header-account-label">Dashboard</span>
+            </a>
+        <% } else { %>
+            <div class="header-guest-actions">
+                <a class="header-signin-link" href="/login?returnTo=/">Sign In</a>
+                <a class="cta-btn" href="<%= siteSettings?.heroes?.home?.buttonLink || '/registration' %>">
+                    <%= siteSettings?.heroes?.home?.buttonText || 'Get Started' %>
+                </a>
+            </div>
+        <% } %>
 
 
     </div>

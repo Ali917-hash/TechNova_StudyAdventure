@@ -25,6 +25,20 @@ router.get(
     blogController.blogs
 );
 
+router.get(
+    "/blog/submit",
+    auth.isLoggedIn,
+    blogController.showSubmitBlog
+);
+
+router.post(
+    "/blog/submit",
+    auth.isLoggedIn,
+    upload.single("image"),
+    doubleCsrfProtection,
+    blogController.submitBlog
+);
+
 
 // ==========================================
 // PUBLIC - BLOG DETAILS
@@ -128,6 +142,13 @@ router.post(
     auth.isAdmin,
     doubleCsrfProtection,
     blogController.togglePublished
+);
+
+router.post(
+    "/admin/blog/review/:id",
+    auth.isAdmin,
+    doubleCsrfProtection,
+    blogController.reviewSubmittedBlog
 );
 
 

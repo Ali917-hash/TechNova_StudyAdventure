@@ -366,19 +366,21 @@ a {
 
   position: absolute;
 
-  top: 0;
-  left: 0;
-  right: 0;
+  top: -1px;
+  left: 16px;
+  right: 16px;
 
   height: 4px;
 
-  border-radius: 17px 17px 0 0;
+  border-radius: 99px;
 
   background: linear-gradient(90deg, #4f46e5, #2563eb, #06b6d4);
 
   opacity: 0;
 
   transition: opacity 0.3s ease;
+  transform: scaleX(0.96);
+  transform-origin: center;
 }
 
 .box:hover {
@@ -391,6 +393,7 @@ a {
 
 .box:hover::before {
   opacity: 1;
+  transform: scaleX(1.04);
 }
 
 .box i {
