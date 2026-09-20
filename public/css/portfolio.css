@@ -171,7 +171,7 @@ img {
     color:
         rgba(255, 255, 255, 0.82);
 
-    font-size: 15px;
+    font-size: 1rem;
 
     line-height: 1.8;
 }
@@ -529,7 +529,7 @@ img {
 
     color: #64748b;
 
-    font-size: 12px;
+    font-size: 1rem;
 
     line-height: 1.5;
 }
@@ -539,7 +539,7 @@ img {
 
     color: #475569;
 
-    font-size: 13px;
+    font-size: 1rem;
 
     line-height: 1.75;
 }
@@ -588,7 +588,7 @@ img {
 
     color: #64748b;
 
-    font-size: 13px;
+    font-size: 1rem;
 
     line-height: 1.7;
 }
@@ -1005,7 +1005,7 @@ img {
 
     color: #64748b;
 
-    font-size: 12px;
+    font-size: 1rem;
 
     line-height: 1.75;
 }
@@ -1044,7 +1044,7 @@ img {
 
     color: #475569;
 
-    font-size: 9px;
+    font-size: 0.85rem;
 
     font-weight: 700;
 

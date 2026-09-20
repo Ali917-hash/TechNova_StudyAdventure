@@ -659,7 +659,7 @@ header .technova-menu-toggle:hover {
 
     color: #94a3b8;
 
-    font-size: 12px;
+    font-size: 1rem;
 
     line-height: 1.8;
 }
@@ -687,7 +687,7 @@ header .technova-menu-toggle:hover {
 
     text-decoration: none;
 
-    font-size: 12px;
+    font-size: 1rem;
 
     transition:
         color 0.2s ease,
@@ -770,7 +770,7 @@ header .technova-menu-toggle:hover {
 
     color: #94a3b8;
 
-    font-size: 12px;
+    font-size: 1rem;
 
     line-height: 1.6;
 }
@@ -818,6 +818,7 @@ header .technova-menu-toggle:hover {
 
 .main-footer .footer-bottom p {
     margin: 0;
+    font-size: 1rem;
 
     color: #64748b;
 

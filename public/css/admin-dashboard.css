@@ -14,6 +14,12 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   background: #f4f7fb;
   color: #1e293b;
+  font-size: 16px;
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.75;
 }
 /* =====================================================
    DASHBOARD
@@ -311,7 +317,19 @@ body {
 }
 .card p {
   color: #64748b;
-  font-size: 14px;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.admin-page-header p,
+.section-heading p,
+.learning-engagement-header p,
+.admin-welcome-card p,
+.empty-dashboard-state p,
+.message-dashboard-content p,
+.panel-header p {
+  font-size: 15px;
+  line-height: 1.7;
 }
 /* =====================================================
    WELCOME CARD

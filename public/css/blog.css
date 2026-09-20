@@ -141,7 +141,7 @@ body {
     color:
         rgba(255, 255, 255, 0.80);
 
-    font-size: 15px;
+    font-size: 1rem;
 
     line-height: 1.85;
 }
@@ -714,7 +714,7 @@ body {
 
     color: #64748b;
 
-    font-size: 13px;
+    font-size: 1rem;
 
     line-height: 1.7;
 }
@@ -823,7 +823,7 @@ body {
 
     color: #64748b;
 
-    font-size: 13px;
+    font-size: 1rem;
 
     line-height: 1.7;
 }
@@ -935,6 +935,8 @@ body {
 
 .blog-submit-heading p {
     color: #64748b;
+
+    font-size: 1rem;
     line-height: 1.7;
 }
 

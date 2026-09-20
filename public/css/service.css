@@ -179,7 +179,7 @@ body {
     color:
         rgba(255,255,255,0.82);
 
-    font-size: 14px;
+    font-size: 1rem;
 
     line-height: 1.85;
 }
@@ -694,7 +694,7 @@ body {
 
     color: #0f172a;
 
-    font-size: 19px;
+    font-size: 1.2rem;
 
     font-weight: 800;
 
@@ -733,7 +733,7 @@ body {
 
     color: #64748b;
 
-    font-size: 10px;
+    font-size: 0.95rem;
 }
 
 .course-detail-line i {
@@ -752,6 +752,8 @@ body {
     min-width: 0;
 
     color: #334155;
+
+    font-size: 0.95rem;
 
     overflow: hidden;
 
@@ -798,7 +800,7 @@ body {
 .course-price strong {
     color: #2563eb;
 
-    font-size: 21px;
+    font-size: 1.3rem;
 
     font-weight: 800;
 }

@@ -191,7 +191,7 @@ body {
     color:
         rgba(255,255,255,0.82);
 
-    font-size: 14px;
+    font-size: 1rem;
 
     line-height: 1.85;
 }
@@ -499,7 +499,7 @@ body {
 
     color: #64748b;
 
-    font-size: 12px;
+    font-size: 1rem;
 
     line-height: 1.7;
 }
@@ -715,7 +715,7 @@ body {
 
     color: #64748b;
 
-    font-size: 11px;
+    font-size: 1rem;
 
     line-height: 1.7;
 }

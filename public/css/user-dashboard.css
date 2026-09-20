@@ -12,6 +12,12 @@ body {
     font-family: Arial, sans-serif;
     background: #f5f7fb;
     color: #1e293b;
+    font-size: 16px;
+}
+
+p {
+    font-size: 1rem;
+    line-height: 1.75;
 }
 
 
@@ -399,7 +405,17 @@ body {
 .card p {
     color: #64748b;
 
-    font-size: 14px;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.course-body p,
+.profile-box p,
+.certificate-course-section p,
+.qr-card p,
+.verification-security p {
+    font-size: 15px;
+    line-height: 1.75;
 }
 
 
@@ -480,11 +496,12 @@ body {
 }
 
 .course-body p {
-    font-size: 13px;
+    font-size: 15px;
 
     color: #64748b;
 
     margin-bottom: 10px;
+    line-height: 1.7;
 }
 
 
