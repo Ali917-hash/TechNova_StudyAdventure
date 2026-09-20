@@ -31,28 +31,30 @@ const field = (name, fallback = "") => settings[name] || fallback;
         <form action="/admin/site-settings/<%= page %>" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
-            <div class="settings-section">
-                <div class="settings-section-title">
-                    <i class="fa-solid fa-image"></i>
-                    <div><h2><%= page.charAt(0).toUpperCase() + page.slice(1) %> Hero</h2><p>Edit the hero content shown at the top of this page.</p></div>
-                </div>
-                <div class="form-group"><label>Badge</label><input name="heroBadge" value="<%= hero.badge || '' %>"></div>
-                <div class="form-group"><label>Hero Title</label><input name="heroTitle" value="<%= hero.title || '' %>"></div>
-                <div class="form-group"><label>Highlight Text</label><input name="heroHighlight" value="<%= hero.highlight || '' %>"></div>
-                <div class="form-group"><label>Description</label><textarea name="heroDescription" rows="5"><%= hero.description || '' %></textarea></div>
-                <div class="form-row">
-                    <div class="form-group"><label>Button Text</label><input name="heroButtonText" value="<%= hero.buttonText || '' %>"></div>
-                    <div class="form-group"><label>Button Link</label><input name="heroButtonLink" value="<%= hero.buttonLink || '' %>"></div>
-                </div>
-                <div class="form-group">
-                    <label>Hero Image</label>
-                    <div class="settings-image-preview">
-                        <% if (hero.image) { %><img src="<%= uploadUrl(hero.image) %>" alt="Hero image"><% } else { %><div class="no-image">No hero image uploaded.</div><% } %>
+            <% if (page !== 'footer') { %>
+                <div class="settings-section">
+                    <div class="settings-section-title">
+                        <i class="fa-solid fa-image"></i>
+                        <div><h2><%= page.charAt(0).toUpperCase() + page.slice(1) %> Hero</h2><p>Edit the hero content shown at the top of this page.</p></div>
                     </div>
-                    <input type="file" name="heroImage" accept=".jpg,.jpeg,.png,.webp">
+                    <div class="form-group"><label>Badge</label><input name="heroBadge" value="<%= hero.badge || '' %>"></div>
+                    <div class="form-group"><label>Hero Title</label><input name="heroTitle" value="<%= hero.title || '' %>"></div>
+                    <div class="form-group"><label>Highlight Text</label><input name="heroHighlight" value="<%= hero.highlight || '' %>"></div>
+                    <div class="form-group"><label>Description</label><textarea name="heroDescription" rows="5"><%= hero.description || '' %></textarea></div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Button Text</label><input name="heroButtonText" value="<%= hero.buttonText || '' %>"></div>
+                        <div class="form-group"><label>Button Link</label><input name="heroButtonLink" value="<%= hero.buttonLink || '' %>"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Hero Image</label>
+                        <div class="settings-image-preview">
+                            <% if (hero.image) { %><img src="<%= uploadUrl(hero.image) %>" alt="Hero image"><% } else { %><div class="no-image">No hero image uploaded.</div><% } %>
+                        </div>
+                        <input type="file" name="heroImage" accept=".jpg,.jpeg,.png,.webp">
+                    </div>
+                    <div class="form-group"><label>Hero Status</label><select name="heroEnabled"><option value="true" <%= hero.enabled !== false ? 'selected' : '' %>>Enabled</option><option value="false" <%= hero.enabled === false ? 'selected' : '' %>>Disabled</option></select></div>
                 </div>
-                <div class="form-group"><label>Hero Status</label><select name="heroEnabled"><option value="true" <%= hero.enabled !== false ? 'selected' : '' %>>Enabled</option><option value="false" <%= hero.enabled === false ? 'selected' : '' %>>Disabled</option></select></div>
-            </div>
+            <% } %>
 
             <% if (page === 'home') { %>
                 <div class="settings-section">
@@ -102,6 +104,31 @@ const field = (name, fallback = "") => settings[name] || fallback;
             <% if (page === 'portfolio') { %><div class="settings-section"><div class="settings-section-title"><i class="fa-solid fa-briefcase"></i><div><h2>Portfolio Call To Action</h2><p>Manage the CTA displayed below portfolio projects.</p></div></div><div class="form-group"><label>Title</label><input name="portfolioCtaTitle" value="<%= field('portfolioCtaTitle') %>"></div><div class="form-group"><label>Description</label><textarea name="portfolioCtaDescription" rows="4"><%= field('portfolioCtaDescription') %></textarea></div><div class="form-row"><div class="form-group"><label>Button Text</label><input name="portfolioCtaButtonText" value="<%= field('portfolioCtaButtonText') %>"></div><div class="form-group"><label>Button Link</label><input name="portfolioCtaButtonLink" value="<%= field('portfolioCtaButtonLink') %>"></div></div></div><% } %>
 
             <% if (page === 'contact') { %><div class="settings-section"><div class="settings-section-title"><i class="fa-solid fa-address-book"></i><div><h2>Contact Information</h2><p>Manage contact details shown to visitors.</p></div></div><div class="form-group"><label>Address</label><textarea name="contactAddress" rows="3"><%= field('contactAddress') %></textarea></div><div class="form-group"><label>Phone</label><input name="contactPhone" value="<%= field('contactPhone') %>"></div><div class="form-group"><label>Email</label><input type="email" name="contactEmail" value="<%= field('contactEmail') %>"></div><div class="form-group"><label>Business Hours</label><textarea name="contactHours" rows="4"><%= field('contactHours') %></textarea></div></div><div class="settings-section"><div class="settings-section-title"><i class="fa-solid fa-circle-question"></i><div><h2>Contact FAQs</h2><p>Manage frequently asked questions.</p></div></div><% for (let i = 1; i <= 4; i++) { const faq = (settings.contactFaqs || [])[i - 1] || {}; %><div class="settings-subsection"><h3>FAQ <%= i %></h3><div class="form-group"><label>Question</label><input name="faq<%= i %>Question" value="<%= faq.question || '' %>"></div><div class="form-group"><label>Answer</label><textarea name="faq<%= i %>Answer" rows="4"><%= faq.answer || '' %></textarea></div><div class="form-group"><label>Status</label><select name="faq<%= i %>Visible"><option value="true" <%= faq.visible !== false ? 'selected' : '' %>>Visible</option><option value="false" <%= faq.visible === false ? 'selected' : '' %>>Hidden</option></select></div></div><% } %></div><% } %>
+
+            <% if (page === 'footer') { %>
+                <div class="settings-section">
+                    <div class="settings-section-title"><i class="fa-solid fa-link"></i><div><h2>Footer Page Links</h2><p>Update the pages shown in the footer navigation.</p></div></div>
+                    <% const footerNavItems = [['/', 'Home'], ['/about', 'About'], ['/services', 'Services'], ['/portfolio', 'Portfolio'], ['/blog', 'Blog'], ['/contact', 'Contact']]; %>
+                    <% footerNavItems.forEach(([path, label]) => { const key = `nav${label}`; %>
+                        <div class="form-row">
+                            <div class="form-group"><label><%= label %> Label</label><input name="<%= key %>Label" value="<%= navMap[path]?.label || label %>"></div>
+                            <div class="form-group"><label><%= label %> Visibility</label><select name="<%= key %>Visible"><option value="true" <%= navMap[path]?.visible !== false ? 'selected' : '' %>>Visible</option><option value="false" <%= navMap[path]?.visible === false ? 'selected' : '' %>>Hidden</option></select></div>
+                        </div>
+                    <% }); %>
+                </div>
+
+                <div class="settings-section">
+                    <div class="settings-section-title"><i class="fa-solid fa-window-maximize"></i><div><h2>Footer</h2><p>Manage the public footer content and social links.</p></div></div>
+                    <div class="form-group"><label>Footer Title</label><input name="footerTitle" value="<%= field('footerTitle', 'TechNova') %>"></div>
+                    <div class="form-group"><label>Footer Description</label><textarea name="footerDescription" rows="4"><%= field('footerDescription') %></textarea></div>
+                    <div class="form-group"><label>Address</label><textarea name="footerAddress" rows="3"><%= field('footerAddress') %></textarea></div>
+                    <div class="form-row"><div class="form-group"><label>Phone</label><input name="footerPhone" value="<%= field('footerPhone') %>"></div><div class="form-group"><label>Email</label><input type="email" name="footerEmail" value="<%= field('footerEmail') %>"></div></div>
+                    <div class="form-group"><label>Facebook</label><input type="url" name="facebookUrl" value="<%= field('facebookUrl') %>"></div>
+                    <div class="form-group"><label>Twitter / X</label><input type="url" name="twitterUrl" value="<%= field('twitterUrl') %>"></div>
+                    <div class="form-group"><label>LinkedIn</label><input type="url" name="linkedinUrl" value="<%= field('linkedinUrl') %>"></div>
+                    <div class="form-group"><label>Instagram</label><input type="url" name="instagramUrl" value="<%= field('instagramUrl') %>"></div>
+                </div>
+            <% } %>
 
             <% if (page === 'blog') { %><div class="settings-section"><div class="settings-section-title"><i class="fa-solid fa-newspaper"></i><div><h2>Blog Page</h2><p>Blog page settings are currently managed through the hero editor above.</p></div></div><p class="settings-help">Update the hero content and image, then save the Blog settings.</p></div><% } %>
 

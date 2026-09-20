@@ -946,7 +946,8 @@ const SETTINGS_PAGES = new Set([
     "services",
     "portfolio",
     "blog",
-    "contact"
+    "contact",
+    "footer"
 ]);
 
 exports.pageSettings = async (req, res) => {
@@ -1091,6 +1092,32 @@ exports.updatePageSettings = async (req, res) => {
                 image: files.heroImage?.[0]?.filename || hero.image || "",
                 enabled: parseBoolean(body.heroEnabled, true)
             });
+        }
+
+        if (page === "footer") {
+            settings.navigation = [
+                ["/", "navHome"],
+                ["/about", "navAbout"],
+                ["/services", "navServices"],
+                ["/portfolio", "navPortfolio"],
+                ["/blog", "navBlog"],
+                ["/contact", "navContact"]
+            ].map(([path, key], index) => ({
+                path,
+                label: body[`${key}Label`] || (path === "/" ? "Home" : path === "/about" ? "About Us" : path === "/services" ? "Services" : path === "/portfolio" ? "Portfolio" : path === "/blog" ? "Blog" : "Contact"),
+                visible: parseBoolean(body[`${key}Visible`], true),
+                order: index + 1
+            }));
+
+            settings.footerTitle = body.footerTitle || "TechNova";
+            settings.footerDescription = body.footerDescription || "";
+            settings.footerAddress = body.footerAddress || "";
+            settings.footerPhone = body.footerPhone || "";
+            settings.footerEmail = body.footerEmail || "";
+            settings.facebookUrl = body.facebookUrl || "";
+            settings.twitterUrl = body.twitterUrl || "";
+            settings.linkedinUrl = body.linkedinUrl || "";
+            settings.instagramUrl = body.instagramUrl || "";
         }
 
         if (page === "services") {
