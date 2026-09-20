@@ -82,10 +82,6 @@ exports.settingsPage = async (
     res
 ) => {
 
-    return res.redirect(
-        "/admin/site-settings/home"
-    );
-
     try {
 
         const settings =

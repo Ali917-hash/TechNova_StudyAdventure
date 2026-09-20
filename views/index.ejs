@@ -61,6 +61,7 @@ const hero =
             </p>
 
 
+            <% if (hero.buttonText && hero.buttonText.trim().toLowerCase() !== 'get started') { %>
             <div class="hero-cta">
 
                 <a
@@ -73,6 +74,7 @@ const hero =
                 </a>
 
             </div>
+            <% } %>
 
 
         </div>
