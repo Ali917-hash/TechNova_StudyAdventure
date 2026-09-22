@@ -15,6 +15,7 @@ const {
 const {
     generateCsrfToken
 } = require("./middleware/csrf");
+const trackPublicVisit = require("./middleware/visitorTracker");
 
 const app = express();
 const path = require("path");
@@ -273,6 +274,8 @@ app.use((req, res, next) => {
     next();
 
 });
+
+app.use(trackPublicVisit);
 
 // ==========================================
 // COOKIE PARSER
@@ -584,6 +587,41 @@ app.use(learningRoutes);
 const siteSettingsRoutes = require("./routes/siteSettingsRoutes");
 app.use(siteSettingsRoutes);
 
+const renderErrorPage = (
+    req,
+    res,
+    {
+        code,
+        label,
+        title,
+        message,
+        icon
+    }
+) => {
+    return res.status(code).render("error", {
+        code,
+        label,
+        title,
+        message,
+        icon,
+        requestId: crypto.randomBytes(6).toString("hex")
+    });
+};
+
+// ==========================================
+// NOT FOUND
+// ==========================================
+
+app.use((req, res) => {
+    return renderErrorPage(req, res, {
+        code: 404,
+        label: "Page not found",
+        title: "That page took a wrong turn.",
+        message: "The page may have moved, or the address may be incomplete. Let us get you back to TechNova.",
+        icon: "fa-compass"
+    });
+});
+
 // ==========================================
 // CENTRALIZED ERROR HANDLING
 // ==========================================
@@ -604,47 +642,75 @@ app.use((error, req, res, next) => {
     }
 
     if (error.code === "LIMIT_FILE_SIZE") {
-        return res.status(413).send(
-            "The uploaded file is larger than the allowed limit."
-        );
+        return renderErrorPage(req, res, {
+            code: 413,
+            label: "Upload too large",
+            title: "That file is too big.",
+            message: "Please choose a smaller file or split the course material into manageable parts.",
+            icon: "fa-file-arrow-up"
+        });
     }
 
     if (error.code === "LIMIT_FILE_COUNT") {
-        return res.status(413).send(
-            "Too many files were uploaded in one request."
-        );
+        return renderErrorPage(req, res, {
+            code: 413,
+            label: "Upload limit reached",
+            title: "Too many files at once.",
+            message: "Please reduce the number of files in this upload and try again.",
+            icon: "fa-layer-group"
+        });
     }
 
     if (error.code === "LIMIT_PART_COUNT") {
-        return res.status(413).send(
-            "The form contains too many fields or files."
-        );
+        return renderErrorPage(req, res, {
+            code: 413,
+            label: "Request too large",
+            title: "There is too much in this request.",
+            message: "Please simplify the form submission and try again.",
+            icon: "fa-boxes-stacked"
+        });
     }
 
     if (error.code === "LIMIT_FIELD_COUNT") {
-        return res.status(413).send(
-            "The form contains too many fields."
-        );
+        return renderErrorPage(req, res, {
+            code: 413,
+            label: "Form limit reached",
+            title: "Too many form fields.",
+            message: "Please remove extra fields and submit the form again.",
+            icon: "fa-list-check"
+        });
     }
 
     if (error.code === "EBADCSRFTOKEN") {
-        return res.status(403).send(
-            "Invalid security token. Please refresh and try again."
-        );
+        return renderErrorPage(req, res, {
+            code: 403,
+            label: "Security check",
+            title: "Your request could not be verified.",
+            message: "Refresh the page and try again. Your session may have expired.",
+            icon: "fa-shield-halved"
+        });
     }
 
     if (
         error.name === "BlobError" ||
         error.message?.includes("BLOB_READ_WRITE_TOKEN")
     ) {
-        return res.status(503).send(
-            "Image storage is not configured. Connect a Vercel Blob store and redeploy."
-        );
+        return renderErrorPage(req, res, {
+            code: 503,
+            label: "Storage unavailable",
+            title: "File storage is taking a pause.",
+            message: "The service is temporarily unable to process uploaded files. Please try again shortly.",
+            icon: "fa-cloud-arrow-up"
+        });
     }
 
-    return res.status(500).send(
-        "An unexpected error occurred."
-    );
+    return renderErrorPage(req, res, {
+        code: 500,
+        label: "Unexpected error",
+        title: "Something needs our attention.",
+        message: "We could not complete that request. Please try again, and contact support if the problem continues.",
+        icon: "fa-triangle-exclamation"
+    });
 });
 
 

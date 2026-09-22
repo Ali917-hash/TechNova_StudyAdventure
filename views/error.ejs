@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a">
+    <title><%= code %> | TechNova</title>
+    <link rel="stylesheet" href="/css/error.css">
+</head>
+<body>
+    <main class="error-page">
+        <div class="error-shell">
+            <header class="error-header">
+                <a class="error-brand" href="/" aria-label="TechNova home">
+                    <span class="error-brand-mark">TN</span>
+                    <span>TECHNOVA</span>
+                </a>
+                <span class="error-status"><i></i> Service notice</span>
+            </header>
+
+            <section class="error-content" aria-labelledby="error-title">
+                <div class="error-copy">
+                    <p class="error-kicker"><%= label %></p>
+                    <h1 id="error-title"><%= title %></h1>
+                    <p class="error-message"><%= message %></p>
+
+                    <div class="error-actions">
+                        <a class="error-primary-action" href="/">
+                            <i class="fa-solid fa-house"></i>
+                            Return home
+                        </a>
+                        <button class="error-secondary-action" type="button" data-error-back>
+                            <i class="fa-solid fa-arrow-left"></i>
+                            Go back
+                        </button>
+                    </div>
+                </div>
+
+                <div class="error-signal" aria-hidden="true">
+                    <span class="error-signal-label">STATUS</span>
+                    <strong><%= code %></strong>
+                    <span class="error-signal-icon"><i class="fa-solid <%= icon %>"></i></span>
+                    <span class="error-signal-line"></span>
+                </div>
+            </section>
+
+            <footer class="error-footer">
+                <span>TechNova learning platform</span>
+                <% if (requestId) { %>
+                    <span>Ref <strong><%= requestId %></strong></span>
+                <% } %>
+            </footer>
+        </div>
+    </main>
+    <script nonce="<%= cspNonce %>">
+        document.querySelector("[data-error-back]")?.addEventListener("click", () => {
+            window.history.back();
+        });
+    </script>
+</body>
+</html>

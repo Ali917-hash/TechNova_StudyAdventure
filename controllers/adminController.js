@@ -8,6 +8,7 @@ const Blog = require("../models/Blog");
 const Progress = require("../models/Progress");
 const Certificate = require("../models/Certificate");
 const LoginActivity = require("../models/LoginActivity");
+const VisitActivity = require("../models/VisitActivity");
 const nodemailer = require("nodemailer");
 const getAppUrl = require("../utils/appUrl");
 
@@ -675,7 +676,43 @@ exports.loginActivity = async (req, res) => {
             ];
         }
 
-        const [activities, totalLogins, userLogins, adminLogins, recentLogins] =
+        const registrationQuery = {
+            role: "user",
+            createdAt: {
+                $gte: from,
+                $lte: to
+            }
+        };
+
+        if (search) {
+            const escapedSearch = search.replace(
+                /[.*+?^${}()|[\]\\]/g,
+                "\\$&"
+            );
+            registrationQuery.$or = [
+                { email: { $regex: escapedSearch, $options: "i" } },
+                { firstName: { $regex: escapedSearch, $options: "i" } },
+                { lastName: { $regex: escapedSearch, $options: "i" } }
+            ];
+        }
+
+        const visitQuery = {
+            visitedAt: {
+                $gte: from,
+                $lte: to
+            }
+        };
+
+        const [
+            activities,
+            totalLogins,
+            userLogins,
+            adminLogins,
+            recentLogins,
+            registrations,
+            totalVisits,
+            uniqueVisitors
+        ] =
             await Promise.all([
                 LoginActivity.find(query)
                     .populate("user", "firstName lastName email role")
@@ -689,7 +726,18 @@ exports.loginActivity = async (req, res) => {
                     .sort({ loggedInAt: -1 })
                     .limit(5)
                     .populate("user", "firstName lastName email role")
-                    .lean()
+                    .lean(),
+                User.find(registrationQuery)
+                    .select("firstName lastName email createdAt")
+                    .sort({ createdAt: -1 })
+                    .limit(200)
+                    .lean(),
+                VisitActivity.countDocuments(visitQuery),
+                VisitActivity.aggregate([
+                    { $match: visitQuery },
+                    { $group: { _id: "$visitorId" } },
+                    { $count: "total" }
+                ])
             ]);
 
         return res.render("admin/loginActivity", {
@@ -700,6 +748,9 @@ exports.loginActivity = async (req, res) => {
             totalLogins,
             userLogins,
             adminLogins,
+            registrations,
+            totalVisits,
+            uniqueVisitors: uniqueVisitors[0]?.total || 0,
             filters: {
                 search,
                 role,
