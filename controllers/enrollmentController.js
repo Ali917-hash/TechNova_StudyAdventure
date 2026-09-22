@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const nodemailer = require("nodemailer");
 
 const Enrollment = require("../models/Enrollment");
 const Progress = require("../models/Progress");
@@ -193,6 +194,43 @@ exports.enrollCourse = async (req, res) => {
             console.log(
                 "PROGRESS CREATED:",
                 progress._id.toString()
+            );
+
+        }
+
+        try {
+
+            const transporter =
+                nodemailer.createTransport({
+                    host: process.env.MAIL_HOST,
+                    port: Number(process.env.MAIL_PORT || 587),
+                    secure: process.env.MAIL_SECURE === "true",
+                    auth: {
+                        user: process.env.MAIL_USER,
+                        pass: process.env.MAIL_PASS
+                    }
+                });
+
+            await transporter.sendMail({
+                from:
+                    process.env.MAIL_FROM ||
+                    process.env.MAIL_USER,
+                to: "technova.platform@gmail.com",
+                subject: `New enrollment request: ${course.title}`,
+                text:
+                    "A new course enrollment request is waiting for approval.\n\n" +
+                    `Student: ${req.session.user.email || "Unknown"}\n` +
+                    `Course: ${course.title}\n` +
+                    `Enrollment ID: ${enrollment._id}\n` +
+                    `Requested at: ${new Date().toISOString()}\n\n` +
+                    "Review it in the TechNova admin dashboard."
+            });
+
+        } catch (mailError) {
+
+            console.error(
+                "ENROLLMENT ADMIN NOTIFICATION ERROR:",
+                mailError
             );
 
         }
