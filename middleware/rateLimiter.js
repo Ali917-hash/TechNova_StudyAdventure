@@ -38,7 +38,6 @@ const passwordResetLimiter = rateLimit({
     legacyHeaders: false
 });
 
-
 module.exports = {
     loginLimiter,
     registrationLimiter,

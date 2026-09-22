@@ -20,6 +20,7 @@ const {
     profileUpdateValidation,
     changeEmailValidation,
     changePasswordValidation,
+    passwordResetValidation,
     handleValidationErrors
 } = require("../middleware/validation");
 
@@ -85,6 +86,8 @@ router.get(
 router.post(
     "/reset-password/:token",
     doubleCsrfProtection,
+    passwordResetValidation,
+    handleValidationErrors,
     userController.resetPassword
 );
 

@@ -1,0 +1,125 @@
+<%
+const currentPage = "login-activity";
+%>
+
+<%- include("../layouts/adminDashboardHeader") %>
+<%- include("../partials/adminSidebar") %>
+
+<div class="main-content login-activity-page">
+    <div class="admin-page-header">
+        <div>
+            <h1>Login Activity</h1>
+            <p>Review successful account logins from the last 30 days.</p>
+        </div>
+    </div>
+
+    <div class="login-statistics">
+        <div class="login-stat-card">
+            <span>Total Logins</span>
+            <strong><%= totalLogins %></strong>
+        </div>
+        <div class="login-stat-card">
+            <span>User Logins</span>
+            <strong><%= userLogins %></strong>
+        </div>
+        <div class="login-stat-card">
+            <span>Admin Logins</span>
+            <strong><%= adminLogins %></strong>
+        </div>
+        <div class="login-stat-card">
+            <span>Recent Logins</span>
+            <strong><%= recentLogins.length %></strong>
+        </div>
+    </div>
+
+    <section class="login-panel">
+        <div class="login-panel-header">
+            <div>
+                <h2>Filter Login Details</h2>
+                <p>Results are limited to 200 records per search.</p>
+            </div>
+        </div>
+
+        <form class="login-filters" method="GET" action="/admin/login-activity">
+            <label>
+                Search
+                <input
+                    type="search"
+                    name="search"
+                    value="<%= filters.search %>"
+                    placeholder="Email or IP address">
+            </label>
+
+            <label>
+                Role
+                <select name="role">
+                    <option value="all" <%= filters.role === "all" ? "selected" : "" %>>All roles</option>
+                    <option value="user" <%= filters.role === "user" ? "selected" : "" %>>Users</option>
+                    <option value="admin" <%= filters.role === "admin" ? "selected" : "" %>>Admins</option>
+                </select>
+            </label>
+
+            <label>
+                From
+                <input type="date" name="from" value="<%= filters.from %>">
+            </label>
+
+            <label>
+                To
+                <input type="date" name="to" value="<%= filters.to %>">
+            </label>
+
+            <button type="submit" class="login-filter-button">
+                <i class="fa-solid fa-filter"></i>
+                Filter
+            </button>
+
+            <a href="/admin/login-activity" class="login-clear-button">Clear</a>
+        </form>
+    </section>
+
+    <section class="login-panel">
+        <div class="login-panel-header">
+            <div>
+                <h2>Login Details</h2>
+                <p><%= activities.length %> record(s) shown.</p>
+            </div>
+        </div>
+
+        <div class="login-table-wrapper">
+            <table class="login-table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>IP Address</th>
+                        <th>Device</th>
+                        <th>Logged In</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (activities.length === 0) { %>
+                        <tr>
+                            <td colspan="6" class="login-empty">No login activity found.</td>
+                        </tr>
+                    <% } %>
+                    <% activities.forEach(activity => { %>
+                        <tr>
+                            <td>
+                                <strong>
+                                    <%= activity.user ? `${activity.user.firstName} ${activity.user.lastName}` : "Deleted user" %>
+                                </strong>
+                            </td>
+                            <td><%= activity.email %></td>
+                            <td><span class="login-role <%= activity.role %>"><%= activity.role %></span></td>
+                            <td><%= activity.ipAddress %></td>
+                            <td class="login-user-agent" title="<%= activity.userAgent %>"><%= activity.userAgent %></td>
+                            <td><%= new Date(activity.loggedInAt).toLocaleString() %></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

@@ -1,88 +1,76 @@
 const express = require("express");
 const router = express.Router();
-const courseUpload = require("../utils/courseUpload");
+// const courseUpload = require("../utils/courseUpload");
 const courseController = require("../controllers/courseController");
-const enrollmentController = require("../controllers/enrollmentController");
+// const enrollmentController = require("../controllers/enrollmentController");
 const auth = require("../middleware/auth");
 const { doubleCsrfProtection } = require("../middleware/csrf");
 
 const {
-    enrollmentValidation,
-    courseValidationRules,
-    handleValidationErrors
+    // enrollmentValidation,
+    // courseValidationRules,
+    // handleValidationErrors
 } = require("../middleware/validation");
 
 // ======================================================
 // ADMIN - ADD COURSE
 // ======================================================
 
+/* Unused: this route is already registered in adminRoutes.js.
 router.post(
     "/admin/course/add",
     auth.isAdmin,
-    // 1. Multer processes the files and populates req.body
     courseUpload.fields([
-        { 
-            name: 'image', 
-            maxCount: 1 
-        }, 
-        { 
-            name: 'content', 
-            maxCount: 1000 
-        }
+        { name: 'image', maxCount: 1 },
+        { name: 'content', maxCount: 1000 }
     ]),
     doubleCsrfProtection,
-    // 2. Express-validator checks req.body
     courseValidationRules(),
-    // 3. Error handler catches any mistakes
     handleValidationErrors,
-    // 4. Controller saves to DB
     courseController.addCourse
 );
+*/
 
 // ======================================================
 // ADMIN - ALL COURSES
 // ======================================================
 
+/* Unused: this route is already registered in adminRoutes.js.
 router.get(
     "/admin/courses",
     auth.isAdmin,
     courseController.adminCourses
 );
+*/
 
 
 // ======================================================
 // ADMIN - EDIT COURSE
 // ======================================================
 
+/* Unused: this route is already registered in adminRoutes.js.
 router.get(
     "/admin/course/edit/:id",
     auth.isAdmin,
     courseController.showEditCourse
 );
+*/
 
 
+/* Unused: this route is already registered in adminRoutes.js.
 router.post(
     "/admin/course/update/:id",
     auth.isAdmin,
-    // 1. Multer processes the files and populates req.body
     courseUpload.fields([
-        { 
-            name: 'image', 
-            maxCount: 1 
-        }, 
-        { 
-            name: 'content', 
-            maxCount: 1000 
-        }
+        { name: 'image', maxCount: 1 },
+        { name: 'content', maxCount: 1000 }
     ]),
     doubleCsrfProtection,
-    // 2. Express-validator checks req.body
     courseValidationRules(),
-    // 3. Error handler catches any mistakes
     handleValidationErrors,
-    // 4. Controller saves to DB
     courseController.updateCourse
 );
+*/
 
 
 // ======================================================
@@ -101,10 +89,12 @@ router.post(
 // PUBLIC - ALL COURSES
 // ======================================================
 
+/* Unused: this route is already registered in serviceRoutes.js.
 router.get(
     "/services",
     courseController.showCourses
 );
+*/
 
 
 // ======================================================
@@ -132,6 +122,7 @@ router.get(
 // ENROLL IN COURSE
 // ======================================================
 
+/* Unused: this route is already registered in enrollmentRoutes.js.
 router.post(
     "/course/enroll/:id",
     auth.isLoggedIn,
@@ -140,6 +131,7 @@ router.post(
     handleValidationErrors,
     enrollmentController.enrollCourse
 );
+*/
 
 
 module.exports = router;

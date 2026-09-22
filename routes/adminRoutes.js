@@ -1,10 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const upload = require("../middleware/upload");
+const courseUpload = require("../utils/courseUpload");
 const adminController = require("../controllers/adminController");
 const courseController = require("../controllers/courseController");
 const auth = require("../middleware/auth");
 const { doubleCsrfProtection } = require("../middleware/csrf");
+const {
+    courseValidationRules,
+    handleValidationErrors
+} = require("../middleware/validation");
 
 // ==========================================
 // ADMIN DASHBOARD
@@ -33,8 +38,13 @@ router.get(
 router.post(
     "/admin/course/add",
     auth.isAdmin,
-    upload.single("image"),
+    courseUpload.fields([
+        { name: "image", maxCount: 1 },
+        { name: "content", maxCount: 1000 }
+    ]),
     doubleCsrfProtection,
+    courseValidationRules(),
+    handleValidationErrors,
     courseController.addCourse
 );
 
@@ -66,8 +76,13 @@ router.get(
 router.post(
     "/admin/course/update/:id",
     auth.isAdmin,
-    upload.single("image"),
+    courseUpload.fields([
+        { name: "image", maxCount: 1 },
+        { name: "content", maxCount: 1000 }
+    ]),
     doubleCsrfProtection,
+    courseValidationRules(),
+    handleValidationErrors,
     courseController.updateCourse
 );
 
@@ -104,6 +119,16 @@ router.get(
     "/admin/students",
     auth.isAdmin,
     adminController.students
+);
+
+// ==========================================
+// LOGIN ACTIVITY
+// ==========================================
+
+router.get(
+    "/admin/login-activity",
+    auth.isAdmin,
+    adminController.loginActivity
 );
 
 router.post(

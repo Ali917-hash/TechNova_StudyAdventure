@@ -2,7 +2,8 @@ const Course = require("../models/Course");
 const User = require("../models/User");
 const Certificate = require("../models/Certificate");
 const Portfolio = require("../models/Portfolio");
-const Progress = require("../models/Progress");
+// Unused: this controller does not query progress records.
+// const Progress = require("../models/Progress");
 
 
 // ==========================================

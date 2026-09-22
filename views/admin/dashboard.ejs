@@ -1394,6 +1394,76 @@ const currentPage = "dashboard";
     </div>
 
 
+    <section class="dashboard-insight-grid">
+
+        <div class="dashboard-panel activity-timeline-panel">
+
+            <div class="panel-header">
+                <div>
+                    <h2>Recent Activity</h2>
+                    <p>Latest account and platform events.</p>
+                </div>
+
+                <a href="/admin/login-activity" class="panel-link">View Logins</a>
+            </div>
+
+            <div class="activity-timeline">
+                <% if (recentLogins && recentLogins.length > 0) { %>
+                    <% recentLogins.forEach(login => { %>
+                        <div class="activity-timeline-item">
+                            <div class="activity-timeline-icon login">
+                                <i class="fa-solid fa-right-to-bracket"></i>
+                            </div>
+                            <div class="activity-timeline-content">
+                                <strong><%= login.email %> logged in</strong>
+                                <span><%= login.role %> account · <%= new Date(login.loggedInAt).toLocaleString() %></span>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="empty-dashboard-state">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        <p>No recent activity recorded.</p>
+                    </div>
+                <% } %>
+            </div>
+
+        </div>
+
+        <div class="dashboard-panel platform-health-panel">
+
+            <div class="panel-header">
+                <div>
+                    <h2>Platform Health</h2>
+                    <p>Current service readiness.</p>
+                </div>
+                <i class="fa-solid fa-heart-pulse health-heading-icon"></i>
+            </div>
+
+            <div class="health-list">
+                <div class="health-item">
+                    <span><i class="fa-solid fa-database"></i> MongoDB</span>
+                    <strong class="health-status <%= platformHealth.database ? 'healthy' : 'offline' %>">
+                        <%= platformHealth.database ? 'Connected' : 'Offline' %>
+                    </strong>
+                </div>
+                <div class="health-item">
+                    <span><i class="fa-solid fa-envelope"></i> Email service</span>
+                    <strong class="health-status <%= platformHealth.email ? 'healthy' : 'offline' %>">
+                        <%= platformHealth.email ? 'Configured' : 'Needs setup' %>
+                    </strong>
+                </div>
+                <div class="health-item">
+                    <span><i class="fa-solid fa-hard-drive"></i> File storage</span>
+                    <strong class="health-status healthy"><%= platformHealth.storage %></strong>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
     <!-- ==========================================
          QUICK ACTIONS
     =========================================== -->

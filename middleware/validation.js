@@ -331,6 +331,26 @@ const courseValidationRules = () => {
     ];
 };
 
+const passwordResetValidation = [
+
+    body("password")
+        .isLength({ min: 6, max: 128 })
+        .withMessage(
+            "Password must be between 6 and 128 characters."
+        ),
+
+    body("confirmPassword")
+        .custom((value, { req }) => {
+            if (value !== req.body.password) {
+                throw new Error("Passwords do not match.");
+            }
+
+            return true;
+        })
+        .withMessage("Passwords do not match.")
+
+];
+
 module.exports = {
     registrationValidation,
     loginValidation,
@@ -339,5 +359,6 @@ module.exports = {
     changePasswordValidation,
     enrollmentValidation,
     courseValidationRules,
+    passwordResetValidation,
     handleValidationErrors
 };

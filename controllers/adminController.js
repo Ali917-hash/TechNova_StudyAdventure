@@ -7,6 +7,7 @@ const Contact = require("../models/Contact");
 const Blog = require("../models/Blog");
 const Progress = require("../models/Progress");
 const Certificate = require("../models/Certificate");
+const LoginActivity = require("../models/LoginActivity");
 const nodemailer = require("nodemailer");
 const getAppUrl = require("../utils/appUrl");
 
@@ -266,6 +267,30 @@ exports.dashboard = async (req, res) => {
                 .limit(5)
 
                 .lean();
+
+        const recentLogins =
+            await LoginActivity.find()
+                .populate(
+                    "user",
+                    "firstName lastName email role"
+                )
+                .sort({
+                    loggedInAt: -1
+                })
+                .limit(5)
+                .lean();
+
+        const platformHealth = {
+            database: mongoose.connection.readyState === 1,
+            email: Boolean(
+                process.env.MAIL_HOST &&
+                process.env.MAIL_USER &&
+                process.env.MAIL_PASS
+            ),
+            storage: process.env.VERCEL
+                ? "Cloud storage"
+                : "Local storage"
+        };
 
         // ==========================================
         // COURSE PERFORMANCE ANALYTICS
@@ -554,6 +579,8 @@ exports.dashboard = async (req, res) => {
             completedCourses,
             certificatesIssued,
             recentMessages,
+            recentLogins,
+            platformHealth,
             coursePerformance,
 
 
@@ -590,6 +617,100 @@ exports.dashboard = async (req, res) => {
             "Unable to load admin dashboard."
         );
 
+    }
+
+};
+
+
+// ==========================================
+// LOGIN ACTIVITY
+// ==========================================
+
+exports.loginActivity = async (req, res) => {
+
+    try {
+
+        const now = new Date();
+        const defaultStart = new Date(now);
+        defaultStart.setDate(defaultStart.getDate() - 30);
+
+        const from = req.query.from
+            ? new Date(`${req.query.from}T00:00:00`)
+            : defaultStart;
+
+        const to = req.query.to
+            ? new Date(`${req.query.to}T23:59:59.999`)
+            : now;
+
+        if (Number.isNaN(from.getTime()) || Number.isNaN(to.getTime())) {
+            return res.status(400).send("Invalid date filter.");
+        }
+
+        const search = String(req.query.search || "")
+            .trim()
+            .slice(0, 100);
+        const role = ["user", "admin"].includes(req.query.role)
+            ? req.query.role
+            : "all";
+
+        const query = {
+            loggedInAt: {
+                $gte: from,
+                $lte: to
+            }
+        };
+
+        if (role !== "all") {
+            query.role = role;
+        }
+
+        if (search) {
+            const escapedSearch = search.replace(
+                /[.*+?^${}()|[\]\\]/g,
+                "\\$&"
+            );
+            query.$or = [
+                { email: { $regex: escapedSearch, $options: "i" } },
+                { ipAddress: { $regex: escapedSearch, $options: "i" } }
+            ];
+        }
+
+        const [activities, totalLogins, userLogins, adminLogins, recentLogins] =
+            await Promise.all([
+                LoginActivity.find(query)
+                    .populate("user", "firstName lastName email role")
+                    .sort({ loggedInAt: -1 })
+                    .limit(200)
+                    .lean(),
+                LoginActivity.countDocuments(query),
+                LoginActivity.countDocuments({ ...query, role: "user" }),
+                LoginActivity.countDocuments({ ...query, role: "admin" }),
+                LoginActivity.find({ loggedInAt: { $gte: defaultStart, $lte: now } })
+                    .sort({ loggedInAt: -1 })
+                    .limit(5)
+                    .populate("user", "firstName lastName email role")
+                    .lean()
+            ]);
+
+        return res.render("admin/loginActivity", {
+            user: req.session.user,
+            currentPage: "login-activity",
+            activities,
+            recentLogins,
+            totalLogins,
+            userLogins,
+            adminLogins,
+            filters: {
+                search,
+                role,
+                from: req.query.from || defaultStart.toISOString().slice(0, 10),
+                to: req.query.to || now.toISOString().slice(0, 10)
+            }
+        });
+
+    } catch (error) {
+        console.error("LOGIN ACTIVITY ERROR:", error);
+        return res.status(500).send("Unable to load login activity.");
     }
 
 };
@@ -924,7 +1045,7 @@ exports.students = async (req, res) => {
         */
 
         const search = req.query.search
-            ? req.query.search.trim()
+            ? req.query.search.trim().slice(0, 100)
             : "";
 
         /*
@@ -951,25 +1072,30 @@ exports.students = async (req, res) => {
 
         if (search) {
 
+            const escapedSearch = search.replace(
+                /[.*+?^${}()|[\]\\]/g,
+                "\\$&"
+            );
+
             query.$or = [
 
                 {
                     firstName: {
-                        $regex: search,
+                        $regex: escapedSearch,
                         $options: "i"
                     }
                 },
 
                 {
                     lastName: {
-                        $regex: search,
+                        $regex: escapedSearch,
                         $options: "i"
                     }
                 },
 
                 {
                     email: {
-                        $regex: search,
+                        $regex: escapedSearch,
                         $options: "i"
                     }
                 }
@@ -1505,6 +1631,11 @@ exports.deleteEnrollment = async (
         await Enrollment.findByIdAndDelete(
             enrollmentId
         );
+
+        await Progress.deleteOne({
+            user: enrollment.student,
+            course: enrollment.course
+        });
 
 
         return res.redirect(

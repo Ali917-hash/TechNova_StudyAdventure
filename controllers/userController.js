@@ -7,6 +7,7 @@ const getAppUrl = require("../utils/appUrl");
 const Enrollment = require("../models/Enrollment");
 const Progress = require("../models/Progress");
 const Certificate = require("../models/Certificate");
+const LoginActivity = require("../models/LoginActivity");
 
 
 // =====================================================
@@ -640,6 +641,47 @@ exports.loginUser = async (
                             );
 
                         }
+
+                        const loginDetails = {
+                            user: user._id,
+                            email: user.email,
+                            role: user.role,
+                            ipAddress: req.ip || req.socket.remoteAddress || "unknown",
+                            userAgent: req.get("user-agent") || "unknown"
+                        };
+
+                        LoginActivity.create(loginDetails)
+                            .then(() => {
+                                return nodemailer
+                                    .createTransport({
+                                        host: process.env.MAIL_HOST,
+                                        port: Number(process.env.MAIL_PORT || 587),
+                                        secure: process.env.MAIL_SECURE === "true",
+                                        auth: {
+                                            user: process.env.MAIL_USER,
+                                            pass: process.env.MAIL_PASS
+                                        }
+                                    })
+                                    .sendMail({
+                                        from: process.env.MAIL_FROM || process.env.MAIL_USER,
+                                        to: "technova.platform@gmail.com",
+                                        subject: `TechNova login: ${user.email}`,
+                                        text: [
+                                            "A user logged in to TechNova.",
+                                            `Email: ${user.email}`,
+                                            `Role: ${user.role}`,
+                                            `IP address: ${loginDetails.ipAddress}`,
+                                            `Time: ${new Date().toISOString()}`,
+                                            `User agent: ${loginDetails.userAgent}`
+                                        ].join("\n")
+                                    });
+                            })
+                            .catch((loginNotificationError) => {
+                                console.error(
+                                    "LOGIN ACTIVITY NOTIFICATION ERROR:",
+                                    loginNotificationError
+                                );
+                            });
 
 
                         // ==================================

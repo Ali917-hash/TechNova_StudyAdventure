@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const Course = require("../models/Course");
 const Enrollment = require("../models/Enrollment");
+const Progress = require("../models/Progress");
 
 // ==========================================
 // VALIDATE MONGODB OBJECT ID
@@ -502,11 +503,7 @@ exports.showEditCourse = async (req, res) => {
                 user:
                     req.session.user,
 
-                course,
-
-                enrollment,
-
-                enrollmentMessage
+                course
 
             }
         );
@@ -813,9 +810,11 @@ exports.deleteCourse = async (
         }
 
 
-        await Course.findByIdAndDelete(
-            courseId
-        );
+        await Promise.all([
+            Course.findByIdAndDelete(courseId),
+            Enrollment.deleteMany({ course: courseId }),
+            Progress.deleteMany({ course: courseId })
+        ]);
 
 
         return res.redirect(
