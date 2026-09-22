@@ -1467,6 +1467,128 @@ exports.enrollments = async (req, res) => {
 };
 
 // ==========================================
+// ADMIN - LEARNING ACTIVITY
+// ==========================================
+
+exports.learningActivity = async (req, res) => {
+
+    try {
+
+        const search = String(req.query.search || "")
+            .trim()
+            .slice(0, 100);
+        const status = ["all", "pending", "approved", "rejected"]
+            .includes(req.query.status)
+            ? req.query.status
+            : "all";
+        const progressState = ["all", "not-started", "in-progress", "completed"]
+            .includes(req.query.progress)
+            ? req.query.progress
+            : "all";
+
+        const query = {};
+
+        if (status !== "all") {
+            query.status = status;
+        }
+
+        if (search) {
+            const escapedSearch = search.replace(
+                /[.*+?^${}()|[\]\\]/g,
+                "\\$&"
+            );
+            const [students, courses] = await Promise.all([
+                User.find({
+                    role: "user",
+                    $or: [
+                        { firstName: { $regex: escapedSearch, $options: "i" } },
+                        { lastName: { $regex: escapedSearch, $options: "i" } },
+                        { email: { $regex: escapedSearch, $options: "i" } }
+                    ]
+                }).select("_id").lean(),
+                Course.find({
+                    title: { $regex: escapedSearch, $options: "i" }
+                }).select("_id").lean()
+            ]);
+
+            query.$or = [
+                { student: { $in: students.map(student => student._id) } },
+                { course: { $in: courses.map(course => course._id) } }
+            ];
+        }
+
+        const enrollments = await Enrollment.find(query)
+            .populate("student", "firstName lastName email profileImage")
+            .populate("course", "title instructor category")
+            .sort({ updatedAt: -1 })
+            .limit(500)
+            .lean();
+
+        const progressRecords = await Progress.find({
+            $or: enrollments.map(enrollment => ({
+                user: enrollment.student?._id,
+                course: enrollment.course?._id
+            }))
+        }).lean();
+
+        const progressMap = new Map(
+            progressRecords.map(progress => [
+                `${progress.user}:${progress.course}`,
+                progress
+            ])
+        );
+
+        const activity = enrollments
+            .map(enrollment => {
+                const progress = progressMap.get(
+                    `${enrollment.student?._id}:${enrollment.course?._id}`
+                ) || {
+                    progress: 0,
+                    completed: false,
+                    lastAccessedAt: null,
+                    completedMaterials: []
+                };
+
+                return {
+                    ...enrollment,
+                    learningProgress: progress
+                };
+            })
+            .filter(enrollment => {
+                const progress = enrollment.learningProgress;
+                if (progressState === "completed") return progress.completed || progress.progress >= 100;
+                if (progressState === "in-progress") return !progress.completed && progress.progress > 0 && progress.progress < 100;
+                if (progressState === "not-started") return !progress.completed && progress.progress === 0;
+                return true;
+            });
+
+        const counts = {
+            total: activity.length,
+            completed: activity.filter(item => item.learningProgress.completed || item.learningProgress.progress >= 100).length,
+            inProgress: activity.filter(item => !item.learningProgress.completed && item.learningProgress.progress > 0 && item.learningProgress.progress < 100).length,
+            notStarted: activity.filter(item => !item.learningProgress.completed && item.learningProgress.progress === 0).length
+        };
+
+        return res.render("admin/learningActivity", {
+            user: req.session.user,
+            currentPage: "learning-activity",
+            activity,
+            counts,
+            filters: {
+                search,
+                status,
+                progress: progressState
+            }
+        });
+
+    } catch (error) {
+        console.error("LEARNING ACTIVITY ERROR:", error);
+        return res.status(500).send("Unable to load learning activity.");
+    }
+
+};
+
+// ==========================================
 // APPROVE ENROLLMENT
 // ==========================================
 

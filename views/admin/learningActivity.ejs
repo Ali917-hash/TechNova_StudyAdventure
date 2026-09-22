@@ -1,0 +1,99 @@
+<%
+const currentPage = "learning-activity";
+%>
+
+<%- include("../layouts/adminDashboardHeader") %>
+<%- include("../partials/adminSidebar") %>
+
+<div class="main-content learning-activity-page">
+    <div class="page-header">
+        <div>
+            <h1>Learning Activity</h1>
+            <p>Track enrolled students and their course progress.</p>
+        </div>
+    </div>
+
+    <div class="learning-statistics">
+        <div class="learning-stat-card"><span>Total Records</span><strong><%= counts.total %></strong></div>
+        <div class="learning-stat-card"><span>Not Started</span><strong><%= counts.notStarted %></strong></div>
+        <div class="learning-stat-card"><span>In Progress</span><strong><%= counts.inProgress %></strong></div>
+        <div class="learning-stat-card"><span>Completed</span><strong><%= counts.completed %></strong></div>
+    </div>
+
+    <section class="learning-panel">
+        <form class="learning-filters" method="GET" action="/admin/learning-activity">
+            <label>
+                Search student or course
+                <input type="search" name="search" value="<%= filters.search %>" placeholder="Name, email, or course">
+            </label>
+            <label>
+                Enrollment status
+                <select name="status">
+                    <option value="all" <%= filters.status === "all" ? "selected" : "" %>>All statuses</option>
+                    <option value="pending" <%= filters.status === "pending" ? "selected" : "" %>>Pending</option>
+                    <option value="approved" <%= filters.status === "approved" ? "selected" : "" %>>Approved</option>
+                    <option value="rejected" <%= filters.status === "rejected" ? "selected" : "" %>>Rejected</option>
+                </select>
+            </label>
+            <label>
+                Progress
+                <select name="progress">
+                    <option value="all" <%= filters.progress === "all" ? "selected" : "" %>>All progress</option>
+                    <option value="not-started" <%= filters.progress === "not-started" ? "selected" : "" %>>Not started</option>
+                    <option value="in-progress" <%= filters.progress === "in-progress" ? "selected" : "" %>>In progress</option>
+                    <option value="completed" <%= filters.progress === "completed" ? "selected" : "" %>>Completed</option>
+                </select>
+            </label>
+            <button class="learning-filter-button" type="submit"><i class="fa-solid fa-filter"></i> Filter</button>
+            <a class="learning-clear-button" href="/admin/learning-activity">Clear</a>
+        </form>
+    </section>
+
+    <section class="learning-panel learning-table-panel">
+        <div class="learning-panel-header">
+            <div>
+                <h2>Student Course Progress</h2>
+                <p>Latest activity appears first.</p>
+            </div>
+        </div>
+
+        <div class="learning-table-wrapper">
+            <table class="learning-table">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Course</th>
+                        <th>Enrollment</th>
+                        <th>Progress</th>
+                        <th>Materials</th>
+                        <th>Last Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (activity.length === 0) { %>
+                        <tr><td colspan="6" class="learning-empty">No learning activity found.</td></tr>
+                    <% } %>
+                    <% activity.forEach(item => { %>
+                        <tr>
+                            <td>
+                                <strong><%= item.student ? `${item.student.firstName} ${item.student.lastName}` : "Deleted student" %></strong>
+                                <small><%= item.student?.email || "" %></small>
+                            </td>
+                            <td>
+                                <strong><%= item.course?.title || "Deleted course" %></strong>
+                                <small><%= item.course?.category || "" %></small>
+                            </td>
+                            <td><span class="learning-status <%= item.status %>"><%= item.status %></span></td>
+                            <td>
+                                <div class="learning-progress-value"><strong><%= item.learningProgress.progress || 0 %>%</strong></div>
+                                <div class="learning-progress-track"><span style="width: <%= Math.min(100, Math.max(0, item.learningProgress.progress || 0)) %>%"></span></div>
+                            </td>
+                            <td><%= item.learningProgress.completedMaterials?.length || 0 %></td>
+                            <td><%= item.learningProgress.lastAccessedAt ? formatPakistanDateTime(item.learningProgress.lastAccessedAt) : "Not started" %></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

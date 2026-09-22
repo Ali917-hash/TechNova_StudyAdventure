@@ -155,6 +155,12 @@ router.get(
     adminController.enrollments
 );
 
+router.get(
+    "/admin/learning-activity",
+    auth.isAdmin,
+    adminController.learningActivity
+);
+
 
 // ==========================================
 // APPROVE ENROLLMENT
