@@ -131,6 +131,12 @@ router.get(
     adminController.loginActivity
 );
 
+router.get(
+    "/admin/registrations",
+    auth.isAdmin,
+    adminController.registrations
+);
+
 router.post(
     "/admin/students/toggle/:id",
     auth.isAdmin,

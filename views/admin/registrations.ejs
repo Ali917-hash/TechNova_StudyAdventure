@@ -1,0 +1,112 @@
+<%
+const currentPage = "registrations";
+%>
+
+<%- include("../layouts/adminDashboardHeader") %>
+<%- include("../partials/adminSidebar") %>
+
+<div class="main-content login-activity-page">
+    <div class="admin-page-header">
+        <div>
+            <h1>Registrations</h1>
+            <p>Review new user accounts created during the selected period.</p>
+        </div>
+    </div>
+
+    <div class="login-statistics">
+        <div class="login-stat-card">
+            <span>Registrations Found</span>
+            <strong><%= registrationCount %></strong>
+        </div>
+        <div class="login-stat-card">
+            <span>Showing</span>
+            <strong><%= registrations.length %></strong>
+        </div>
+        <div class="login-stat-card">
+            <span>Period</span>
+            <strong class="registration-period">30 days</strong>
+        </div>
+    </div>
+
+    <section class="login-panel">
+        <div class="login-panel-header">
+            <div>
+                <h2>Filter Registrations</h2>
+                <p>Results are limited to 200 records per search.</p>
+            </div>
+        </div>
+
+        <form class="login-filters" method="GET" action="/admin/registrations">
+            <label>
+                Search
+                <input
+                    type="search"
+                    name="search"
+                    value="<%= filters.search %>"
+                    placeholder="Name or email">
+            </label>
+
+            <label>
+                From
+                <input type="date" name="from" value="<%= filters.from %>">
+            </label>
+
+            <label>
+                To
+                <input type="date" name="to" value="<%= filters.to %>">
+            </label>
+
+            <button type="submit" class="login-filter-button">
+                <i class="fa-solid fa-filter"></i>
+                Filter
+            </button>
+
+            <a href="/admin/registrations" class="login-clear-button">Clear</a>
+        </form>
+    </section>
+
+    <section class="login-panel">
+        <div class="login-panel-header">
+            <div>
+                <h2>Registered Users</h2>
+                <p>Latest accounts appear first.</p>
+            </div>
+        </div>
+
+        <div class="login-table-wrapper">
+            <table class="login-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Gender</th>
+                        <th>Date Of Birth</th>
+                        <th>Status</th>
+                        <th>Registered</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (registrations.length === 0) { %>
+                        <tr>
+                            <td colspan="6" class="login-empty">No registrations found.</td>
+                        </tr>
+                    <% } %>
+                    <% registrations.forEach(registration => { %>
+                        <tr>
+                            <td><strong><%= registration.firstName %> <%= registration.lastName %></strong></td>
+                            <td><%= registration.email %></td>
+                            <td><%= registration.gender || "Not provided" %></td>
+                            <td><%= registration.dob ? new Date(registration.dob).toLocaleDateString("en-PK", { timeZone: "Asia/Karachi" }) : "Not provided" %></td>
+                            <td>
+                                <span class="login-role <%= registration.isActive ? 'user' : 'admin' %>">
+                                    <%= registration.isActive ? "Active" : "Inactive" %>
+                                </span>
+                            </td>
+                            <td><%= formatPakistanDateTime(registration.createdAt) %></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>

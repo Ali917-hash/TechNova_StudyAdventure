@@ -710,6 +710,7 @@ exports.loginActivity = async (req, res) => {
             adminLogins,
             recentLogins,
             registrations,
+            registrationCount,
             totalVisits,
             uniqueVisitors
         ] =
@@ -732,6 +733,7 @@ exports.loginActivity = async (req, res) => {
                     .sort({ createdAt: -1 })
                     .limit(200)
                     .lean(),
+                User.countDocuments(registrationQuery),
                 VisitActivity.countDocuments(visitQuery),
                 VisitActivity.aggregate([
                     { $match: visitQuery },
@@ -749,6 +751,7 @@ exports.loginActivity = async (req, res) => {
             userLogins,
             adminLogins,
             registrations,
+            registrationCount,
             totalVisits,
             uniqueVisitors: uniqueVisitors[0]?.total || 0,
             filters: {
@@ -762,6 +765,83 @@ exports.loginActivity = async (req, res) => {
     } catch (error) {
         console.error("LOGIN ACTIVITY ERROR:", error);
         return res.status(500).send("Unable to load login activity.");
+    }
+
+};
+
+
+// ==========================================
+// REGISTRATION ACTIVITY
+// ==========================================
+
+exports.registrations = async (req, res) => {
+
+    try {
+
+        const now = new Date();
+        const defaultStart = new Date(now);
+        defaultStart.setDate(defaultStart.getDate() - 30);
+
+        const from = req.query.from
+            ? new Date(`${req.query.from}T00:00:00`)
+            : defaultStart;
+
+        const to = req.query.to
+            ? new Date(`${req.query.to}T23:59:59.999`)
+            : now;
+
+        if (Number.isNaN(from.getTime()) || Number.isNaN(to.getTime())) {
+            return res.status(400).send("Invalid date filter.");
+        }
+
+        const search = String(req.query.search || "")
+            .trim()
+            .slice(0, 100);
+
+        const query = {
+            role: "user",
+            createdAt: {
+                $gte: from,
+                $lte: to
+            }
+        };
+
+        if (search) {
+            const escapedSearch = search.replace(
+                /[.*+?^${}()|[\]\\]/g,
+                "\\$&"
+            );
+            query.$or = [
+                { email: { $regex: escapedSearch, $options: "i" } },
+                { firstName: { $regex: escapedSearch, $options: "i" } },
+                { lastName: { $regex: escapedSearch, $options: "i" } }
+            ];
+        }
+
+        const [registrations, registrationCount] = await Promise.all([
+            User.find(query)
+                .select("firstName lastName email gender dob isActive createdAt")
+                .sort({ createdAt: -1 })
+                .limit(200)
+                .lean(),
+            User.countDocuments(query)
+        ]);
+
+        return res.render("admin/registrations", {
+            user: req.session.user,
+            currentPage: "registrations",
+            registrations,
+            registrationCount,
+            filters: {
+                search,
+                from: req.query.from || defaultStart.toISOString().slice(0, 10),
+                to: req.query.to || now.toISOString().slice(0, 10)
+            }
+        });
+
+    } catch (error) {
+        console.error("REGISTRATION ACTIVITY ERROR:", error);
+        return res.status(500).send("Unable to load registrations.");
     }
 
 };
