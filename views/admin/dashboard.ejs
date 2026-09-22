@@ -1416,7 +1416,7 @@ const currentPage = "dashboard";
                             </div>
                             <div class="activity-timeline-content">
                                 <strong><%= login.email %> logged in</strong>
-                                <span><%= login.role %> account · <%= new Date(login.loggedInAt).toLocaleString() %></span>
+                                <span><%= login.role %> account · <%= formatPakistanDateTime(login.loggedInAt) %></span>
                             </div>
                         </div>
                     <% }); %>

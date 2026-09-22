@@ -7,12 +7,20 @@ const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const crypto = require("crypto");
+const mongoose = require("mongoose");
+const {
+    PAKISTAN_TIME_ZONE,
+    formatPakistanDateTime
+} = require("./utils/pakistanTime");
 const {
     generateCsrfToken
 } = require("./middleware/csrf");
 
 const app = express();
 const path = require("path");
+
+app.locals.pakistanTimeZone = PAKISTAN_TIME_ZONE;
+app.locals.formatPakistanDateTime = formatPakistanDateTime;
 
 app.locals.uploadUrl = image => {
 
@@ -170,6 +178,34 @@ app.use(express.json({
     limit: "1mb"
 }));
 app.use(methodOverride("_method"));
+
+// ==========================================
+// SERVICE HEALTH CHECK
+// ==========================================
+
+app.get("/health", (req, res) => {
+
+    const databaseConnected =
+        mongoose.connection.readyState === 1;
+
+    const emailConfigured = Boolean(
+        process.env.MAIL_HOST &&
+        process.env.MAIL_USER &&
+        process.env.MAIL_PASS
+    );
+
+    return res.status(databaseConnected ? 200 : 503).json({
+        status: databaseConnected ? "ok" : "degraded",
+        services: {
+            database: databaseConnected ? "connected" : "disconnected",
+            email: emailConfigured ? "configured" : "not-configured",
+            storage: process.env.VERCEL ? "cloud" : "local"
+        },
+        timestamp: new Date().toISOString(),
+        pakistanTime: formatPakistanDateTime(new Date())
+    });
+
+});
 
 // ==========================================
 // SECURE SESSION CONFIGURATION
@@ -554,7 +590,14 @@ app.use(siteSettingsRoutes);
 
 app.use((error, req, res, next) => {
 
-    console.error("REQUEST ERROR:", error);
+    console.error("REQUEST ERROR:", {
+        method: req.method,
+        path: req.originalUrl,
+        code: error.code,
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+    });
 
     if (res.headersSent) {
         return next(error);
@@ -562,7 +605,7 @@ app.use((error, req, res, next) => {
 
     if (error.code === "LIMIT_FILE_SIZE") {
         return res.status(413).send(
-            "The image is too large. Each image must be 10 MB or smaller."
+            "The uploaded file is larger than the allowed limit."
         );
     }
 

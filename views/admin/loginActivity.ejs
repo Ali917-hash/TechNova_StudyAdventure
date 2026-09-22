@@ -115,7 +115,7 @@ const currentPage = "login-activity";
                             <td><span class="login-role <%= activity.role %>"><%= activity.role %></span></td>
                             <td><%= activity.ipAddress %></td>
                             <td class="login-user-agent" title="<%= activity.userAgent %>"><%= activity.userAgent %></td>
-                            <td><%= new Date(activity.loggedInAt).toLocaleString() %></td>
+                            <td><%= formatPakistanDateTime(activity.loggedInAt) %></td>
                         </tr>
                     <% }); %>
                 </tbody>

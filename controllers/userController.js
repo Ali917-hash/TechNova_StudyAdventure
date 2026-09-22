@@ -8,6 +8,7 @@ const Enrollment = require("../models/Enrollment");
 const Progress = require("../models/Progress");
 const Certificate = require("../models/Certificate");
 const LoginActivity = require("../models/LoginActivity");
+const { formatPakistanDateTime } = require("../utils/pakistanTime");
 
 
 // =====================================================
@@ -671,7 +672,7 @@ exports.loginUser = async (
                                             `Email: ${user.email}`,
                                             `Role: ${user.role}`,
                                             `IP address: ${loginDetails.ipAddress}`,
-                                            `Time: ${new Date().toISOString()}`,
+                                            `Time (Asia/Karachi): ${formatPakistanDateTime(new Date())}`,
                                             `User agent: ${loginDetails.userAgent}`
                                         ].join("\n")
                                     });
