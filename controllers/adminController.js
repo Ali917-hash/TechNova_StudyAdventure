@@ -650,6 +650,8 @@ exports.loginActivity = async (req, res) => {
         const search = String(req.query.search || "")
             .trim()
             .slice(0, 100);
+        const page = Math.max(1, Number.parseInt(req.query.page, 10) || 1);
+        const pageSize = 10;
         const role = ["user", "admin"].includes(req.query.role)
             ? req.query.role
             : "all";
@@ -712,13 +714,15 @@ exports.loginActivity = async (req, res) => {
             registrations,
             registrationCount,
             totalVisits,
-            uniqueVisitors
+            uniqueVisitors,
+            recentVisitors
         ] =
             await Promise.all([
                 LoginActivity.find(query)
                     .populate("user", "firstName lastName email role")
                     .sort({ loggedInAt: -1 })
-                    .limit(200)
+                    .skip((page - 1) * pageSize)
+                    .limit(pageSize)
                     .lean(),
                 LoginActivity.countDocuments(query),
                 LoginActivity.countDocuments({ ...query, role: "user" }),
@@ -731,7 +735,7 @@ exports.loginActivity = async (req, res) => {
                 User.find(registrationQuery)
                     .select("firstName lastName email createdAt")
                     .sort({ createdAt: -1 })
-                    .limit(200)
+                    .limit(pageSize)
                     .lean(),
                 User.countDocuments(registrationQuery),
                 VisitActivity.countDocuments(visitQuery),
@@ -739,7 +743,12 @@ exports.loginActivity = async (req, res) => {
                     { $match: visitQuery },
                     { $group: { _id: "$visitorId" } },
                     { $count: "total" }
-                ])
+                ]),
+                VisitActivity.find(visitQuery)
+                    .populate("user", "firstName lastName email")
+                    .sort({ visitedAt: -1 })
+                    .limit(10)
+                    .lean()
             ]);
 
         return res.render("admin/loginActivity", {
@@ -754,6 +763,9 @@ exports.loginActivity = async (req, res) => {
             registrationCount,
             totalVisits,
             uniqueVisitors: uniqueVisitors[0]?.total || 0,
+            recentVisitors,
+            loginPage: page,
+            loginPageCount: Math.max(1, Math.ceil(totalLogins / pageSize)),
             filters: {
                 search,
                 role,
@@ -767,6 +779,82 @@ exports.loginActivity = async (req, res) => {
         return res.status(500).send("Unable to load login activity.");
     }
 
+};
+
+// ==========================================
+// VISITOR ACTIVITY
+// ==========================================
+
+exports.visitors = async (req, res) => {
+    try {
+        const now = new Date();
+        const defaultStart = new Date(now);
+        defaultStart.setDate(defaultStart.getDate() - 30);
+        const from = req.query.from ? new Date(`${req.query.from}T00:00:00`) : defaultStart;
+        const to = req.query.to ? new Date(`${req.query.to}T23:59:59.999`) : now;
+        const search = String(req.query.search || "").trim().slice(0, 100);
+        const page = Math.max(1, Number.parseInt(req.query.page, 10) || 1);
+        const pageSize = 10;
+
+        if (Number.isNaN(from.getTime()) || Number.isNaN(to.getTime())) {
+            return res.status(400).send("Invalid date filter.");
+        }
+
+        const query = { visitedAt: { $gte: from, $lte: to } };
+        if (search) {
+            const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            const matchingUsers = await User.find({
+                $or: [
+                    { firstName: { $regex: escapedSearch, $options: "i" } },
+                    { lastName: { $regex: escapedSearch, $options: "i" } },
+                    { email: { $regex: escapedSearch, $options: "i" } }
+                ]
+            }).select("_id").lean();
+
+            query.$or = [
+                { visitorId: { $regex: escapedSearch, $options: "i" } },
+                { ipAddress: { $regex: escapedSearch, $options: "i" } },
+                { path: { $regex: escapedSearch, $options: "i" } },
+                { deviceName: { $regex: escapedSearch, $options: "i" } },
+                { browser: { $regex: escapedSearch, $options: "i" } },
+                { operatingSystem: { $regex: escapedSearch, $options: "i" } },
+                { user: { $in: matchingUsers.map(matchingUser => matchingUser._id) } }
+            ];
+        }
+
+        const [visitors, totalVisitors, uniqueVisitors] = await Promise.all([
+            VisitActivity.find(query)
+                .populate("user", "firstName lastName email")
+                .sort({ visitedAt: -1 })
+                .skip((page - 1) * pageSize)
+                .limit(pageSize)
+                .lean(),
+            VisitActivity.countDocuments(query),
+            VisitActivity.aggregate([
+                { $match: query },
+                { $group: { _id: "$visitorId" } },
+                { $count: "total" }
+            ])
+        ]);
+
+        return res.render("admin/visitors", {
+            user: req.session.user,
+            currentPage: "visitors",
+            visitors,
+            totalVisitors,
+            uniqueVisitors: uniqueVisitors[0]?.total || 0,
+            page,
+            pageCount: Math.max(1, Math.ceil(totalVisitors / pageSize)),
+            filters: {
+                search,
+                from: req.query.from || defaultStart.toISOString().slice(0, 10),
+                to: req.query.to || now.toISOString().slice(0, 10)
+            }
+        });
+    } catch (error) {
+        console.error("VISITOR ACTIVITY ERROR:", error);
+        return res.status(500).send("Unable to load visitor activity.");
+    }
 };
 
 

@@ -8,6 +8,13 @@ const visitActivitySchema = new mongoose.Schema(
             index: true
         },
 
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            default: null,
+            index: true
+        },
+
         path: {
             type: String,
             required: true
@@ -21,6 +28,31 @@ const visitActivitySchema = new mongoose.Schema(
         userAgent: {
             type: String,
             default: "unknown"
+        },
+
+        deviceType: {
+            type: String,
+            default: "unknown"
+        },
+
+        deviceName: {
+            type: String,
+            default: "unknown"
+        },
+
+        browser: {
+            type: String,
+            default: "unknown"
+        },
+
+        operatingSystem: {
+            type: String,
+            default: "unknown"
+        },
+
+        referrer: {
+            type: String,
+            default: "direct"
         },
 
         visitedAt: {

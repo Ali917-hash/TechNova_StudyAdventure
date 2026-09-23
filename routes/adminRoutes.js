@@ -132,6 +132,12 @@ router.get(
 );
 
 router.get(
+    "/admin/visitors",
+    auth.isAdmin,
+    adminController.visitors
+);
+
+router.get(
     "/admin/registrations",
     auth.isAdmin,
     adminController.registrations
