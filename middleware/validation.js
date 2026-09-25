@@ -1,6 +1,47 @@
 // const { body, validationResult } = require("express-validator");
 const { body, param, validationResult } = require("express-validator");
 
+// =====================================================
+// CONTACT VALIDATION
+// =====================================================
+
+const contactValidation = [
+
+    body("name")
+        .trim()
+        .notEmpty()
+        .withMessage("Name is required.")
+        .isLength({ min: 2, max: 50 })
+        .withMessage("Name must be between 2 and 50 characters."),
+
+    body("email")
+        .trim()
+        .notEmpty()
+        .withMessage("Email is required.")
+        .isEmail()
+        .withMessage("Please enter a valid email address.")
+        .normalizeEmail(),
+
+    body("phone")
+        .optional({ values: "falsy" })
+        .trim()
+        .isLength({ min: 7, max: 30 })
+        .withMessage("Phone number must be between 7 and 30 characters."),
+
+    body("subject")
+        .trim()
+        .notEmpty()
+        .withMessage("Subject is required."),
+
+    body("message")
+        .trim()
+        .notEmpty()
+        .withMessage("Message is required.")
+        .isLength({ min: 10, max: 2000 })
+        .withMessage("Message must be at least 10 characters long.")
+
+];
+
 
 // =====================================================
 // REGISTRATION VALIDATION
@@ -354,6 +395,7 @@ const passwordResetValidation = [
 module.exports = {
     registrationValidation,
     loginValidation,
+    contactValidation,
     profileUpdateValidation,
     changeEmailValidation,
     changePasswordValidation,

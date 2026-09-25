@@ -11,7 +11,10 @@ const auth =
 const {
     doubleCsrfProtection
 } = require("../middleware/csrf");
-
+const {
+    contactValidation,
+    handleValidationErrors
+} = require("../middleware/validation");
 
 // ==========================================
 // PUBLIC - CONTACT PAGE
@@ -30,6 +33,8 @@ router.get(
 router.post(
     "/contact",
     doubleCsrfProtection,
+    contactValidation,
+    handleValidationErrors,
     contactController.submitContact
 );
 

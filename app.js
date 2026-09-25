@@ -701,6 +701,20 @@ app.use((error, req, res, next) => {
         });
     }
 
+    if (
+        error.name === "MongoNetworkError" ||
+        error.message?.includes("ENOTFOUND") ||
+        error.message?.includes("MongoDB")
+    ) {
+        return renderErrorPage(req, res, {
+            code: 503,
+            label: "Database unavailable",
+            title: "The database connection is offline.",
+            message: "TechNova could not reach MongoDB. Please verify the Atlas connection string in the environment settings and try again.",
+            icon: "fa-database"
+        });
+    }
+
     return renderErrorPage(req, res, {
         code: 500,
         label: "Unexpected error",

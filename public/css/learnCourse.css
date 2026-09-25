@@ -115,6 +115,7 @@
     min-width: 0;
     overflow: hidden;
     width: 100%;
+    max-width: 100%;
 }
 
 
@@ -148,6 +149,26 @@
     max-width: 100%;
 }
 
+.lesson-pdf iframe {
+    width: 100%;
+    min-height: 70vh;
+    height: calc(100vh - 260px);
+    max-height: 900px;
+    border: 0;
+    display: block;
+    background: #f8fafc;
+}
+
+.lesson-panel.material-panel {
+    width: 100%;
+    max-width: 100%;
+}
+
+.lesson-pdf,
+.lesson-video {
+    width: 100%;
+    max-width: 100%;
+}
 
 .lesson-description {
     color: #64748b;

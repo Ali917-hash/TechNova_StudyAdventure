@@ -174,18 +174,25 @@ exports.submitContact = async (req, res) => {
         } = req.body;
 
 
-        await Contact.create({
+        const createdMessage = await Contact.create({
 
-            name,
-            email,
-            phone,
-            subject,
-            message
+            name: name?.trim(),
+            email: email?.trim(),
+            phone: phone?.trim() || "",
+            subject: subject?.trim(),
+            message: message?.trim()
 
         });
 
 
-        res.redirect(
+        if (!createdMessage) {
+            return res.status(400).send(
+                "Unable to send message."
+            );
+        }
+
+
+        return res.redirect(
             "/contact?success=1"
         );
 
@@ -198,7 +205,18 @@ exports.submitContact = async (req, res) => {
         );
 
 
-        res.status(500).send(
+        if (error.name === "ValidationError") {
+            const validationMessage =
+                Object.values(error.errors)?.[0]?.message ||
+                "Please enter a valid message.";
+
+            return res.status(400).send(
+                validationMessage
+            );
+        }
+
+
+        return res.status(500).send(
             "Unable to send message."
         );
 

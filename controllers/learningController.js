@@ -420,25 +420,81 @@ exports.getCourseMaterial = async (req,res) => {
                 "../public/uploads/course-materials"
             );
 
-        const filePath =
-            path.join(
-                materialDirectory,
-                material.filename
+        const publicUploadsRoot = path.resolve(
+            __dirname,
+            "../public/uploads"
+        );
+
+        const materialRefs = [
+            material.path,
+            material.filename,
+            material.filename && path.basename(material.filename),
+            material.filename && material.filename.replace(/^\/+/, "")
+        ].filter(Boolean);
+
+        let filePath = null;
+
+        for (const ref of materialRefs) {
+            if (!ref || typeof ref !== "string") {
+                continue;
+            }
+
+            if (/^https?:\/\//i.test(ref)) {
+                continue;
+            }
+
+            const candidates = [
+                ref,
+                path.resolve(materialDirectory, ref),
+                path.resolve(publicUploadsRoot, ref),
+                path.join(materialDirectory, path.basename(ref)),
+                path.join(publicUploadsRoot, path.basename(ref))
+            ];
+
+            const matched = candidates.find(candidate => {
+                if (!candidate || typeof candidate !== "string") {
+                    return false;
+                }
+
+                const normalized = path.resolve(candidate);
+                const isInsideMaterialDir =
+                    normalized === materialDirectory ||
+                    normalized.startsWith(materialDirectory + path.sep);
+                const isInsideUploadsRoot =
+                    normalized === publicUploadsRoot ||
+                    normalized.startsWith(publicUploadsRoot + path.sep);
+
+                return (
+                    fs.existsSync(normalized) &&
+                    (isInsideMaterialDir || isInsideUploadsRoot)
+                );
+            });
+
+            if (matched) {
+                filePath = matched;
+                break;
+            }
+        }
+
+        if (!filePath) {
+            return res.status(404).send(
+                "Material file not found."
             );
+        }
 
 
         // Prevent path traversal
-        if (
-            !filePath.startsWith(
-                materialDirectory +
-                path.sep
-            )
-        ) {
+        const normalizedFilePath = path.resolve(filePath);
+        const isAllowedPath =
+            normalizedFilePath === materialDirectory ||
+            normalizedFilePath.startsWith(materialDirectory + path.sep) ||
+            normalizedFilePath === publicUploadsRoot ||
+            normalizedFilePath.startsWith(publicUploadsRoot + path.sep);
 
+        if (!isAllowedPath) {
             return res.status(403).send(
                 "Invalid material path."
             );
-
         }
 
 
@@ -448,7 +504,7 @@ exports.getCourseMaterial = async (req,res) => {
 
         if (
             !fs.existsSync(
-                filePath
+                normalizedFilePath
             )
         ) {
 
@@ -464,7 +520,7 @@ exports.getCourseMaterial = async (req,res) => {
         // ======================================
 
         const stat =
-            fs.statSync(filePath);
+            fs.statSync(normalizedFilePath);
 
         const fileSize =
             stat.size;
