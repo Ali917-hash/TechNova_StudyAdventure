@@ -167,9 +167,6 @@ app.use(
 const nodemailer = require("nodemailer");
 const connectDB = require("./config/db");
 
-// Connect Database
-connectDB();
-
 // Middleware
 app.use(express.urlencoded({
     extended: true,
@@ -719,8 +716,18 @@ app.use((error, req, res, next) => {
 const PORT = process.env.PORT || 3000;
 
 if (!process.env.VERCEL) {
-    app.listen(PORT, () => {
-        console.log(`Server Running On Port ${PORT}`);
+    connectDB()
+        .then(() => {
+            app.listen(PORT, () => {
+                console.log(`Server Running On Port ${PORT}`);
+            });
+        })
+        .catch(() => {
+            process.exitCode = 1;
+        });
+} else {
+    connectDB().catch(() => {
+        process.exitCode = 1;
     });
 }
 
