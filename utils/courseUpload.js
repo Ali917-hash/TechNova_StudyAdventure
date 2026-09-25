@@ -383,7 +383,7 @@ module.exports = multer({
     limits: {
 
         fileSize:
-            3 * 1024 * 1024 * 1024,
+            5 * 1024 * 1024,
 
         files: 100,
 

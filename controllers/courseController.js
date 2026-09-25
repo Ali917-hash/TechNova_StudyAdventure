@@ -419,6 +419,12 @@ exports.addCourse = async (req, res) => {
 
         console.error(err);
 
+        if (err && err.code === "LIMIT_FILE_SIZE") {
+            return res.status(413).send(
+                "Course material is too large. Please upload a PDF under 5MB."
+            );
+        }
+
 
         res.status(500).send(
             "Unable to add course: " +
@@ -758,6 +764,12 @@ exports.updateCourse = async (req, res) => {
             "COURSE UPDATE ERROR:",
             err
         );
+
+        if (err && err.code === "LIMIT_FILE_SIZE") {
+            return res.status(413).send(
+                "Course material is too large. Please upload a PDF under 5MB."
+            );
+        }
 
 
         res.status(500).send(
